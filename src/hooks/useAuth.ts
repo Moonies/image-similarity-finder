@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks/useRedux'
 import { setCredentials, logout, User } from '@/store/slices/authSlice'
 import { useRouter } from 'next/navigation'
 import { useLoading } from './useLoading'
+import { useNotification } from './useNotification'
 
 // Authentication service (replace with your actual implementation)
 // import { authService } from '@/services/authService';
@@ -13,7 +14,9 @@ interface UseAuthHook {
   isAuthenticated: boolean
   login: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
-  refreshToken: () => Promise<void>
+  refreshToken: (newToken: any) => Promise<void> // now use any waiting API
+  getCurrentToken: () => any // wait API
+  getCurrentUser: () => any //wait API
 }
 
 export function useAuth(): UseAuthHook {
@@ -22,7 +25,7 @@ export function useAuth(): UseAuthHook {
   const { setLoading } = useLoading()
   // Get current auth state from Redux
   const { user, isAuthenticated } = useAppSelector(state => state.auth)
-
+  const { notificationModal } = useNotification()
   // Login method
   const login = async (email: string, password: string) => {
     setLoading(true)
@@ -79,7 +82,7 @@ export function useAuth(): UseAuthHook {
   }
 
   // Token refresh method
-  const refreshTokenMethod = async () => {
+  const refreshTokenMethod = async (newToken: any) => {
     setLoading(true)
     try {
       const refreshToken = localStorage.getItem('refreshToken')
@@ -107,11 +110,31 @@ export function useAuth(): UseAuthHook {
     }
   }
 
+  const getCurrentToken = () => {
+    try {
+      const storedToken = localStorage.getItem('token')
+      return storedToken ? (JSON.parse(storedToken) as any) : null //set any wait API
+    } catch (error) {
+      notificationModal.error(`${error}`)
+    }
+  }
+
+  const getCurrentUser = () => {
+    try {
+      const storedUser = localStorage.getItem('user')
+      return storedUser ? (JSON.parse(storedUser) as any) : null //set any wait API
+    } catch (error) {
+      notificationModal.error(`${error}`)
+    }
+  }
+
   return {
     user,
     isAuthenticated,
     login,
     logout: handleLogout,
     refreshToken: refreshTokenMethod,
+    getCurrentToken,
+    getCurrentUser,
   }
 }

@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { ConfirmModalContext } from '@/components/modals/ConfirmModal'
+import { ConfirmModalContext } from '@/components/providers/ConfirmProvider'
 
 export const useConfirmModal = () => {
   const context = useContext(ConfirmModalContext)

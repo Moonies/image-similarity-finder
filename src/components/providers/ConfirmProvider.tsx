@@ -1,3 +1,4 @@
+'use client'
 import React, { useState, useCallback, createContext, ReactNode } from 'react'
 import {
   Dialog,
