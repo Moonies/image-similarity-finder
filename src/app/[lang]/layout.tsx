@@ -6,6 +6,7 @@ import { ReduxProvider } from '@/components/providers/ReduxProvider'
 import { AuthProvider } from '@/components/providers/AuthProvider'
 import { ConfirmModalProvider } from '@/components/providers/ConfirmProvider'
 import { Notification } from '@/components/Notification'
+import { ThemeContextProvider } from '@/context/ThemeContext'
 
 export async function generateStaticParams() {
   return [{ lang: 'en' }, { lang: 'ja' }]
@@ -21,16 +22,18 @@ export default function MainAppLayout({
   return (
     <ReduxProvider>
       <LanguageProvider locale={lang}>
-        <ThemeRegistry>
-          <LoadingProvider>
-            <AuthProvider>
-              <ConfirmModalProvider>
-                <MainLayout>{children}</MainLayout>
-              </ConfirmModalProvider>
-              <Notification />
-            </AuthProvider>
-          </LoadingProvider>
-        </ThemeRegistry>
+        <ThemeContextProvider>
+          <ThemeRegistry>
+            <LoadingProvider>
+              <AuthProvider>
+                <ConfirmModalProvider>
+                  <MainLayout>{children}</MainLayout>
+                </ConfirmModalProvider>
+                <Notification />
+              </AuthProvider>
+            </LoadingProvider>
+          </ThemeRegistry>
+        </ThemeContextProvider>
       </LanguageProvider>
     </ReduxProvider>
   )

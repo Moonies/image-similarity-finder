@@ -1,5 +1,6 @@
 'use client'
 
+import { useThemeContext } from '@/context/ThemeContext'
 import { useConfirmModal } from '@/hooks/useConfirm'
 import useHttp from '@/hooks/useHttp'
 import { Box, Button, Typography } from '@mui/material'
@@ -8,6 +9,8 @@ import { useEffect } from 'react'
 export default function ViewerPage() {
   const { api } = useHttp()
   const { openConfirmModal } = useConfirmModal()
+  const { mode, toggleTheme, setMode } = useThemeContext()
+
   //for example
   const testApi = async () => {
     const result = await api.user.checkAuth('aaaa', 'bbbb')
@@ -31,6 +34,7 @@ export default function ViewerPage() {
           })
           if (confirmed) {
             console.log('confirmed')
+            toggleTheme()
           }
         }}
       >
