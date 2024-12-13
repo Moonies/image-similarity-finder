@@ -90,7 +90,7 @@ export const ConfirmModalProvider: React.FC<ConfirmModalProviderProps> = ({ chil
           <Button
             onClick={handleConfirm}
             color='primary'
-            variant='outlined'
+            variant='contained'
             sx={{ color: 'white' }}
             aria-label='close'
           >

@@ -6,5 +6,5 @@ import ContentLayout from '@/components/layout/ContentLayout'
 export default function Home() {
   const { t } = useTranslation('common')
 
-  return <Box>Home contian</Box>
+  return <Box>{t('welcome')}</Box>
 }

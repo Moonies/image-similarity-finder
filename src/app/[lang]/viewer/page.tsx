@@ -9,7 +9,6 @@ import { useEffect } from 'react'
 export default function ViewerPage() {
   const { api } = useHttp()
   const { openConfirmModal } = useConfirmModal()
-  const { mode, toggleTheme, setMode } = useThemeContext()
 
   //for example
   const testApi = async () => {
@@ -34,7 +33,6 @@ export default function ViewerPage() {
           })
           if (confirmed) {
             console.log('confirmed')
-            toggleTheme()
           }
         }}
       >

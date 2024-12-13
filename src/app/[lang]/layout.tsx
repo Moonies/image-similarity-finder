@@ -9,16 +9,17 @@ import { Notification } from '@/components/Notification'
 import { ThemeContextProvider } from '@/context/ThemeContext'
 
 export async function generateStaticParams() {
-  return [{ lang: 'en' }, { lang: 'ja' }]
+  return [{ lang: 'en' }, { lang: 'jp' }]
 }
 
-export default function MainAppLayout({
+export default async function MainAppLayout({
   children,
-  lang,
+  params,
 }: {
   children: React.ReactNode
-  lang: string
+  params: { lang: string }
 }) {
+  const { lang } = await params
   return (
     <ReduxProvider>
       <LanguageProvider locale={lang}>
