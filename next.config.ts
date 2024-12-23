@@ -2,9 +2,9 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  // devIndicators: {
-  //   appIsrStatus: false,
-  // },
+  devIndicators: {
+    appIsrStatus: false,
+  },
   // interpolation: {
   //   escapeValue: false,
   // },
