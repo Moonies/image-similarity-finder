@@ -3,7 +3,7 @@
 import { Box, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import {
   Home as HomeIcon,
-  Download as DownloadIcon,
+  Upload as UploadIcon,
   ArrowBack as ArrowBackIcon,
   ArrowForward as ArrowForwardIcon,
   DarkMode as DarkModeIcon,
@@ -11,6 +11,7 @@ import {
   Refresh as RefreshIcon,
   ImageSearch as ImageSearchIcon,
   Language as LanguageIcon,
+  ContentPaste as ContentPasteIcon,
 } from '@mui/icons-material'
 import React, { useCallback, useState } from 'react'
 import { StyledDrawer, StyledSidebarButton } from './style'
@@ -36,7 +37,7 @@ export default function SideMenu() {
 
   const menuItems = [
     { label: 'Home', key: 'home', icon: HomeIcon, path: '/' },
-    { label: 'Download', key: 'download', icon: DownloadIcon, path: '/Download' },
+    { label: 'Search', key: 'search', icon: UploadIcon, path: '/search' },
     { label: 'Back', key: 'back', icon: ArrowBackIcon, path: '' },
     { label: 'Foward', key: 'foward', icon: ArrowForwardIcon, path: '' },
     {
@@ -46,6 +47,7 @@ export default function SideMenu() {
       path: '',
     },
     { label: 'Reload', key: 'reload', icon: RefreshIcon, path: '' },
+    { label: 'Database', key: 'database', icon: ContentPasteIcon, path: '/check_records' },
     { label: 'Image Preview', key: 'preview', icon: ImageSearchIcon, path: '/viewer' },
     { label: 'En', key: 'language', icon: LanguageIcon, path: '' },
   ]
@@ -60,7 +62,7 @@ export default function SideMenu() {
   const handleClick = async (key: string, path: string) => {
     switch (key) {
       case 'home':
-      case 'download':
+      case 'search':
       case 'preview':
         handleNavigation(path)
         break
@@ -68,7 +70,6 @@ export default function SideMenu() {
         toggleTheme()
         break
       case 'language':
-        console.log(currentLang)
         await i18n.changeLanguage(currentLang === 'en' ? 'jp' : 'en')
         setCurrentLang(i18n.language)
         // setLoading(true)
@@ -94,58 +95,6 @@ export default function SideMenu() {
               </ListItemButton>
             )
           })}
-          {/* <ListItemButton onClick={() => handleNavigation('/')}>
-            <ListItemIcon>
-              <HomeIcon sx={{ color: 'white' }} />
-            </ListItemIcon>
-            <ListItemText primary='Home' />
-          </ListItemButton>
-          <ListItemButton>
-            <ListItemIcon>
-              <DownloadIcon sx={{ color: 'white' }} />
-            </ListItemIcon>
-            <ListItemText primary='Download' />
-          </ListItemButton>
-          <ListItemButton>
-            <ListItemIcon>
-              <ArrowBackIcon sx={{ color: 'white' }} />
-            </ListItemIcon>
-            <ListItemText primary='Back' />
-          </ListItemButton>
-          <ListItemButton>
-            <ListItemIcon>
-              <ArrowForwardIcon sx={{ color: 'white' }} />
-            </ListItemIcon>
-            <ListItemText primary='Foward' />
-          </ListItemButton>
-          <ListItemButton onClick={toggleTheme}>
-            <ListItemIcon>
-              {mode === 'dark' ? (
-                <DarkModeIcon sx={{ color: 'white' }} />
-              ) : (
-                <LightModeIcon sx={{ color: 'white' }} />
-              )}
-            </ListItemIcon>
-            <ListItemText primary='Dark Mode' />
-          </ListItemButton>
-          <ListItemButton>
-            <ListItemIcon>
-              <RefreshIcon sx={{ color: 'white' }} />
-            </ListItemIcon>
-            <ListItemText primary='Reload' />
-          </ListItemButton>
-          <ListItemButton onClick={() => handleNavigation('/viewer')}>
-            <ListItemIcon>
-              <ImageSearchIcon sx={{ color: 'white' }} />
-            </ListItemIcon>
-            <ListItemText primary='Preview' />
-          </ListItemButton>
-          <ListItemButton>
-            <ListItemIcon>
-              <LanguageIcon sx={{ color: 'white' }} />
-            </ListItemIcon>
-            <ListItemText primary='En' />
-          </ListItemButton> */}
         </Box>
         <Box flex={1} display={'flex'} alignItems={'flex-end'}>
           <StyledSidebarButton onClick={() => setOpen(!open)}>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux'
 import { clearCredentials, setCredentials } from '@/store/slices/authSlice'
@@ -14,11 +14,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [isTokenValidating, setIsTokenValidating] = useState(true)
 
-  useEffect(() => {
-    const token = localStorage.getItem('token')
-
-    // Check and validate token
-    const validateToken = async () => {
+  // Check and validate token
+  const validateToken = useCallback(
+    async (token: string | null) => {
       setIsTokenValidating(true)
 
       try {
@@ -57,11 +55,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } finally {
         setIsTokenValidating(false)
       }
-    }
+    },
+    [pathname, dispatch, setShowLoginModal, setIsTokenValidating]
+  )
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
 
     // Only validate if token exists
     if (token) {
-      validateToken()
+      validateToken(token)
     } else {
       // No token and not on login page
       setIsTokenValidating(false)
