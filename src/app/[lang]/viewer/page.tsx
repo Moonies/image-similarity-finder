@@ -24,6 +24,7 @@ export default function ViewerPage() {
       <Typography variant='h4'>Viewer Page</Typography>
       <Typography>Viewer content goes here</Typography>
       <Button
+        variant='contained'
         onClick={async () => {
           //for example
           const confirmed = await openConfirmModal({
