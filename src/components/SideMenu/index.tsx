@@ -30,8 +30,8 @@ export default function SideMenu() {
   const { setLoading } = useLoading()
 
   const handleNavigation = (path: string) => {
-    const lang = pathname.split('/')[1] // This will get 'en' from '/en/viewer'
-    // Include language in the path
+    const [lang, currentPath] = pathname.replace(/^\//, '').split('/') // This will get 'en' and 'currentpaht' from '/en/viewer'
+    if (path === `/${currentPath}`) return
     router.push(`/${lang}${path}`)
   }
 
@@ -47,7 +47,7 @@ export default function SideMenu() {
       path: '',
     },
     { label: 'Reload', key: 'reload', icon: RefreshIcon, path: '' },
-    { label: 'Database', key: 'database', icon: ContentPasteIcon, path: '/check_records' },
+    { label: 'Database', key: 'database', icon: ContentPasteIcon, path: '/record' },
     { label: 'Image Preview', key: 'preview', icon: ImageSearchIcon, path: '/viewer' },
     { label: 'En', key: 'language', icon: LanguageIcon, path: '' },
   ]
@@ -64,6 +64,7 @@ export default function SideMenu() {
       case 'home':
       case 'search':
       case 'preview':
+      case 'database':
         handleNavigation(path)
         break
       case 'mode':
@@ -87,7 +88,11 @@ export default function SideMenu() {
         <Box display={'flex'} flex={1} flexDirection={'column'}>
           {menuItems.map((item, index) => {
             return (
-              <ListItemButton key={index} onClick={() => handleClick(item.key, item.path)}>
+              <ListItemButton
+                key={index}
+                onClick={() => handleClick(item.key, item.path)}
+                selected={item.path === `/${pathname.split('/').slice(2).join('/')}`}
+              >
                 <ListItemIcon>
                   <item.icon sx={{ color: 'white' }} />
                 </ListItemIcon>
