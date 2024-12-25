@@ -12,7 +12,7 @@ import {
   GridRowModes,
   GridRowModesModel,
 } from '@mui/x-data-grid'
-import { IconButton } from '@mui/material'
+import { TFunction } from 'i18next'
 
 interface CustomColumn {
   edit(id: GridRowId): () => void
@@ -20,6 +20,7 @@ interface CustomColumn {
   remove(id: GridRowId): () => void
   cancle(id: GridRowId): () => void
   rowModesModel: GridRowModesModel
+  t: TFunction
 }
 export default function CustomColumn({
   cancle,
@@ -27,36 +28,37 @@ export default function CustomColumn({
   save,
   remove,
   rowModesModel,
+  t,
 }: CustomColumn): GridColDef[] {
   return [
     {
       field: 'col1',
-      headerName: 'Drawing Number',
+      headerName: t('column.col1'),
       headerAlign: 'center',
       flex: 1,
     },
     {
       field: 'col2',
-      headerName: 'Name',
+      headerName: t('column.col2'),
       headerAlign: 'center',
       flex: 1,
     },
     {
       field: 'col3',
-      headerName: 'Selling Price',
+      headerName: t('column.col3'),
       headerAlign: 'center',
       flex: 1,
       editable: true,
     },
     {
       field: 'col4',
-      headerName: 'Material Cost',
+      headerName: t('column.col4'),
       headerAlign: 'center',
       flex: 1,
     },
     {
       field: 'col5',
-      headerName: 'Material Supplier',
+      headerName: t('column.col5'),
       type: 'number',
       headerAlign: 'center',
       flex: 1,
@@ -66,96 +68,96 @@ export default function CustomColumn({
     },
     {
       field: 'col6',
-      headerName: 'Lathe Cost',
+      headerName: t('column.col6'),
       headerAlign: 'center',
       flex: 1,
     },
     {
       field: 'col7',
-      headerName: 'Lathe Supplier',
+      headerName: t('column.col7'),
       headerAlign: 'center',
       editable: true,
     },
     {
       field: 'col8',
-      headerName: 'Milling Cost',
+      headerName: t('column.col8'),
       headerAlign: 'center',
       editable: true,
     },
     {
       field: 'col9',
-      headerName: 'Milling Supplier',
+      headerName: t('column.col9'),
       headerAlign: 'center',
     },
     {
       field: 'col10',
-      headerName: 'Heat Treatment Cost',
+      headerName: t('column.col10'),
       headerAlign: 'center',
     },
     {
       field: 'col11',
-      headerName: 'Heat Treatment Supplier',
+      headerName: t('column.col11'),
       headerAlign: 'center',
     },
     {
       field: 'col12',
-      headerName: 'Grinding Cost',
+      headerName: t('column.col12'),
       headerAlign: 'center',
     },
     {
       field: 'col13',
-      headerName: 'Grinding Supplier',
+      headerName: t('column.col13'),
       headerAlign: 'center',
     },
     {
       field: 'col14',
-      headerName: 'Transportation Cost',
+      headerName: t('column.col14'),
       headerAlign: 'center',
     },
     {
       field: 'col15',
-      headerName: 'Transportation Supplier',
+      headerName: t('column.col15'),
       headerAlign: 'center',
     },
     {
       field: 'col16',
-      headerName: 'General Cost',
+      headerName: t('column.col16'),
       headerAlign: 'center',
     },
     {
       field: 'col17',
-      headerName: 'General Supplier',
+      headerName: t('column.col17'),
       headerAlign: 'center',
     },
     {
       field: 'col18',
-      headerName: 'Welding Cost',
+      headerName: t('column.col18'),
       headerAlign: 'center',
     },
     {
       field: 'col19',
-      headerName: 'Welding Supplier',
+      headerName: t('column.col19'),
       headerAlign: 'center',
     },
     {
       field: 'col20',
-      headerName: 'Other Cost',
+      headerName: t('column.col20'),
       headerAlign: 'center',
     },
     {
       field: 'col21',
-      headerName: 'Other Supplier',
+      headerName: t('column.col21'),
       headerAlign: 'center',
     },
     {
       field: 'col22',
-      headerName: 'Defect Details',
+      headerName: t('column.col22'),
       headerAlign: 'center',
     },
     {
       field: 'actions',
       type: 'actions',
-      headerName: 'Actions',
+      headerName: t('column.action'),
       width: 100,
       cellClassName: 'actions',
       getActions: ({ id }: any) => {

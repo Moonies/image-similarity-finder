@@ -18,8 +18,11 @@ import {
 import DataTable from '@/components/DataTable'
 import useRecord from './hooks/useRecord'
 import CustomColumn from './components/CustomColumn'
+import { useTranslation } from 'react-i18next'
 
 export default function RecordPage() {
+  const { t } = useTranslation('record-page')
+
   const recordDataGridRef = useGridApiRef()
   const {
     mockData,
@@ -45,9 +48,19 @@ export default function RecordPage() {
         save: handleSaveClick,
         remove: handleDeleteClick,
         rowModesModel,
+        t: t,
       }),
-    []
+    [rowModesModel, t]
   )
+
+  // const columns = CustomColumn({
+  //   cancle: handleCancelClick,
+  //   edit: handleEditClick,
+  //   save: handleSaveClick,
+  //   remove: handleDeleteClick,
+  //   rowModesModel,
+  //   t: t,
+  // })
 
   useEffect(() => {
     prepareCategorySearch(columns)
@@ -62,11 +75,11 @@ export default function RecordPage() {
           onChange={(event, newValue) => handleChange('category', newValue)}
           value={searchCriteria.category}
           sx={{ width: 300 }}
-          renderInput={params => <TextField {...params} label='category' />}
+          renderInput={params => <TextField {...params} label={t('category')} />}
         />
         <TextField
           name='keyword'
-          label='keyword'
+          label={t('keyword')}
           value={searchCriteria.keyword}
           onChange={e => handleChange('keyword', e.target.value)}
         />
