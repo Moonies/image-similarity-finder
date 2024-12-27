@@ -1,6 +1,14 @@
 'use client'
 
-import { Box, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import {
+  Box,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from '@mui/material'
 import {
   Home as HomeIcon,
   Upload as UploadIcon,
@@ -13,8 +21,8 @@ import {
   Language as LanguageIcon,
   ContentPaste as ContentPasteIcon,
 } from '@mui/icons-material'
-import React, { useCallback, useState } from 'react'
-import { StyledDrawer, StyledSidebarButton } from './style'
+import React, { useCallback, useEffect, useState } from 'react'
+import { StyledDrawer, StyledSelect, StyledSidebarButton } from './style'
 import { useRouter, usePathname } from 'next/navigation'
 import { useThemeContext } from '@/context/ThemeContext'
 import { useTranslation } from 'react-i18next'
@@ -27,6 +35,7 @@ export default function SideMenu() {
   const { toggleTheme, mode } = useThemeContext()
   const { i18n } = useTranslation()
   const [currentLang, setCurrentLang] = useState(i18n.language)
+  const [languageSwitcher, SetLanguageSwitcher] = useState(i18n.language)
   const { setLoading } = useLoading()
 
   const handleNavigation = (path: string) => {
@@ -37,7 +46,7 @@ export default function SideMenu() {
 
   const menuItems = [
     { label: 'Home', key: 'home', icon: HomeIcon, path: '/' },
-    { label: 'Search', key: 'search', icon: UploadIcon, path: '/search' },
+    { label: 'Upload', key: 'search', icon: UploadIcon, path: '/upload' },
     { label: 'Back', key: 'back', icon: ArrowBackIcon, path: '' },
     { label: 'Foward', key: 'foward', icon: ArrowForwardIcon, path: '' },
     {
@@ -70,34 +79,58 @@ export default function SideMenu() {
       case 'mode':
         toggleTheme()
         break
-      case 'language':
-        await i18n.changeLanguage(currentLang === 'en' ? 'jp' : 'en')
-        setCurrentLang(i18n.language)
-        // setLoading(true)
-        updatePathname(i18n.language)
-        break
 
       default:
         break
     }
   }
 
+  const getCurrnetGroupPath = () => {
+    const currentGroupPath = pathname.split('/')
+    return currentGroupPath[2]
+  }
+
+  const handleLanguageClick = async (event: SelectChangeEvent<unknown>) => {
+    SetLanguageSwitcher(event.target.value as string)
+    await i18n.changeLanguage(currentLang === 'en' ? 'jp' : 'en')
+    setCurrentLang(i18n.language)
+    // setLoading(true)
+    updatePathname(i18n.language)
+  }
+
+  useEffect(() => {
+    SetLanguageSwitcher(i18n.language)
+    return () => {}
+  }, [i18n.language])
+
   return (
     <StyledDrawer variant='permanent' open={open}>
       <Box display={'flex'} flex={1} flexDirection={'column'}>
         <Box display={'flex'} flex={1} flexDirection={'column'}>
           {menuItems.map((item, index) => {
-            return (
+            return item.key !== 'language' ? (
               <ListItemButton
                 key={index}
                 onClick={() => handleClick(item.key, item.path)}
-                selected={item.path === `/${pathname.split('/').slice(2).join('/')}`}
+                selected={item.path === `/${getCurrnetGroupPath()}`}
               >
                 <ListItemIcon>
                   <item.icon sx={{ color: 'white' }} />
                 </ListItemIcon>
                 <ListItemText primary={item.label} />
               </ListItemButton>
+            ) : (
+              <StyledSelect
+                labelId='select-label-language'
+                id='select'
+                value={languageSwitcher}
+                onChange={handleLanguageClick}
+                key={index}
+                size='small'
+              >
+                <MenuItem value={'en'}>En</MenuItem>
+                <MenuItem value={'jp'}>Jp</MenuItem>
+              </StyledSelect>
             )
           })}
         </Box>

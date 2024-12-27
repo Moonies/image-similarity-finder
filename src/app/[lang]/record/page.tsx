@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useGridApiRef } from '@mui/x-data-grid'
 import { Search as SearchIcon } from '@mui/icons-material'
 
@@ -16,13 +16,12 @@ import {
   TextField,
 } from '@mui/material'
 import DataTable from '@/components/DataTable'
-import useRecord from './hooks/useRecord'
+import useRecord, { SearchCriteria } from './hooks/useRecord'
 import CustomColumn from './components/CustomColumn'
 import { useTranslation } from 'react-i18next'
 
 export default function RecordPage() {
   const { t } = useTranslation('record-page')
-
   const recordDataGridRef = useGridApiRef()
   const {
     mockData,
@@ -38,6 +37,7 @@ export default function RecordPage() {
     categorySearch,
     handleChange,
     searchCriteria,
+    getPageData,
   } = useRecord()
 
   const columns = useMemo(
@@ -50,17 +50,22 @@ export default function RecordPage() {
         rowModesModel,
         t: t,
       }),
-    [rowModesModel, t]
+    [rowModesModel, t, handleCancelClick, handleEditClick, handleSaveClick, handleDeleteClick]
   )
 
-  // const columns = CustomColumn({
-  //   cancle: handleCancelClick,
-  //   edit: handleEditClick,
-  //   save: handleSaveClick,
-  //   remove: handleDeleteClick,
-  //   rowModesModel,
-  //   t: t,
-  // })
+  useEffect(() => {
+    const cachedData = getPageData('searchCriteria')
+    if (cachedData) {
+      for (const key in cachedData) {
+        if (cachedData.hasOwnProperty(key)) {
+          const typedKey = key as keyof SearchCriteria
+          const value = cachedData[typedKey]
+          handleChange(key, value)
+        }
+      }
+    }
+    return () => {}
+  }, [])
 
   useEffect(() => {
     prepareCategorySearch(columns)
@@ -84,7 +89,12 @@ export default function RecordPage() {
           onChange={e => handleChange('keyword', e.target.value)}
         />
         <Box justifyContent={'center'} alignContent={'center'}>
-          <Button aria-label='search' variant='contained' size='small'>
+          <Button
+            aria-label='search'
+            variant='contained'
+            size='small'
+            onClick={() => console.log(searchCriteria)}
+          >
             <SearchIcon />
           </Button>
         </Box>

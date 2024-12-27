@@ -1,3 +1,4 @@
+import { useCache } from '@/context/CacheContext'
 import {
   GridColDef,
   GridEventListener,
@@ -8,11 +9,17 @@ import {
   GridRowModesModel,
   GridRowsProp,
 } from '@mui/x-data-grid'
+import { useParams, useRouter } from 'next/navigation'
 import React, { useCallback, useMemo, useState } from 'react'
 
 interface CategorySaleSearch {
   value: string
   label: string
+}
+
+export type SearchCriteria = {
+  category: string
+  keyword: string
 }
 
 const mock: GridRowsProp = [
@@ -33,7 +40,14 @@ export default function useRecord() {
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({})
   const [mockData, setMockData] = useState(mock)
   const [categorySearch, setCategorySearch] = useState<CategorySaleSearch[]>([])
-  const [searchCriteria, setSearchCriteria] = useState({ category: '', keyword: '' })
+  const [searchCriteria, setSearchCriteria] = useState<SearchCriteria>({
+    category: '',
+    keyword: '',
+  })
+  const params = useParams()
+  const lang = params.lang as string
+  const router = useRouter()
+  const { setPageData, getPageData } = useCache()
 
   const prepareCategorySearch = useCallback((columns: GridColDef[]) => {
     let result: CategorySaleSearch[] = []
@@ -47,6 +61,7 @@ export default function useRecord() {
   }, [])
 
   const handleChange = (name: string, value: string | null) => {
+    console.log('set')
     setSearchCriteria(prev => ({ ...prev, [name]: value }))
   }
 
@@ -56,31 +71,43 @@ export default function useRecord() {
     }
   }
 
-  const handleEditClick = (id: GridRowId) => () => {
-    console.log('edit')
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } })
-  }
+  const handleEditClick = useCallback(
+    (id: GridRowId) => () => {
+      // setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } }) // edit inline need to discuss
+      setPageData('searchCriteria', { ...searchCriteria })
+      router.push(`/${lang}/record/${id}`)
+    },
+    [setPageData, searchCriteria]
+  )
 
-  const handleSaveClick = (id: GridRowId) => () => {
-    console.log('save')
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } })
-  }
+  const handleSaveClick = useCallback(
+    (id: GridRowId) => () => {
+      setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } })
+    },
+    [rowModesModel, setRowModesModel]
+  )
 
-  const handleDeleteClick = (id: GridRowId) => () => {
-    setMockData(mockData.filter(row => row.id !== id))
-  }
-
-  const handleCancelClick = (id: GridRowId) => () => {
-    setRowModesModel({
-      ...rowModesModel,
-      [id]: { mode: GridRowModes.View, ignoreModifications: true },
-    })
-
-    const editedRow = mockData.find(row => row.id === id)
-    if (editedRow!.isNew) {
+  const handleDeleteClick = useCallback(
+    (id: GridRowId) => () => {
       setMockData(mockData.filter(row => row.id !== id))
-    }
-  }
+    },
+    [mockData, setMockData]
+  )
+
+  const handleCancelClick = useCallback(
+    (id: GridRowId) => () => {
+      setRowModesModel({
+        ...rowModesModel,
+        [id]: { mode: GridRowModes.View, ignoreModifications: true },
+      })
+
+      const editedRow = mockData.find(row => row.id === id)
+      if (editedRow!.isNew) {
+        setMockData(mockData.filter(row => row.id !== id))
+      }
+    },
+    [rowModesModel, setRowModesModel]
+  )
 
   const processRowUpdate = (newRow: GridRowModel) => {
     const updatedRow = { ...newRow, isNew: false }
@@ -105,5 +132,6 @@ export default function useRecord() {
     categorySearch,
     searchCriteria,
     handleChange,
+    getPageData,
   }
 }

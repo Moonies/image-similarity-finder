@@ -1,5 +1,5 @@
 import { CSSObject } from '@emotion/styled'
-import { Drawer, IconButton, styled, Theme } from '@mui/material'
+import { Drawer, IconButton, Select, styled, Theme } from '@mui/material'
 
 const drawerWidth = 240
 
@@ -56,5 +56,25 @@ export const StyledSidebarButton = styled(IconButton)({
   borderRadius: 0,
   '&:hover': {
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  },
+})
+
+export const StyledSelect = styled(Select)({
+  color: '#000000',
+  background: 'white',
+  '& .MuiSelect-icon': {
+    color: 'purple', // Customize dropdown arrow color
+  },
+  '& .MuiOutlinedInput-notchedOutline': {
+    font: '#000000',
+  },
+  '&:hover .MuiOutlinedInput-notchedOutline': {
+    fontcolor: '#000000',
+  },
+  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+    fontcolor: '#000000',
+  },
+  '& .MuiMenuItem-root': {
+    color: 'black', // Font color for dropdown options
   },
 })
