@@ -5,7 +5,6 @@ import { useThemeContext } from '@/context/ThemeContext'
 
 export default function ThemeRegistry({ children }: { children: React.ReactNode }) {
   const { theme } = useThemeContext()
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

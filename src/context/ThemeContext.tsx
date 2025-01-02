@@ -1,5 +1,5 @@
 'use client'
-import React, { createContext, useState, useContext } from 'react'
+import React, { createContext, useState, useContext, useEffect } from 'react'
 import { ThemeMode, getTheme } from '@/theme/theme'
 
 interface ThemeContextType {
@@ -39,6 +39,11 @@ export const ThemeContextProvider: React.FC<{ children: React.ReactNode }> = ({ 
     setMode(newMode)
     localStorage.setItem('theme', newMode)
   }
+
+  // Update body background when theme changes
+  // useEffect(() => {
+  //   document.body.style.backgroundColor = mode === 'dark' ? '#1A202C' : '#ffffff'
+  // }, [mode])
 
   return (
     <ThemeContext.Provider

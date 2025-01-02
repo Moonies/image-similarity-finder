@@ -1,0 +1,29 @@
+{
+  "category": "Category",
+  "keyword": "Keyword",
+  "column": {
+    "col1": "Drawing Number",
+    "col2": "Name",
+    "col3": "Material Cost",
+    "col4": "Material Supplier",
+    "col5": "Lathe Cost",
+    "col6": "Lathe Supplier",
+    "col7": "Milling Cost",
+    "col8": "Milling Supplier",
+    "col9": "Heat Treatment Cost",
+    "col10": "Heat Treatment Supplier",
+    "col11": "Grinding Cost",
+    "col12": "Grinding Supplier",
+    "col13": "Transportation Cost",
+    "col14": "Transportation Supplier",
+    "col15": "General Cost",
+    "col16": "General Supplier",
+    "col17": "Welding Cost",
+    "col18": "Welding Supplier",
+    "col19": "Other Cost",
+    "col20": "Other Supplier",
+    "col21": "Selling Price",
+    "col22": "Defect Details",
+    "action": "Actions"
+  }
+}

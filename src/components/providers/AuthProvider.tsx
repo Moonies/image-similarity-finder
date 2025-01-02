@@ -61,7 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const token = localStorage.getItem('token')
-
+    // console.log(pathname)
     // Only validate if token exists
     if (token) {
       validateToken(token)
@@ -76,7 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Protect routes
   useEffect(() => {
-    const protectedRoutes = ['/dashboard', '/viewer']
+    const protectedRoutes = ['/']
 
     if (!isAuthenticated && protectedRoutes.includes(pathname)) {
       // router.push('/login')

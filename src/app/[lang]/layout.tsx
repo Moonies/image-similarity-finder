@@ -7,6 +7,7 @@ import { AuthProvider } from '@/components/providers/AuthProvider'
 import { ConfirmModalProvider } from '@/components/providers/ConfirmProvider'
 import { Notification } from '@/components/Notification'
 import { ThemeContextProvider } from '@/context/ThemeContext'
+import { CacheProvider } from '@/context/CacheContext'
 
 export async function generateStaticParams() {
   return [{ lang: 'en' }, { lang: 'jp' }]
@@ -28,7 +29,9 @@ export default async function MainAppLayout({
             <LoadingProvider>
               <AuthProvider>
                 <ConfirmModalProvider>
-                  <MainLayout>{children}</MainLayout>
+                  <CacheProvider>
+                    <MainLayout>{children}</MainLayout>
+                  </CacheProvider>
                 </ConfirmModalProvider>
                 <Notification />
               </AuthProvider>
