@@ -4,11 +4,12 @@ import InputUploadFile from '@/components/InputUploadFile'
 import { Box, Button, Typography } from '@mui/material'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import useSearch from './hooks/useSearch'
 
 export default function SearchPage() {
   const { t } = useTranslation('search-page')
   const [uploadFile, setUploadFile] = useState<File>()
-
+  const { handleUpload } = useSearch()
   const handleChooseFile = useCallback(
     (chooseFile: FileList | null) => {
       const file = chooseFile?.[0]
@@ -17,8 +18,6 @@ export default function SearchPage() {
     },
     [setUploadFile]
   )
-
-  const handleUpload = () => {}
 
   return (
     <Box display={'flex'} flex={1} flexDirection={'column'} padding={1}>
@@ -43,7 +42,9 @@ export default function SearchPage() {
           <Typography>{uploadFile ? uploadFile.name : t('imagePlaceholder')}</Typography>
         </Box>
         <Box display={'flex'} flexDirection={'row'}>
-          <Button variant='contained'>{t('submitButton')}</Button>
+          <Button variant='contained' onClick={handleUpload}>
+            {t('submitButton')}
+          </Button>
         </Box>
       </Box>
     </Box>
