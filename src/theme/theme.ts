@@ -48,7 +48,6 @@ const lightTheme: PaletteOptions = {
   },
   background: {
     default: '#ffffff',
-
     paper: '#f4f4f4',
   },
   error: {
@@ -87,7 +86,6 @@ const darkTheme: PaletteOptions = {
   },
   background: {
     default: '#1A202C',
-
     paper: '#2D3748',
   },
   error: {

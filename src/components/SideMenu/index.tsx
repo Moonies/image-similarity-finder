@@ -46,7 +46,7 @@ export default function SideMenu() {
 
   const menuItems = [
     { label: 'Home', key: 'home', icon: HomeIcon, path: '/' },
-    { label: 'Upload', key: 'search', icon: UploadIcon, path: '/upload' },
+    { label: 'Upload', key: 'search', icon: UploadIcon, path: '/search' },
     { label: 'Back', key: 'back', icon: ArrowBackIcon, path: '' },
     { label: 'Foward', key: 'foward', icon: ArrowForwardIcon, path: '' },
     {

@@ -22,7 +22,7 @@ const TextFieldBox: React.FC<TextFieldBoxProps> = ({
       <Typography sx={{ width: '40%' }} color={color}>
         {text}
       </Typography>
-      <TextField {...props} id='outlined-basic' variant='outlined' size='small' fullWidth />
+      <TextField {...props} variant='outlined' size='small' fullWidth />
     </Box>
   )
 }
