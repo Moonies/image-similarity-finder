@@ -1,50 +1,47 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
+import { useEffect, useRef, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux'
 import { clearCredentials, setCredentials } from '@/store/slices/authSlice'
 import { LoginModal } from '@/components/modals/LoginModal'
+import useHttp from '@/hooks/useHttp'
+import { useNotification } from '@/hooks/useNotification'
+import { TokenData } from '@/hooks/useAuth'
+import { useLoading } from '@/hooks/useLoading'
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch()
-  const router = useRouter()
+  // const router = useRouter()
   const pathname = usePathname()
-  const { isAuthenticated } = useAppSelector(state => state.auth)
+  const { isAuthenticated, user } = useAppSelector(state => state.auth)
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [isTokenValidating, setIsTokenValidating] = useState(true)
+  const { notificationSnackbar } = useNotification()
+  const { setLoading } = useLoading()
+  const { api } = useHttp()
 
   // Check and validate token
-  const validateToken = useCallback(
-    async (token: string | null) => {
-      setIsTokenValidating(true)
-
-      try {
-        if (!token) {
-          throw new Error('No token')
-        }
-
-        // Validate token with your backend
-        // const userData = await validateTokenService(token)
-        let userData = {
-          id: 'Test001',
-          email: 'test@sansenshimizu.com',
-          name: 'testChan',
-        }
+  const validateToken = useRef(async (token: TokenData) => {
+    setIsTokenValidating(true)
+    const useStored = localStorage.getItem('user')
+    const currentUser: string = isAuthenticated ? user : JSON.parse(useStored as string)
+    try {
+      if (!token) {
+        throw new Error('No token')
+      }
+      const result = await api.user.checkAuth(currentUser, token.refreshToken)
+      if (result.code === 200 && result.data) {
         // If validation successful, set credentials
         dispatch(
           setCredentials({
-            user: userData,
-            token: token,
+            user: currentUser,
+            token: result.data,
           })
         )
-
-        // If currently on login page, redirect to dashboard
-        // if (pathname === '/login') {
-        //   router.push('/dashboard')
-        // }
-      } catch (error) {
-        // Token invalid or expired
+        // router.push('/')
+      } else {
+        notificationSnackbar.error(result.message)
         localStorage.removeItem('token')
         dispatch(clearCredentials())
 
@@ -52,27 +49,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (pathname !== '/login') {
           setShowLoginModal(true)
         }
-      } finally {
-        setIsTokenValidating(false)
       }
-    },
-    [pathname, dispatch, setShowLoginModal, setIsTokenValidating]
-  )
 
-  useEffect(() => {
-    const token = localStorage.getItem('token')
-    // console.log(pathname)
-    // Only validate if token exists
-    if (token) {
-      validateToken(token)
-    } else {
-      // No token and not on login page
-      setIsTokenValidating(false)
+      // If currently on login page, redirect to dashboard
+      // if (pathname === '/login') {
+      //   router.push('/dashboard')
+      // }
+    } catch (error) {
+      // Token invalid or expired
+      localStorage.removeItem('token')
+      dispatch(clearCredentials())
+
+      // Show login modal or redirect based on route
       if (pathname !== '/login') {
         setShowLoginModal(true)
       }
+    } finally {
+      setIsTokenValidating(false)
+      setLoading(false)
     }
-  }, [pathname])
+  })
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    console.log(token)
+    setLoading(true)
+    // Only validate if token exists
+    if (token) {
+      validateToken.current(JSON.parse(token) as TokenData)
+    } else {
+      setLoading(false)
+      // No token and not on login page
+      setIsTokenValidating(false)
+      // if (pathname !== '/login') {
+      setShowLoginModal(true)
+      // }
+    }
+  }, [pathname, setLoading])
 
   // Protect routes
   useEffect(() => {

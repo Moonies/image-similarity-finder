@@ -10,7 +10,7 @@ import {
   GridRowsProp,
 } from '@mui/x-data-grid'
 import { useParams, useRouter } from 'next/navigation'
-import React, { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 
 interface CategorySaleSearch {
   value: string
@@ -50,7 +50,7 @@ export default function useRecord() {
   const { setPageData, getPageData } = useCache()
 
   const prepareCategorySearch = useCallback((columns: GridColDef[]) => {
-    let result: CategorySaleSearch[] = []
+    const result: CategorySaleSearch[] = []
     columns.forEach(item => {
       result.push({
         value: item.field,
@@ -60,10 +60,10 @@ export default function useRecord() {
     setCategorySearch(result)
   }, [])
 
-  const handleChange = (name: string, value: string | null) => {
+  const handleChange = useCallback((name: string, value: string | null) => {
     console.log('set')
     setSearchCriteria(prev => ({ ...prev, [name]: value }))
-  }
+  }, [])
 
   const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -77,7 +77,7 @@ export default function useRecord() {
       setPageData('searchCriteria', { ...searchCriteria })
       router.push(`/${lang}/record/${id}`)
     },
-    [setPageData, searchCriteria]
+    [setPageData, searchCriteria, router, lang]
   )
 
   const handleSaveClick = useCallback(
@@ -106,7 +106,7 @@ export default function useRecord() {
         setMockData(mockData.filter(row => row.id !== id))
       }
     },
-    [rowModesModel, setRowModesModel]
+    [mockData, rowModesModel]
   )
 
   const processRowUpdate = (newRow: GridRowModel) => {

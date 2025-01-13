@@ -1,31 +1,30 @@
 import { ApiResponse } from '@/api'
 
-export interface AuthData {
+export interface UserData {
   expiration: string
   refreshExpiration: string
   refreshToken: string
   token: string
 }
 
-export default async function checkAuth(
-  // httpRequest: HttpRequest,
+export default async function login(
   username: string,
-  refreshToken: string
-): Promise<ApiResponse<AuthData>> {
-  //refresh token only without Authorization Header
+  password: string
+): Promise<ApiResponse<UserData>> {
   const baseURL = process.env.NEXT_PUBLIC_API_URL
-  const response = await fetch(baseURL + '/api/auth/refresh', {
+  const response = await fetch(baseURL + '/api/auth/login', {
     method: 'POST',
     headers: {
       Accept: '*/*',
       'Access-Control-Allow-Origin': '*',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ username: username, refreshToken: refreshToken }),
+    body: JSON.stringify({ username: username, password: password }),
   })
 
   if (!response.ok) {
     const errorData = await response.json()
+    // console.log(errorData)
     return {
       code: errorData.status,
       message: errorData.message,

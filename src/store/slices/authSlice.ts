@@ -41,16 +41,16 @@
 //version 2
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-export interface User {
-  id: string
-  email: string
-  name: string
+type TokenData = {
+  expiration: string
+  refreshExpiration: string
+  refreshToken: string
+  token: string
 }
-
 interface AuthState {
   isAuthenticated: boolean
-  user: User | null
-  token: string | null
+  user: string | null
+  token: TokenData | null
 }
 
 const initialState: AuthState = {
@@ -63,14 +63,16 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setCredentials: (state, action: PayloadAction<{ user: User; token: string }>) => {
+    setCredentials: (state, action: PayloadAction<{ user: string; token: TokenData }>) => {
       state.isAuthenticated = true
       state.user = action.payload.user
       state.token = action.payload.token
 
       // Save to localStorage
       if (typeof window !== 'undefined') {
-        localStorage.setItem('token', action.payload.token)
+        console.log('set token')
+        localStorage.setItem('token', JSON.stringify(action.payload.token))
+        localStorage.setItem('user', JSON.stringify(action.payload.user))
       }
     },
     clearCredentials: state => {
@@ -78,6 +80,7 @@ const authSlice = createSlice({
       state.token = null
       state.isAuthenticated = false
       localStorage.removeItem('token')
+      localStorage.removeItem('user')
     },
     logout: state => {
       state.isAuthenticated = false
@@ -87,6 +90,7 @@ const authSlice = createSlice({
       // Clear localStorage
       if (typeof window !== 'undefined') {
         localStorage.removeItem('token')
+        localStorage.removeItem('user')
       }
     },
   },
