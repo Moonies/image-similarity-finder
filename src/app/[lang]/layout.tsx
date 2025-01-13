@@ -26,16 +26,16 @@ export default async function MainAppLayout({
       <LanguageProvider locale={lang}>
         <ThemeContextProvider>
           <ThemeRegistry>
-            <LoadingProvider>
-              <AuthProvider>
-                <ConfirmModalProvider>
+            <ConfirmModalProvider>
+              <LoadingProvider>
+                <AuthProvider>
                   <CacheProvider>
                     <MainLayout>{children}</MainLayout>
                   </CacheProvider>
-                </ConfirmModalProvider>
-                <Notification />
-              </AuthProvider>
-            </LoadingProvider>
+                  <Notification />
+                </AuthProvider>
+              </LoadingProvider>
+            </ConfirmModalProvider>
           </ThemeRegistry>
         </ThemeContextProvider>
       </LanguageProvider>

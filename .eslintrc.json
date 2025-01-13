@@ -1,3 +1,20 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": ["next/core-web-vitals", "next/typescript", "plugin:react-hooks/recommended"],
+  "plugins": ["react-hooks"],
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "args": "none",
+        "varsIgnorePattern": "^_", // Ignore variables starting with underscore
+        "argsIgnorePattern": "^_", // Ignore parameters starting with underscore
+        "destructuredArrayIgnorePattern": "^_",
+        "caughtErrors": "none",
+        "vars": "all"
+      }
+    ]
+  }
 }

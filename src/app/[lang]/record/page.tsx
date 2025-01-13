@@ -1,19 +1,9 @@
 'use client'
 
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useGridApiRef } from '@mui/x-data-grid'
 import { Search as SearchIcon } from '@mui/icons-material'
-import {
-  Autocomplete,
-  Box,
-  Button,
-  Container,
-  Divider,
-  IconButton,
-  MenuItem,
-  Select,
-  TextField,
-} from '@mui/material'
+import { Autocomplete, Box, Button, Divider, TextField } from '@mui/material'
 import DataTable from '@/components/DataTable'
 import useRecord, { SearchCriteria } from './hooks/useRecord'
 import CustomColumn from './components/CustomColumn'
@@ -64,11 +54,11 @@ export default function RecordPage() {
       }
     }
     return () => {}
-  }, [])
+  }, [getPageData, handleChange])
 
   useEffect(() => {
     prepareCategorySearch(columns)
-  }, [columns])
+  }, [columns, prepareCategorySearch])
 
   return (
     <Box display={'flex'} flex={1} flexDirection={'column'} padding={1}>

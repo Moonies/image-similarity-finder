@@ -6,7 +6,6 @@ import {
   closeModalNotification,
   openSnackbarNotification,
   closeSnackbarNotification,
-  NotificationType,
 } from '@/store/slices/notificationSlice'
 
 export const useNotification = () => {

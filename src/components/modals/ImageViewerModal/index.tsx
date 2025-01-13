@@ -1,18 +1,10 @@
-import {
-  Box,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Paper,
-  Typography,
-} from '@mui/material'
+import { Box, Dialog, DialogContent, DialogTitle, IconButton, Typography } from '@mui/material'
 import {
   Close as CloseIcon,
   ZoomIn as ZoomInIcon,
   ZoomOut as ZoomOutIcon,
 } from '@mui/icons-material'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 
 interface imageViewerProps {
   open: boolean
