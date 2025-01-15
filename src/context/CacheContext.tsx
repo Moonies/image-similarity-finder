@@ -1,5 +1,6 @@
 'use client'
 
+import { ZipContent } from '@/hooks/useZipExtractor'
 import { createContext, useContext, useState, ReactNode } from 'react'
 
 interface CacheStructure {
@@ -14,6 +15,8 @@ interface CacheStructure {
   filters: {
     [key: string]: any
   }
+  rawData: { [key: string]: string }
+  zipFile: ZipContent[]
 }
 
 interface CacheContextType {

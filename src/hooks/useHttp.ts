@@ -3,6 +3,8 @@ import { useConfirmModal } from '@/hooks/useConfirm'
 import { useLoading } from '@/hooks/useLoading'
 import { useNotification } from '@/hooks/useNotification'
 import { default as userApi } from '@/api/user'
+import { default as drawingApi } from '@/api/drawing'
+
 import { useAppSelector } from './useRedux'
 export type HttpRequest = (
   fetchFunction: () => Promise<Response>,
@@ -21,13 +23,16 @@ export default function useHttp() {
       try {
         const response = await fetchFunction()
         if (!response.ok) {
-          throw {
-            response: response,
-          }
+          throw await response.json()
         }
         return response
       } catch (error: any) {
         console.log(error)
+        // const errorData = await error.json()
+
+        // console.log(error)
+        // console.log(errorData.response)
+
         if (disableDisplayError) return error
 
         setLoading(false)
@@ -50,13 +55,17 @@ export default function useHttp() {
                 // refreshToken(result.data)
                 notificationModal.info('Please try your action again.')
               } else {
-                notificationSnackbar.error('Authentication failed: ' + error.message)
+                notificationSnackbar.error('Authentication failed: ' + error?.message)
               }
             }
             break
-
+          case 413:
+            notificationSnackbar.error('Error: ' + error?.title + `\n ${error?.detail}`)
+            break
           default:
-            notificationSnackbar.error('Error: ' + error.message + `\n ${error.response?.message}`)
+            notificationSnackbar.error(
+              'Error: ' + error?.message + `\n status: ${error?.status}` + `\n ${error?.message}`
+            )
             break
         }
         return error
@@ -65,17 +74,11 @@ export default function useHttp() {
     [setLoading, openConfirmModal, notificationSnackbar, user, token, notificationModal]
   )
 
-  // API instance creation remains similar
-  // const api = {
-  //   user: userApi(httpRequest),
-  //   // component: componentApi(httpRequest),
-  //   // customer: customerApi(httpRequest),
-  //   // ... other APIs
-  // }
   // Create api and store in ref
   const api = useMemo(() => {
     const apiInstance = {
       user: userApi(httpRequest),
+      drawing: drawingApi(httpRequest),
     }
     apiRef.current = apiInstance // Store in ref
     return apiInstance

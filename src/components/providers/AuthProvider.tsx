@@ -97,10 +97,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [isAuthenticated, pathname])
 
+  //remove for not have a landing page
   // Prevent rendering children until token validation is complete
-  if (isTokenValidating) {
-    return null // Or a loading spinner
-  }
+  // if (isTokenValidating) {
+  //   return null // Or a loading spinner
+  // }
 
   return (
     <>

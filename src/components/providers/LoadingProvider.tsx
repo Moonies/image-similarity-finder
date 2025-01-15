@@ -6,18 +6,19 @@ import { Backdrop, CircularProgress } from '@mui/material'
 interface LoadingContextType {
   isLoading: boolean
   setLoading: (loading: boolean) => void
-  withLoading: <T>(
-    fn: () => Promise<T> | T,
-    options?: {
-      catchError?: boolean
-    }
-  ) => Promise<T | undefined>
+  // withLoading: <T>(
+  //   fn: () => Promise<T> | T,
+  //   options?: {
+  //     catchError?: boolean
+  //   }
+  // ) => Promise<T | undefined>
+  withLoading: <T>(promise: Promise<T>) => Promise<T>
 }
 
 export const LoadingContext = createContext<LoadingContextType>({
   isLoading: false,
   setLoading: () => {},
-  withLoading: async () => undefined,
+  withLoading: promise => promise,
 })
 
 export const LoadingProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -27,26 +28,39 @@ export const LoadingProvider: React.FC<{ children: ReactNode }> = ({ children })
     setIsLoading(loading)
   }, [])
 
+  // const withLoading = useCallback(
+  //   async <T,>(
+  //     fn: () => Promise<T> | T,
+  //     options: { catchError?: boolean } = { catchError: true }
+  //   ): Promise<T | undefined> => {
+  //     try {
+  //       setIsLoading(true)
+  //       const result = await Promise.resolve(fn())
+  //       return result
+  //     } catch (error) {
+  //       if (!options.catchError) {
+  //         throw error
+  //       }
+  //       console.error('Loading error:', error)
+  //       return undefined
+  //     } finally {
+  //       setIsLoading(false)
+  //     }
+  //   },
+  //   []
+  // )
+
   const withLoading = useCallback(
-    async <T,>(
-      fn: () => Promise<T> | T,
-      options: { catchError?: boolean } = { catchError: true }
-    ): Promise<T | undefined> => {
+    async <T,>(promise: Promise<T>): Promise<T> => {
+      setIsLoading(true)
       try {
-        setIsLoading(true)
-        const result = await Promise.resolve(fn())
+        const result = await promise
         return result
-      } catch (error) {
-        if (!options.catchError) {
-          throw error
-        }
-        console.error('Loading error:', error)
-        return undefined
       } finally {
         setIsLoading(false)
       }
     },
-    []
+    [setLoading]
   )
 
   return (

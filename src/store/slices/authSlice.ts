@@ -1,44 +1,3 @@
-//old version
-// import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-// import type { RootState } from '@/store'
-
-// interface User {
-//   id: string
-//   username: string
-//   email: string
-// }
-
-// interface AuthState {
-//   user: User | null
-//   isAuthenticated: boolean
-// }
-
-// const initialState: AuthState = {
-//   user: null,
-//   isAuthenticated: false,
-// }
-
-// const authSlice = createSlice({
-//   name: 'auth',
-//   initialState,
-//   reducers: {
-//     setUser: (state, action: PayloadAction<User>) => {
-//       state.user = action.payload
-//       state.isAuthenticated = true
-//     },
-//     logout: state => {
-//       state.user = null
-//       state.isAuthenticated = false
-//     },
-//   },
-// })
-
-// export const { setUser, logout } = authSlice.actions
-// export const selectUser = (state: RootState) => state.auth.user
-// export const selectIsAuthenticated = (state: RootState) => state.auth.isAuthenticated
-
-// export default authSlice.reducer
-//version 2
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 type TokenData = {
@@ -95,6 +54,11 @@ const authSlice = createSlice({
     },
   },
 })
+
+export const getCurrentToken = (): TokenData | null => {
+  const storedToken = localStorage.getItem('token')
+  return storedToken ? (JSON.parse(storedToken) as TokenData) : null
+}
 
 export const { setCredentials, clearCredentials, logout } = authSlice.actions
 export default authSlice.reducer

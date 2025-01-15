@@ -1,28 +1,33 @@
-export type ApiResponse<T = any> = {
+import { getCurrentToken } from '@/store/slices/authSlice'
+
+export type ApiResponse<T> = {
   code: number
   message: string
-  data?: T
+  data: T | null | undefined
 }
 
 export const createFetchInstance = (baseURL: string) => {
   return async (path: string, options: RequestInit = {}) => {
-    const token = localStorage.getItem('token') // Or your token management
-    // const token =
-    //   'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlciIsInRva2VuIjp0cnVlLCJyZWZyZXNoX3Rva2VuIjpmYWxzZSwiaWF0IjoxNzMzODkyMjgzLCJleHAiOjE3MzM4OTM0ODN9.wB2myI43Z2WajdHhjeNSr59v1N59UEuyJ_avserTHxw'
-    const defaultOptions: RequestInit = {
-      headers: {
-        Accept: '*/*',
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
-        Authorization: token ? `Bearer ${token}` : '',
-        ...options.headers,
-      },
+    const storedToken = getCurrentToken()
+
+    // Base headers that can be fully replaced if needed
+    const defaultHeaders: Record<string, string> = {
+      Accept: '*/*',
+      'Access-Control-Allow-Origin': '*',
+      Authorization: storedToken ? `Bearer ${storedToken.token}` : '',
     }
 
-    return fetch(`${baseURL}${path}`, {
-      ...defaultOptions,
+    // Add Content-Type only if it's not FormData
+    if (!(options.body instanceof FormData)) {
+      defaultHeaders['Content-Type'] = 'application/json'
+    }
+
+    const requestOptions: RequestInit = {
       ...options,
-    })
+      headers: options.headers ? { ...defaultHeaders, ...options.headers } : defaultHeaders,
+    }
+
+    return fetch(`${baseURL}${path}`, requestOptions)
   }
 }
 

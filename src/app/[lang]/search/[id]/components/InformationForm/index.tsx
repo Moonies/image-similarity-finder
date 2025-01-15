@@ -1,52 +1,42 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Drawer, Box, IconButton, Typography, TextField, Button } from '@mui/material'
 import { Close as CloseIcon } from '@mui/icons-material'
 import TextFieldBox from '@/components/TextFieldBox'
 import { useTranslation } from 'react-i18next'
+import { DrawingImageDetail } from '@/api/drawing/getDrawingDetail'
+import { UpdateDrawingImageDetail } from '@/api/drawing/updateDrawingDetail'
 
 interface InformationFormProps {
   open: boolean
+  initialData: Partial<DrawingImageDetail>
   onClose: () => void
-  onSubmit: (formData: Partial<MockRecord> | undefined) => void
-}
-export type MockRecord = {
-  drawingNumber: string
-  orderNumber: string
-  name: string
-  materialCost: number
-  materialSup: string
-  latheCost: number
-  latheSup: string
-  millingCost: number
-  millingSup: string
-  heatTreatmentCost: number
-  heatTreatmentSup: string
-  grindingCost: number
-  grindingSup: string
-  transportationCost: number
-  transportationSup: string
-  generalCost: number
-  generalSup: string
-  weldingCost: number
-  weldingSup: string
-  otherCost: number
-  otherSup: string
-  sellingPrice: number
-  defectDetails: string
+  onSubmit: (formData: UpdateDrawingImageDetail) => void
 }
 
-export default function InformationForm({ onClose, onSubmit, open }: InformationFormProps) {
+export default function InformationForm({
+  onClose,
+  onSubmit,
+  open,
+  initialData,
+}: InformationFormProps) {
   const { t } = useTranslation('search-id-information')
-  const [recordData, setRecordData] = useState<Partial<MockRecord>>()
-  const handleChange = (name: keyof MockRecord, value: string | number | null) => {
+  const [recordData, setRecordData] = useState<Partial<DrawingImageDetail>>()
+
+  const handleChange = (name: keyof DrawingImageDetail, value: string | number | null) => {
     setRecordData(prev => ({ ...prev, [name]: value }))
   }
 
   const handleSubmit = () => {
-    onSubmit(recordData)
+    onSubmit(recordData as UpdateDrawingImageDetail)
   }
+
+  useEffect(() => {
+    setRecordData(initialData)
+
+    return () => {}
+  }, [initialData])
   return (
     <Drawer
       anchor={'right'}

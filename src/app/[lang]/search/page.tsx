@@ -5,11 +5,14 @@ import { Box, Button, Typography } from '@mui/material'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import useSearch from './hooks/useSearch'
+import { useNotification } from '@/hooks/useNotification'
 
 export default function SearchPage() {
   const { t } = useTranslation('search-page')
   const [uploadFile, setUploadFile] = useState<File>()
   const { handleUpload } = useSearch()
+  const { notificationModal } = useNotification()
+
   const handleChooseFile = useCallback(
     (chooseFile: FileList | null) => {
       const file = chooseFile?.[0]
@@ -18,6 +21,14 @@ export default function SearchPage() {
     },
     [setUploadFile]
   )
+
+  const handleSubmit = useCallback(() => {
+    if (uploadFile) {
+      handleUpload(uploadFile)
+    } else {
+      notificationModal.warning('Please Select file after click button.')
+    }
+  }, [handleUpload, notificationModal, uploadFile])
 
   return (
     <Box display={'flex'} flex={1} flexDirection={'column'} padding={1}>
@@ -42,7 +53,7 @@ export default function SearchPage() {
           <Typography>{uploadFile ? uploadFile.name : t('imagePlaceholder')}</Typography>
         </Box>
         <Box display={'flex'} flexDirection={'row'}>
-          <Button variant='contained' onClick={handleUpload}>
+          <Button variant='contained' onClick={handleSubmit}>
             {t('submitButton')}
           </Button>
         </Box>
