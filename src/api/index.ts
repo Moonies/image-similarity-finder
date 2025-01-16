@@ -4,6 +4,12 @@ export type ApiResponse<T> = {
   code: number
   message: string
   data: T | null | undefined
+  page?: {
+    size: number
+    number: number
+    totalElements: number
+    totalPages: number
+  } | null
 }
 
 export const createFetchInstance = (baseURL: string) => {

@@ -32,32 +32,32 @@ export default function CustomColumn({
 }: CustomColumn): GridColDef[] {
   return [
     {
-      field: 'col1',
+      field: 'drawingNumber',
       headerName: t('column.col1'),
       headerAlign: 'center',
       flex: 1,
     },
     {
-      field: 'col2',
+      field: 'name',
       headerName: t('column.col2'),
       headerAlign: 'center',
       flex: 1,
     },
     {
-      field: 'col3',
+      field: 'materialCost',
       headerName: t('column.col3'),
       headerAlign: 'center',
       flex: 1,
       editable: true,
     },
     {
-      field: 'col4',
+      field: 'materialSup',
       headerName: t('column.col4'),
       headerAlign: 'center',
       flex: 1,
     },
     {
-      field: 'col5',
+      field: 'latheCost',
       headerName: t('column.col5'),
       type: 'number',
       headerAlign: 'center',
@@ -67,90 +67,90 @@ export default function CustomColumn({
       // },
     },
     {
-      field: 'col6',
+      field: 'latheSup',
       headerName: t('column.col6'),
       headerAlign: 'center',
       flex: 1,
     },
     {
-      field: 'col7',
+      field: 'millingCost',
       headerName: t('column.col7'),
       headerAlign: 'center',
       editable: true,
     },
     {
-      field: 'col8',
+      field: 'millingSup',
       headerName: t('column.col8'),
       headerAlign: 'center',
       editable: true,
     },
     {
-      field: 'col9',
+      field: 'heartTreatmentCost',
       headerName: t('column.col9'),
       headerAlign: 'center',
     },
     {
-      field: 'col10',
+      field: 'heartTreatmentSup',
       headerName: t('column.col10'),
       headerAlign: 'center',
     },
     {
-      field: 'col11',
+      field: 'grindingCost',
       headerName: t('column.col11'),
       headerAlign: 'center',
     },
     {
-      field: 'col12',
+      field: 'grindingSup',
       headerName: t('column.col12'),
       headerAlign: 'center',
     },
     {
-      field: 'col13',
+      field: 'transportationCost',
       headerName: t('column.col13'),
       headerAlign: 'center',
     },
     {
-      field: 'col14',
+      field: 'transportationSup',
       headerName: t('column.col14'),
       headerAlign: 'center',
     },
     {
-      field: 'col15',
+      field: 'generalCost',
       headerName: t('column.col15'),
       headerAlign: 'center',
     },
     {
-      field: 'col16',
+      field: 'generalSup',
       headerName: t('column.col16'),
       headerAlign: 'center',
     },
     {
-      field: 'col17',
+      field: 'weldingCost',
       headerName: t('column.col17'),
       headerAlign: 'center',
     },
     {
-      field: 'col18',
+      field: 'weldingSup',
       headerName: t('column.col18'),
       headerAlign: 'center',
     },
     {
-      field: 'col19',
+      field: 'otherCost',
       headerName: t('column.col19'),
       headerAlign: 'center',
     },
     {
-      field: 'col20',
+      field: 'otherSup',
       headerName: t('column.col20'),
       headerAlign: 'center',
     },
     {
-      field: 'col21',
+      field: 'sellingPrice',
       headerName: t('column.col21'),
       headerAlign: 'center',
     },
     {
-      field: 'col22',
+      field: 'defectDetails',
       headerName: t('column.col22'),
       headerAlign: 'center',
     },
@@ -166,6 +166,7 @@ export default function CustomColumn({
         if (isInEditMode) {
           return [
             <GridActionsCellItem
+              key={id}
               icon={<SaveIcon />}
               label='Save'
               sx={{
@@ -174,6 +175,7 @@ export default function CustomColumn({
               onClick={save(id)}
             />,
             <GridActionsCellItem
+              key={id}
               icon={<CloseIcon />}
               label='Cancel'
               className='textPrimary'
@@ -185,6 +187,7 @@ export default function CustomColumn({
 
         return [
           <GridActionsCellItem
+            key={id}
             icon={<EditIcon />}
             label='Edit'
             className='textPrimary'
@@ -192,6 +195,7 @@ export default function CustomColumn({
             sx={{ backgroundColor: theme => theme.palette.warning.light }}
           />,
           <GridActionsCellItem
+            key={id}
             icon={<DeleteIcon />}
             label='Delete'
             onClick={remove(id)}

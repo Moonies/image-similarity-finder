@@ -1,32 +1,6 @@
 import { ApiResponse, fetchInstance } from '@/api'
 import { HttpRequest } from '@/hooks/useHttp'
-
-export type DrawingImageDetail = {
-  id: string
-  drawingNumber: string
-  orderNumber: string
-  name: string
-  materialCost: number
-  materialSup: string
-  latheCost: number
-  latheSup: string
-  millingCost: number
-  millingSup: string
-  heatTreatmentCost: number
-  heatTreatmentSup: string
-  grindingCost: number
-  grindingSup: string
-  transportationCost: number
-  transportationSup: string
-  generalCost: number
-  generalSup: string
-  weldingCost: number
-  weldingSup: string
-  otherCost: number
-  otherSup: string
-  sellingPrice: number
-  defectDetails: string
-}
+import { DrawingImageDetail } from '@/api/drawing'
 
 export default async function getDrawingDetail(
   httpRequest: HttpRequest,

@@ -1,7 +1,10 @@
+import { DrawingImageDetail } from '@/api/drawing'
 import { useCache } from '@/context/CacheContext'
+import useHttp from '@/hooks/useHttp'
 import {
   GridColDef,
   GridEventListener,
+  GridPaginationModel,
   GridRowEditStopReasons,
   GridRowId,
   GridRowModel,
@@ -10,7 +13,7 @@ import {
   GridRowsProp,
 } from '@mui/x-data-grid'
 import { useParams, useRouter } from 'next/navigation'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 interface CategorySaleSearch {
   value: string
@@ -22,32 +25,55 @@ export type SearchCriteria = {
   keyword: string
 }
 
-const mock: GridRowsProp = [
-  { id: 1, col1: 'Hello', col2: 'World' },
-  { id: 2, col1: 'DataGridPro', col2: 'is Awesome' },
-  { id: 3, col1: 'MUI', col2: 'is Amazing' },
-  {
-    id: 4,
-    col1: 'MUI4',
-    col2: 'is Amazing',
-    col3: 'MUI4',
-    col4: 'is Amazing',
-    col5: 'MUI4',
-    col6: 'is Amazing',
-  },
-]
+interface CachedData {
+  [key: string]: DrawingImageDetail[]
+}
+
 export default function useRecord() {
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({})
-  const [mockData, setMockData] = useState(mock)
+  const [drawingList, setDrawingList] = useState<GridRowsProp>([])
   const [categorySearch, setCategorySearch] = useState<CategorySaleSearch[]>([])
   const [searchCriteria, setSearchCriteria] = useState<SearchCriteria>({
     category: '',
     keyword: '',
   })
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+    page: 0,
+    pageSize: 10,
+  })
+  const [cachedData, setCachedData] = useState<CachedData>({})
+  const [totalRows, setTotalRows] = useState(0)
+
   const params = useParams()
   const lang = params.lang as string
   const router = useRouter()
   const { setPageData, getPageData } = useCache()
+  const { api } = useHttp()
+
+  const getDrawingList = useMemo(
+    () =>
+      async ({ page, pageSize }: GridPaginationModel) => {
+        const searchCriteriaParams = {
+          ...searchCriteria,
+          page,
+          pageSize,
+        }
+        const result = await api.drawing.getDrawingList(searchCriteriaParams)
+        if (result.code === 200 && result.data) {
+          setDrawingList(result.data)
+          setTotalRows(result.page?.totalElements ?? 0)
+          setCachedData(prevCache => ({
+            ...prevCache,
+            [`${paginationModel.page}-${paginationModel.pageSize}`]: result.data ? result.data : [],
+          }))
+        }
+      },
+    [api.drawing, paginationModel.page, paginationModel.pageSize, searchCriteria]
+  )
+
+  const handleSearch = useCallback(async () => {
+    getDrawingList(paginationModel)
+  }, [getDrawingList, paginationModel])
 
   const prepareCategorySearch = useCallback((columns: GridColDef[]) => {
     const result: CategorySaleSearch[] = []
@@ -61,7 +87,6 @@ export default function useRecord() {
   }, [])
 
   const handleChange = useCallback((name: string, value: string | null) => {
-    console.log('set')
     setSearchCriteria(prev => ({ ...prev, [name]: value }))
   }, [])
 
@@ -74,10 +99,12 @@ export default function useRecord() {
   const handleEditClick = useCallback(
     (id: GridRowId) => () => {
       // setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } }) // edit inline need to discuss
+      console.log(cachedData)
+      //check cache -> check searchCriteria -> check current page if update is success get all new with same searchCriteria else get all cache
       setPageData('searchCriteria', { ...searchCriteria })
       router.push(`/${lang}/record/${id}`)
     },
-    [setPageData, searchCriteria, router, lang]
+    [cachedData, setPageData, searchCriteria, router, lang]
   )
 
   const handleSaveClick = useCallback(
@@ -89,9 +116,9 @@ export default function useRecord() {
 
   const handleDeleteClick = useCallback(
     (id: GridRowId) => () => {
-      setMockData(mockData.filter(row => row.id !== id))
+      setDrawingList(drawingList.filter(row => row.id !== id))
     },
-    [mockData, setMockData]
+    [drawingList, setDrawingList]
   )
 
   const handleCancelClick = useCallback(
@@ -101,25 +128,45 @@ export default function useRecord() {
         [id]: { mode: GridRowModes.View, ignoreModifications: true },
       })
 
-      const editedRow = mockData.find(row => row.id === id)
+      const editedRow = drawingList.find(row => row.id === id)
       if (editedRow!.isNew) {
-        setMockData(mockData.filter(row => row.id !== id))
+        setDrawingList(drawingList.filter(row => row.id !== id))
       }
     },
-    [mockData, rowModesModel]
+    [drawingList, rowModesModel]
   )
 
   const processRowUpdate = (newRow: GridRowModel) => {
     const updatedRow = { ...newRow, isNew: false }
-    setMockData(mockData.map(row => (row.id === newRow.id ? updatedRow : row)))
+    setDrawingList(drawingList.map(row => (row.id === newRow.id ? updatedRow : row)))
     return updatedRow
   }
 
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
     setRowModesModel(newRowModesModel)
   }
+
+  const handlePaginationModelChange = async (newModel: GridPaginationModel) => {
+    if (newModel.pageSize !== paginationModel.pageSize) {
+      // If page size has changed, reset to the first page
+      setPaginationModel({ page: 0, pageSize: newModel.pageSize })
+      // Clear the cache when page size changes
+      setCachedData({})
+    } else {
+      setPaginationModel(newModel)
+    }
+    const cacheKey = `${newModel.page}-${newModel.pageSize}`
+
+    if (cachedData[cacheKey]) {
+      setDrawingList(cachedData[cacheKey])
+      return
+    } else if (drawingList.length !== 0) {
+      getDrawingList(newModel)
+    }
+  }
+
   return {
-    mockData,
+    drawingList,
     handleRowEditStop,
     handleEditClick,
     handleSaveClick,
@@ -133,5 +180,9 @@ export default function useRecord() {
     searchCriteria,
     handleChange,
     getPageData,
+    handleSearch,
+    handlePaginationModelChange,
+    totalRows,
+    paginationModel,
   }
 }
