@@ -1,7 +1,7 @@
-import { HttpRequest } from '@/hooks/useHttp'
 import { ApiResponse, fetchInstance } from '@/api'
+import { HttpRequest } from '@/hooks/useHttp'
 
-export type UpdateDrawingImageDetail = {
+export type DrawingImageDetail = {
   id: string
   drawingNumber: string
   orderNumber: string
@@ -28,17 +28,13 @@ export type UpdateDrawingImageDetail = {
   defectDetails: string
 }
 
-export default async function updateDrawingDetail(
+export default async function getDrawingList(
   httpRequest: HttpRequest,
-  data: UpdateDrawingImageDetail
-): Promise<ApiResponse<null>> {
+  drawingNumber: string
+): Promise<ApiResponse<DrawingImageDetail[]>> {
   const response = await httpRequest(() =>
-    fetchInstance(`/api/drawings/${data.id}`, {
-      method: 'PATCH',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    fetchInstance(`/api/drawings`, {
+      method: 'GET',
     })
   )
 
@@ -49,7 +45,7 @@ export default async function updateDrawingDetail(
       data: undefined,
     }
   }
-  // const result = await response.json()
+  const result = await response.json()
   //result._embedded.drawings[0] _embedded for test need to discuss
-  return { code: 200, message: 'success', data: null }
+  return { code: 200, message: 'success', data: result._embedded }
 }
