@@ -50,11 +50,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setShowLoginModal(true)
         }
       }
-
-      // If currently on login page, redirect to dashboard
-      // if (pathname === '/login') {
-      //   router.push('/dashboard')
-      // }
     } catch (error) {
       // Token invalid or expired
       localStorage.removeItem('token')
@@ -76,12 +71,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true)
     // Only validate if token exists
     if (token) {
-      validateToken.current(JSON.parse(token) as TokenData)
+      setLoading(false) //for test token expire
+
+      // validateToken.current(JSON.parse(token) as TokenData)
     } else {
       setLoading(false)
       // No token and not on login page
       setIsTokenValidating(false)
-      // if (pathname !== '/login') {
       setShowLoginModal(true)
       // }
     }

@@ -1,4 +1,3 @@
-import React from 'react'
 import { ApiResponse, fetchInstance } from '@/api'
 import { HttpRequest } from '@/hooks/useHttp'
 

@@ -1,0 +1,14 @@
+{
+  "update": {
+    "success": "Update Success!!",
+    "fail": "Update Failed!!"
+  },
+  "create": {
+    "success": "Create Success!!",
+    "fail": "Create Failed!!"
+  },
+  "delete": {
+    "success": "Delete Success!!",
+    "fail": "Delete Failed!!"
+  }
+}

@@ -2,7 +2,7 @@ import useHttp from '@/hooks/useHttp'
 import { useZipExtractor } from '@/hooks/useZipExtractor'
 
 import { useParams, useRouter } from 'next/navigation'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useCache } from '@/context/CacheContext'
 
 export default function useSearch() {
@@ -11,8 +11,18 @@ export default function useSearch() {
   const router = useRouter()
   const { api } = useHttp()
   const { setPageData } = useCache()
-
   const { handleZipInput } = useZipExtractor()
+
+  const searchDrawing = useMemo(
+    () => async (fileSelected: File) => {
+      const result = await api.drawing.searchDrawing(fileSelected)
+      if (result.code === 200 && result.data) {
+        return result.data
+      }
+      return null
+    },
+    [api.drawing]
+  )
 
   const handleUpload = useCallback(
     async (fileSelected: File) => {
@@ -28,15 +38,8 @@ export default function useSearch() {
         router.push(`/${lang}/search/${id}`)
       }
     },
-    [handleZipInput, lang, router, setPageData]
+    [handleZipInput, lang, router, searchDrawing, setPageData]
   )
 
-  const searchDrawing = async (fileSelected: File) => {
-    const result = await api.drawing.searchDrawing(fileSelected)
-    if (result.code === 200 && result.data) {
-      return result.data
-    } else {
-    }
-  }
   return { handleUpload }
 }

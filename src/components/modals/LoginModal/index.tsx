@@ -31,8 +31,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onCancle 
       e.preventDefault()
       try {
         setLoading(true)
-        await login(username, password)
-        onClose() // Close modal on successful login
+        const result = await login(username, password)
+        if (result) onClose()
       } catch (error) {
         // Handle login error (could add error state to show message)
         console.error('Login failed', error)

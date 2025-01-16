@@ -15,7 +15,7 @@ interface CacheStructure {
   filters: {
     [key: string]: any
   }
-  rawData: { [key: string]: string }
+  rawData: { [key: string]: any }
   zipFile: ZipContent[]
 }
 

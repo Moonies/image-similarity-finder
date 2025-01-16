@@ -6,6 +6,7 @@ type TokenData = {
   refreshToken: string
   token: string
 }
+
 interface AuthState {
   isAuthenticated: boolean
   user: string | null
@@ -58,6 +59,11 @@ const authSlice = createSlice({
 export const getCurrentToken = (): TokenData | null => {
   const storedToken = localStorage.getItem('token')
   return storedToken ? (JSON.parse(storedToken) as TokenData) : null
+}
+
+export const getCurrentUser = (): string => {
+  const storedUser = localStorage.getItem('user')
+  return storedUser ? (JSON.parse(storedUser) as string) : ''
 }
 
 export const { setCredentials, clearCredentials, logout } = authSlice.actions

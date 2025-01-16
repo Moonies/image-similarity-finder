@@ -9,6 +9,7 @@ import { useCache } from '@/context/CacheContext'
 import useSearchDetail from './hooks/useSearchDetail'
 import { DrawingImageDetail } from '@/api/drawing/getDrawingDetail'
 import { UpdateDrawingImageDetail } from '@/api/drawing/updateDrawingDetail'
+import Image from 'next/image'
 
 type ImageUrl = {
   id: number
@@ -22,6 +23,7 @@ export default function SearchDetail() {
   const { t } = useTranslation('search-id')
   const { getPageData } = useCache()
   const cachedData = getPageData('zipFile')
+  const uploadCachedData = getPageData('rawData')
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedImage, setSelectedImage] = useState('')
   const [openInformation, setOpenInformation] = useState(false)
@@ -30,20 +32,26 @@ export default function SearchDetail() {
   const [metaData, setMetaData] = useState<MetaData>()
   const { handleGetDetailImage, handleUpdateDrawingDetail } = useSearchDetail()
 
-  const handleOpenMoreInfo = useCallback(async (drawingNumber: string) => {
-    const result = await handleGetDetailImage(drawingNumber)
-    if (result) {
-      setSelectedImageDetail(result)
-      setOpenInformation(true)
-    }
-  }, [])
+  const handleOpenMoreInfo = useCallback(
+    async (drawingNumber: string) => {
+      const result = await handleGetDetailImage(drawingNumber)
+      if (result) {
+        setSelectedImageDetail(result)
+        setOpenInformation(true)
+      }
+    },
+    [handleGetDetailImage]
+  )
 
-  const handleSubmit = useCallback(async (formData: UpdateDrawingImageDetail) => {
-    if (formData) {
-      const result = await handleUpdateDrawingDetail(formData)
-      if (result) setOpenInformation(false)
-    }
-  }, [])
+  const handleSubmit = useCallback(
+    async (formData: UpdateDrawingImageDetail) => {
+      if (formData) {
+        const result = await handleUpdateDrawingDetail(formData)
+        if (result) setOpenInformation(false)
+      }
+    },
+    [handleUpdateDrawingDetail]
+  )
 
   useEffect(() => {
     if (!cachedData?.length) return
@@ -78,10 +86,13 @@ export default function SearchDetail() {
     }
   }, [cachedData])
 
-  const getFileValue = useCallback((filename: string): number => {
-    if (!metaData) return 0
-    return metaData[filename] || 0
-  }, [])
+  const getFileValue = useCallback(
+    (filename: string): number => {
+      if (!metaData) return 0
+      return metaData[filename] || 0
+    },
+    [metaData]
+  )
 
   return (
     <Box display={'flex'} flexDirection={'column'} flex={1}>
@@ -103,11 +114,14 @@ export default function SearchDetail() {
         </Box>
         <Divider sx={{ marginX: 2, borderWidth: 1 }} />
         <Box display={'flex'} flex={1} flexDirection={'column'} alignItems={'center'} padding={2}>
-          <Box maxWidth={1080} minWidth={720}>
-            {imageUrls && imageUrls.length > 0 && (
-              <img
-                src={imageUrls[0].url}
+          <Box>
+            {uploadCachedData && (
+              <Image
+                loader={({ src }) => src}
+                src={uploadCachedData.uploadedImage}
                 alt='Preview'
+                width={750} //Next Image can't auto width&height fill is oversize
+                height={500}
                 style={{ maxWidth: '100%' }}
                 onClick={e => {
                   setSelectedImage(imageUrls[0].url)
@@ -141,15 +155,18 @@ export default function SearchDetail() {
             imageUrls.length > 0 &&
             imageUrls.map(item => {
               return (
-                <Card key={item.id}>
+                <Card key={item.id} sx={{ minWidth: 345, maxWidth: 475 }}>
                   <CardMedia
                     component='img'
-                    // alt='green iguana'
-                    height='345'
+                    height={345}
+                    // width={475}
                     image={item.url}
                     onClick={e => {
                       setSelectedImage(item.url)
                       setModalOpen(true)
+                    }}
+                    sx={{
+                      objectFit: 'contain',
                     }}
                   />
                   <CardActions sx={{ justifyContent: 'space-between' }}>
