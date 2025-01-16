@@ -1,33 +1,98 @@
 'use client'
 
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Divider,
-  Typography,
-} from '@mui/material'
-import React, { useCallback, useState } from 'react'
-import image from '../mock/hataraku-image.jpg'
-import TestLargeImage from '../mock/HAYARAKU-Data-Journey - Order Journey.jpg'
+import { Box, Button, Card, CardActions, CardMedia, Divider, Typography } from '@mui/material'
+import { useCallback, useEffect, useState } from 'react'
 import ImageViewerModal from '@/components/modals/ImageViewerModal'
-import InformationForm, { MockRecord } from './components/InformationForm'
+import InformationForm from './components/InformationForm'
 import { useTranslation } from 'react-i18next'
+import { useCache } from '@/context/CacheContext'
+import useSearchDetail from './hooks/useSearchDetail'
+import { DrawingImageDetail } from '@/api/drawing/getDrawingDetail'
+import { UpdateDrawingImageDetail } from '@/api/drawing/updateDrawingDetail'
+import Image from 'next/image'
+
+type ImageUrl = {
+  id: number
+  url: string
+  name: string
+}
+type MetaData = {
+  [key: string]: number
+}
 export default function SearchDetail() {
   const { t } = useTranslation('search-id')
+  const { getPageData } = useCache()
+  const cachedData = getPageData('zipFile')
+  const uploadCachedData = getPageData('rawData')
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedImage, setSelectedImage] = useState('')
   const [openInformation, setOpenInformation] = useState(false)
-  const mockArray = [TestLargeImage, image]
+  const [selectedImageDetail, setSelectedImageDetail] = useState<Partial<DrawingImageDetail>>({})
+  const [imageUrls, setImageUrls] = useState<ImageUrl[]>([])
+  const [metaData, setMetaData] = useState<MetaData>()
+  const { handleGetDetailImage, handleUpdateDrawingDetail } = useSearchDetail()
 
-  const handleOpenMoreInfo = useCallback(() => {
-    setOpenInformation(true)
-  }, [])
+  const handleOpenMoreInfo = useCallback(
+    async (drawingNumber: string) => {
+      const result = await handleGetDetailImage(drawingNumber)
+      if (result) {
+        setSelectedImageDetail(result)
+        setOpenInformation(true)
+      }
+    },
+    [handleGetDetailImage]
+  )
 
-  const handleSubmit = useCallback((formData: Partial<MockRecord> | undefined) => {}, [])
+  const handleSubmit = useCallback(
+    async (formData: UpdateDrawingImageDetail) => {
+      if (formData) {
+        const result = await handleUpdateDrawingDetail(formData)
+        if (result) setOpenInformation(false)
+      }
+    },
+    [handleUpdateDrawingDetail]
+  )
+
+  useEffect(() => {
+    if (!cachedData?.length) return
+    const newUrls = cachedData
+      .filter((_, index) => index !== cachedData.length - 1)
+      .map((image, index, array) => {
+        // if (index === array.length - 1) return
+        return {
+          id: index,
+          url: image.type === 'image' ? URL.createObjectURL(image.content as Blob) : '',
+          name: image.name.replace('files/', ''),
+        }
+      })
+    setImageUrls(newUrls)
+    const metaData = cachedData[cachedData.length - 1].content as any
+    const transformedContent: MetaData = Object.entries(metaData).reduce((acc, [key, value]) => {
+      // Remove 'files/' from the key
+      const newKey = key.replace('files/', '')
+      return {
+        ...acc,
+        [newKey]: value,
+      }
+    }, {})
+    setMetaData(transformedContent)
+    // Cleanup
+    return () => {
+      newUrls.forEach(image => {
+        if (image.url) {
+          URL.revokeObjectURL(image.url)
+        }
+      })
+    }
+  }, [cachedData])
+
+  const getFileValue = useCallback(
+    (filename: string): number => {
+      if (!metaData) return 0
+      return metaData[filename] || 0
+    },
+    [metaData]
+  )
 
   return (
     <Box display={'flex'} flexDirection={'column'} flex={1}>
@@ -49,16 +114,21 @@ export default function SearchDetail() {
         </Box>
         <Divider sx={{ marginX: 2, borderWidth: 1 }} />
         <Box display={'flex'} flex={1} flexDirection={'column'} alignItems={'center'} padding={2}>
-          <Box maxWidth={1080} minWidth={720}>
-            <img
-              src={TestLargeImage.src}
-              alt='Preview'
-              style={{ maxWidth: '100%' }}
-              onClick={e => {
-                setSelectedImage(TestLargeImage.src)
-                setModalOpen(true)
-              }}
-            />
+          <Box>
+            {uploadCachedData && (
+              <Image
+                loader={({ src }) => src}
+                src={uploadCachedData.uploadedImage}
+                alt='Preview'
+                width={750} //Next Image can't auto width&height fill is oversize
+                height={500}
+                style={{ maxWidth: '100%' }}
+                onClick={e => {
+                  setSelectedImage(imageUrls[0].url)
+                  setModalOpen(true)
+                }}
+              />
+            )}
           </Box>
         </Box>
       </Box>
@@ -78,38 +148,52 @@ export default function SearchDetail() {
             {t('similarTitle')}
           </Typography>
         </Box>
+
         <Divider sx={{ marginX: 2, borderWidth: 1 }} />
         <Box display={'flex'} flexDirection={'row'} gap={2} padding={2}>
-          {mockArray.map((item, index) => {
-            return (
-              <Card key={index} sx={{ maxWidth: 345 }}>
-                <CardMedia
-                  component='img'
-                  alt='green iguana'
-                  height='345'
-                  image={item.src}
-                  onClick={e => {
-                    setSelectedImage(item.src)
-                    setModalOpen(true)
-                  }}
-                />
-                <CardActions sx={{ justifyContent: 'space-between' }}>
-                  <Button size='small' onClick={handleOpenMoreInfo} variant='contained'>
-                    {t('infoButton')}
-                  </Button>
-                  {/* <Button size='small'>Learn More</Button> */}
-                  <Typography variant='h6'>{t('similarPecent')} : 000%</Typography>
-                </CardActions>
-              </Card>
-            )
-          })}
+          {imageUrls &&
+            imageUrls.length > 0 &&
+            imageUrls.map(item => {
+              return (
+                <Card key={item.id} sx={{ minWidth: 345, maxWidth: 475 }}>
+                  <CardMedia
+                    component='img'
+                    height={345}
+                    // width={475}
+                    image={item.url}
+                    onClick={e => {
+                      setSelectedImage(item.url)
+                      setModalOpen(true)
+                    }}
+                    sx={{
+                      objectFit: 'contain',
+                    }}
+                  />
+                  <CardActions sx={{ justifyContent: 'space-between' }}>
+                    <Button
+                      size='small'
+                      onClick={() => handleOpenMoreInfo(item.name)}
+                      variant='contained'
+                    >
+                      {t('infoButton')}
+                    </Button>
+                    <Typography variant='h6'>
+                      {t('similarPecent')} : {getFileValue(item.name)}%
+                    </Typography>
+                  </CardActions>
+                </Card>
+              )
+            })}
         </Box>
       </Box>
-      <InformationForm
-        open={openInformation}
-        onClose={() => setOpenInformation(false)}
-        onSubmit={handleSubmit}
-      />
+      {openInformation && (
+        <InformationForm
+          open={openInformation}
+          initialData={selectedImageDetail}
+          onClose={() => setOpenInformation(false)}
+          onSubmit={handleSubmit}
+        />
+      )}
       {modalOpen && (
         <ImageViewerModal
           open={modalOpen}

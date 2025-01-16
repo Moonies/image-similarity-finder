@@ -18,7 +18,7 @@ export type TokenData = {
 interface UseAuthHook {
   // user: User | null
   isAuthenticated: boolean
-  login: (email: string, password: string) => Promise<void>
+  login: (email: string, password: string) => Promise<boolean | undefined>
   logout: () => Promise<void>
   refreshToken: (newToken: any) => Promise<void> // now use any waiting API
   getCurrentToken: () => any // wait API
@@ -47,8 +47,8 @@ export function useAuth(): UseAuthHook {
               token: result.data,
             })
           )
+          return true
         } else {
-          console.log('else', result)
           switch (result.code) {
             case 401:
               // resetConfig()
@@ -66,25 +66,8 @@ export function useAuth(): UseAuthHook {
 
               break
           }
+          return false
         }
-        // let user = {
-        //   id: 'Test001',
-        //   email: 'test@sansenshimizu.com',
-        //   name: 'testChan',
-        // }
-        // let token = 'test ISF toke'
-        // let refreshToken = 'test ISF refreshToken'
-        // // Save tokens to localStorage
-        // localStorage.setItem('accessToken', token)
-        // localStorage.setItem('refreshToken', refreshToken)
-
-        // Update Redux store
-        // dispatch(
-        //   setCredentials({
-        //     user,
-        //     token,
-        //   })
-        // )
       } catch (error) {
         // Handle login error
         console.error('Login failed', error)

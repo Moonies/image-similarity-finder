@@ -9,7 +9,6 @@ import {
   DialogActions,
   Button,
   Snackbar,
-  Alert,
 } from '@mui/material'
 import { useNotification } from '@/hooks/useNotification'
 import { StyledAlert } from './style'
@@ -93,7 +92,14 @@ export const Notification: React.FC = () => {
             onClose={notificationSnackbar.close}
             severity={snackbar.type}
             variant='filled'
-            sx={{ width: '100%', color: 'white' }}
+            sx={{
+              width: '100%',
+              color: 'white',
+              whiteSpace: 'pre-line',
+              '& .MuiAlert-message': {
+                width: '100%',
+              },
+            }}
           >
             {snackbar.message}
           </StyledAlert>

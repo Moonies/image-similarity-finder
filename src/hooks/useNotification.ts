@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux'
 import { RootState } from '@/store'
 import {
   openModalNotification,
@@ -9,8 +9,8 @@ import {
 } from '@/store/slices/notificationSlice'
 
 export const useNotification = () => {
-  const dispatch = useDispatch()
-  const { modal, snackbar } = useSelector((state: RootState) => state.notification)
+  const dispatch = useAppDispatch()
+  const { modal, snackbar } = useAppSelector((state: RootState) => state.notification)
 
   // Modal Notification Methods
   const notificationModal = {

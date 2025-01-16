@@ -9,7 +9,7 @@ interface TextBox {
 type TextFieldBoxProps = TextBox & Omit<TextFieldProps, keyof TextBox>
 
 const TextFieldBox: React.FC<TextFieldBoxProps> = ({
-  text,
+  text = '',
   size = 'small',
   color: colorProps,
   lasted = false,
