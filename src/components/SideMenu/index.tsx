@@ -47,15 +47,15 @@ export default function SideMenu() {
   const menuItems = [
     { label: 'Home', key: 'home', icon: HomeIcon, path: '/' },
     { label: 'Upload', key: 'search', icon: UploadIcon, path: '/search' },
-    { label: 'Back', key: 'back', icon: ArrowBackIcon, path: '' },
-    { label: 'Foward', key: 'foward', icon: ArrowForwardIcon, path: '' },
+    // { label: 'Back', key: 'back', icon: ArrowBackIcon, path: '' },
+    // { label: 'Foward', key: 'foward', icon: ArrowForwardIcon, path: '' },
     {
       label: mode === 'dark' ? 'Dark Mode' : 'Light Mode',
       key: 'mode',
       icon: mode === 'dark' ? DarkModeIcon : LightModeIcon,
       path: '',
     },
-    { label: 'Reload', key: 'reload', icon: RefreshIcon, path: '' },
+    // { label: 'Reload', key: 'reload', icon: RefreshIcon, path: '' },
     { label: 'Database', key: 'database', icon: ContentPasteIcon, path: '/record' },
     // { label: 'Image Preview', key: 'preview', icon: ImageSearchIcon, path: '/viewer' },
     { label: 'En', key: 'language', icon: LanguageIcon, path: '' },
