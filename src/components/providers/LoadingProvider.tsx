@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useState, useContext, ReactNode, useCallback } from 'react'
+import React, { createContext, useState, ReactNode, useCallback } from 'react'
 import { Backdrop, CircularProgress } from '@mui/material'
 
 interface LoadingContextType {
@@ -50,18 +50,15 @@ export const LoadingProvider: React.FC<{ children: ReactNode }> = ({ children })
   //   []
   // )
 
-  const withLoading = useCallback(
-    async <T,>(promise: Promise<T>): Promise<T> => {
-      setIsLoading(true)
-      try {
-        const result = await promise
-        return result
-      } finally {
-        setIsLoading(false)
-      }
-    },
-    [setLoading]
-  )
+  const withLoading = useCallback(async <T,>(promise: Promise<T>): Promise<T> => {
+    setIsLoading(true)
+    try {
+      const result = await promise
+      return result
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
 
   return (
     <LoadingContext.Provider value={{ isLoading, setLoading, withLoading }}>

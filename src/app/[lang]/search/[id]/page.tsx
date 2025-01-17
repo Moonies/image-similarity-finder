@@ -10,6 +10,7 @@ import useSearchDetail from './hooks/useSearchDetail'
 import { UpdateDrawingImageDetail } from '@/api/drawing/updateDrawingDetail'
 import Image from 'next/image'
 import { DrawingImageDetail } from '@/api/drawing'
+import { useLoading } from '@/hooks/useLoading'
 
 type ImageUrl = {
   id: number
@@ -31,6 +32,7 @@ export default function SearchDetail() {
   const [imageUrls, setImageUrls] = useState<ImageUrl[]>([])
   const [metaData, setMetaData] = useState<MetaData>()
   const { handleGetDetailImage, handleUpdateDrawingDetail } = useSearchDetail()
+  const { setLoading } = useLoading()
 
   const handleOpenMoreInfo = useCallback(
     async (drawingNumber: string) => {
@@ -76,6 +78,7 @@ export default function SearchDetail() {
       }
     }, {})
     setMetaData(transformedContent)
+    setLoading(false)
     // Cleanup
     return () => {
       newUrls.forEach(image => {
@@ -84,6 +87,7 @@ export default function SearchDetail() {
         }
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cachedData])
 
   const getFileValue = useCallback(

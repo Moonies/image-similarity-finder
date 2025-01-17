@@ -1,6 +1,7 @@
 import { DrawingImageDetail } from '@/api/drawing'
 import { useCache } from '@/context/CacheContext'
 import useHttp from '@/hooks/useHttp'
+import { useLoading } from '@/hooks/useLoading'
 import {
   GridColDef,
   GridEventListener,
@@ -43,12 +44,12 @@ export default function useRecord() {
   })
   const [cachedData, setCachedData] = useState<CachedData>({})
   const [totalRows, setTotalRows] = useState(0)
-
   const params = useParams()
   const lang = params.lang as string
   const router = useRouter()
   const { setPageData, getPageData } = useCache()
   const { api } = useHttp()
+  const { setLoading } = useLoading()
 
   const getDrawingList = useMemo(
     () =>
@@ -99,7 +100,7 @@ export default function useRecord() {
   const handleEditClick = useCallback(
     (id: GridRowId) => () => {
       const selectedData = drawingList.find(item => item.id === id)
-
+      setLoading(true)
       // setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } }) // edit inline need to discuss
       //check cache -> check searchCriteria -> check current page if update is success get all new with same searchCriteria else get all cache
       setPageData('searchCriteria', { ...searchCriteria })
@@ -116,6 +117,7 @@ export default function useRecord() {
     },
     [
       drawingList,
+      setLoading,
       setPageData,
       searchCriteria,
       cachedData,

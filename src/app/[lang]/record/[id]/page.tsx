@@ -25,7 +25,6 @@ export default function RecordDetail() {
 
   useEffect(() => {
     if (isFirstMount.current) {
-      console.log('mount')
       const cachedData = getPageData('rawData')
       if (cachedData) withLoading(getDrawingImage(cachedData[`drawingNumber`]))
       isFirstMount.current = false
