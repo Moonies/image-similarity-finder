@@ -3,7 +3,8 @@ import { HttpRequest } from '@/hooks/useHttp'
 import { default as searchDrawing } from './searchDrawing'
 import { default as getDrawingDetail } from './getDrawingDetail'
 import { default as updateDrawingDetail, UpdateDrawingImageDetail } from './updateDrawingDetail'
-import { DrawingListSearchCriteria, default as getDrawingList } from './getDrawingList'
+import { default as getDrawingList, DrawingListSearchCriteria } from './getDrawingList'
+import { default as getDrawingImage } from './getDrawingImage'
 
 export type DrawingImageDetail = {
   id: string
@@ -36,6 +37,7 @@ export interface SearchApi {
   getDrawingDetail: (drawingNumber: string) => Promise<ApiResponse<DrawingImageDetail>>
   updateDrawingDetail: (params: UpdateDrawingImageDetail) => Promise<ApiResponse<null>>
   getDrawingList: (params: DrawingListSearchCriteria) => Promise<ApiResponse<DrawingImageDetail[]>>
+  getDrawingImage: (drawingId: string) => Promise<ApiResponse<string>>
 }
 
 export default function search(httpRequest: HttpRequest): SearchApi {
@@ -44,5 +46,6 @@ export default function search(httpRequest: HttpRequest): SearchApi {
     getDrawingDetail: drawingNumber => getDrawingDetail(httpRequest, drawingNumber),
     updateDrawingDetail: params => updateDrawingDetail(httpRequest, params),
     getDrawingList: params => getDrawingList(httpRequest, params),
+    getDrawingImage: drawingId => getDrawingImage(httpRequest, drawingId),
   }
 }

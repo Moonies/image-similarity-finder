@@ -36,9 +36,6 @@ export default async function updateDrawingDetail(
     fetchInstance(`/api/drawings/${data.id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
     })
   )
 

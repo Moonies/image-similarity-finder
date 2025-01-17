@@ -5,8 +5,8 @@ import { Drawer, Box, IconButton, Typography, Button } from '@mui/material'
 import { Close as CloseIcon } from '@mui/icons-material'
 import TextFieldBox from '@/components/TextFieldBox'
 import { useTranslation } from 'react-i18next'
-import { DrawingImageDetail } from '@/api/drawing/getDrawingDetail'
 import { UpdateDrawingImageDetail } from '@/api/drawing/updateDrawingDetail'
+import { DrawingImageDetail } from '@/api/drawing'
 
 interface InformationFormProps {
   open: boolean

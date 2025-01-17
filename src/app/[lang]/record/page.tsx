@@ -5,13 +5,14 @@ import { useGridApiRef } from '@mui/x-data-grid'
 import { Search as SearchIcon } from '@mui/icons-material'
 import { Autocomplete, Box, Button, Divider, TextField } from '@mui/material'
 import DataTable from '@/components/DataTable'
-import useRecord, { SearchCriteria } from './hooks/useRecord'
+import useRecord from './hooks/useRecord'
 import CustomColumn from './components/CustomColumn'
 import { useTranslation } from 'react-i18next'
 
 export default function RecordPage() {
   const { t } = useTranslation('record-page')
   const recordDataGridRef = useGridApiRef()
+
   const {
     drawingList,
     handleRowEditStop,
@@ -26,11 +27,11 @@ export default function RecordPage() {
     categorySearch,
     handleChange,
     searchCriteria,
-    getPageData,
     handleSearch,
     handlePaginationModelChange,
     totalRows,
     paginationModel,
+    handleCache,
   } = useRecord()
 
   const columns = useMemo(
@@ -47,18 +48,10 @@ export default function RecordPage() {
   )
 
   useEffect(() => {
-    const cachedData = getPageData('searchCriteria')
-    if (cachedData) {
-      for (const key in cachedData) {
-        if (cachedData.hasOwnProperty(key)) {
-          const typedKey = key as keyof SearchCriteria
-          const value = cachedData[typedKey]
-          handleChange(key, value)
-        }
-      }
-    }
-    return () => {}
-  }, [getPageData, handleChange])
+    console.log('mount')
+    handleCache()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     prepareCategorySearch(columns)

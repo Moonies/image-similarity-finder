@@ -64,11 +64,11 @@ export default function useRecord() {
           setTotalRows(result.page?.totalElements ?? 0)
           setCachedData(prevCache => ({
             ...prevCache,
-            [`${paginationModel.page}-${paginationModel.pageSize}`]: result.data ? result.data : [],
+            [`${page}-${pageSize}`]: result.data ? result.data : [],
           }))
         }
       },
-    [api.drawing, paginationModel.page, paginationModel.pageSize, searchCriteria]
+    [api.drawing, searchCriteria]
   )
 
   const handleSearch = useCallback(async () => {
@@ -80,7 +80,7 @@ export default function useRecord() {
     columns.forEach(item => {
       result.push({
         value: item.field,
-        label: item?.headerName || '',
+        label: item?.headerName?.toLocaleLowerCase() || '',
       })
     })
     setCategorySearch(result)
@@ -98,13 +98,33 @@ export default function useRecord() {
 
   const handleEditClick = useCallback(
     (id: GridRowId) => () => {
+      const selectedData = drawingList.find(item => item.id === id)
+
       // setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } }) // edit inline need to discuss
-      console.log(cachedData)
       //check cache -> check searchCriteria -> check current page if update is success get all new with same searchCriteria else get all cache
       setPageData('searchCriteria', { ...searchCriteria })
+      setPageData('searchResults', { drawingList: cachedData })
+      setPageData('lastedPagination', {
+        page: paginationModel.page,
+        pageSize: paginationModel.pageSize,
+        totalRow: totalRows,
+      })
+      setPageData('rawData', { ...selectedData })
+      // const endcodeId = encodeURIComponent(id)
+
       router.push(`/${lang}/record/${id}`)
     },
-    [cachedData, setPageData, searchCriteria, router, lang]
+    [
+      drawingList,
+      setPageData,
+      searchCriteria,
+      cachedData,
+      paginationModel.page,
+      paginationModel.pageSize,
+      totalRows,
+      router,
+      lang,
+    ]
   )
 
   const handleSaveClick = useCallback(
@@ -136,6 +156,22 @@ export default function useRecord() {
     [drawingList, rowModesModel]
   )
 
+  const handleCache = useCallback(() => {
+    const cachedDrawingList = getPageData('searchResults')
+    const cachedSearchCriteria = getPageData('searchCriteria')
+    const cachedPagination = getPageData('lastedPagination')
+
+    if (cachedSearchCriteria) setSearchCriteria(cachedSearchCriteria)
+    if (cachedDrawingList?.drawingList)
+      setDrawingList(
+        cachedDrawingList?.drawingList[`${cachedPagination?.page}-${cachedPagination?.pageSize}`]
+      )
+    if (cachedPagination) {
+      setPaginationModel({ page: cachedPagination.page, pageSize: cachedPagination.pageSize })
+      setTotalRows(cachedPagination?.totalRow)
+    }
+  }, [getPageData])
+
   const processRowUpdate = (newRow: GridRowModel) => {
     const updatedRow = { ...newRow, isNew: false }
     setDrawingList(drawingList.map(row => (row.id === newRow.id ? updatedRow : row)))
@@ -156,7 +192,6 @@ export default function useRecord() {
       setPaginationModel(newModel)
     }
     const cacheKey = `${newModel.page}-${newModel.pageSize}`
-
     if (cachedData[cacheKey]) {
       setDrawingList(cachedData[cacheKey])
       return
@@ -184,5 +219,6 @@ export default function useRecord() {
     handlePaginationModelChange,
     totalRows,
     paginationModel,
+    handleCache,
   }
 }

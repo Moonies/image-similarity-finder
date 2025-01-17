@@ -7,9 +7,9 @@ import InformationForm from './components/InformationForm'
 import { useTranslation } from 'react-i18next'
 import { useCache } from '@/context/CacheContext'
 import useSearchDetail from './hooks/useSearchDetail'
-import { DrawingImageDetail } from '@/api/drawing/getDrawingDetail'
 import { UpdateDrawingImageDetail } from '@/api/drawing/updateDrawingDetail'
 import Image from 'next/image'
+import { DrawingImageDetail } from '@/api/drawing'
 
 type ImageUrl = {
   id: number
