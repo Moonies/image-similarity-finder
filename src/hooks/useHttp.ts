@@ -88,6 +88,8 @@ export default function useHttp() {
                 notificationModal.info('Please try your action again.')
               } else {
                 notificationSnackbar.error('Authentication failed: ' + error?.message)
+                localStorage.removeItem('token')
+                window.location.reload()
               }
             }
             break

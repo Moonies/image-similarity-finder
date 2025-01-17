@@ -5,15 +5,16 @@ import { useGridApiRef } from '@mui/x-data-grid'
 import { Search as SearchIcon } from '@mui/icons-material'
 import { Autocomplete, Box, Button, Divider, TextField } from '@mui/material'
 import DataTable from '@/components/DataTable'
-import useRecord, { SearchCriteria } from './hooks/useRecord'
+import useRecord from './hooks/useRecord'
 import CustomColumn from './components/CustomColumn'
 import { useTranslation } from 'react-i18next'
 
 export default function RecordPage() {
   const { t } = useTranslation('record-page')
   const recordDataGridRef = useGridApiRef()
+
   const {
-    mockData,
+    drawingList,
     handleRowEditStop,
     handleEditClick,
     handleSaveClick,
@@ -26,7 +27,11 @@ export default function RecordPage() {
     categorySearch,
     handleChange,
     searchCriteria,
-    getPageData,
+    handleSearch,
+    handlePaginationModelChange,
+    totalRows,
+    paginationModel,
+    handleCache,
   } = useRecord()
 
   const columns = useMemo(
@@ -43,18 +48,10 @@ export default function RecordPage() {
   )
 
   useEffect(() => {
-    const cachedData = getPageData('searchCriteria')
-    if (cachedData) {
-      for (const key in cachedData) {
-        if (cachedData.hasOwnProperty(key)) {
-          const typedKey = key as keyof SearchCriteria
-          const value = cachedData[typedKey]
-          handleChange(key, value)
-        }
-      }
-    }
-    return () => {}
-  }, [getPageData, handleChange])
+    console.log('mount')
+    handleCache()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     prepareCategorySearch(columns)
@@ -78,12 +75,7 @@ export default function RecordPage() {
           onChange={e => handleChange('keyword', e.target.value)}
         />
         <Box justifyContent={'center'} alignContent={'center'}>
-          <Button
-            aria-label='search'
-            variant='contained'
-            size='small'
-            onClick={() => console.log(searchCriteria)}
-          >
+          <Button aria-label='search' variant='contained' size='small' onClick={handleSearch}>
             <SearchIcon />
           </Button>
         </Box>
@@ -91,16 +83,19 @@ export default function RecordPage() {
       <Divider sx={{ borderWidth: 1, borderColor: theme => theme.palette.primary.light }} />
       <Box marginTop={2} flex={1}>
         <DataTable
-          data={mockData}
+          data={drawingList}
           columns={columns}
           editMode='row'
+          totalRows={totalRows}
           apiref={recordDataGridRef}
-          paginationModel={{ pageSize: 25, page: 0 }}
+          paginationModel={paginationModel}
           onSelected={selectedRow => console.log(selectedRow)}
           onRowModesModelChange={handleRowModesModelChange}
+          onPaginationModelChange={handlePaginationModelChange}
           onRowEditStop={handleRowEditStop}
           processRowUpdate={processRowUpdate}
           rowModesModel={rowModesModel}
+          paginationMode='server'
           sx={{ height: '100%' }}
         />
       </Box>

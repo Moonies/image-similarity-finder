@@ -1,5 +1,6 @@
 'use client'
 
+import { DrawingImageDetail } from '@/api/drawing'
 import { ZipContent } from '@/hooks/useZipExtractor'
 import { createContext, useContext, useState, ReactNode } from 'react'
 
@@ -9,8 +10,13 @@ interface CacheStructure {
     category: string
   }
   searchResults: {
-    items: Array<any>
-    metadata: { [key: string]: any }
+    drawingList?: { [key: string]: DrawingImageDetail[] }
+    metadata?: { [key: string]: any }
+  }
+  lastedPagination: {
+    page: number
+    pageSize: number
+    totalRow: number
   }
   filters: {
     [key: string]: any

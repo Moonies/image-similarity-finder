@@ -2,12 +2,19 @@ import { ApiResponse, fetchInstance } from '@/api'
 import { HttpRequest } from '@/hooks/useHttp'
 import { DrawingImageDetail } from '@/api/drawing'
 
-export default async function getDrawingDetail(
+export interface DrawingListSearchCriteria {
+  category: string
+  keyword?: string
+  page: number
+  pageSize: number
+}
+
+export default async function getDrawingList(
   httpRequest: HttpRequest,
-  drawingNumber: string
-): Promise<ApiResponse<DrawingImageDetail>> {
+  { category, keyword, page = 0, pageSize = 10 }: DrawingListSearchCriteria
+): Promise<ApiResponse<DrawingImageDetail[]>> {
   const response = await httpRequest(() =>
-    fetchInstance(`/api/drawings?drawingNumber.equal=${drawingNumber}`, {
+    fetchInstance(`/api/drawings?${category}.contains=${keyword}&page=${page}&size=${pageSize}`, {
       method: 'GET',
     })
   )
@@ -21,5 +28,5 @@ export default async function getDrawingDetail(
   }
   const result = await response.json()
   //result._embedded.drawings[0] _embedded for test need to discuss
-  return { code: 200, message: 'success', data: result._embedded.drawings[0] }
+  return { code: 200, message: 'success', data: result._embedded.drawings, page: result?.page }
 }

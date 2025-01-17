@@ -1,14 +1,12 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import {
   GridAutosizeOptions,
-  GridCellParams,
   GridColDef,
   GridPaginationModel,
   GridRowIdGetter,
   GridRowSelectionModel,
   GridRowsProp,
   GridValidRowModel,
-  GridRowModes,
 } from '@mui/x-data-grid'
 import { StyledStripedDataGrid, DataGridContainer } from './style'
 import { DataGridProps, GridApiCommunity } from '@mui/x-data-grid/internals'
@@ -57,7 +55,7 @@ const DataTable = React.memo<TableProps>(
           // autoHeight
           disableColumnMenu
           getRowClassName={params => (params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd')}
-          // pageSizeOptions={[10, 50, 100]}
+          pageSizeOptions={[10, 50, 100]}
           paginationModel={paginationModel}
           onPaginationModelChange={onPaginationModelChange}
           checkboxSelection={checkboxSelection}
@@ -73,5 +71,7 @@ const DataTable = React.memo<TableProps>(
     )
   }
 )
+
+DataTable.displayName = 'DataTable'
 
 export default DataTable
