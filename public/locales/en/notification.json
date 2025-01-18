@@ -10,5 +10,8 @@
   "delete": {
     "success": "Delete Success!!",
     "fail": "Delete Failed!!"
+  },
+  "token": {
+    "reTask": "Please try your action again."
   }
 }

@@ -1,0 +1,29 @@
+{
+  "category": "Thể loại",
+  "keyword": "từ khóa",
+  "column": {
+    "col1": "Số bản vẽ",
+    "col2": "Tên",
+    "col3": "Chi phí vật liệu",
+    "col4": "Nhà cung cấp vật liệu",
+    "col5": "Chi phí tiện",
+    "col6": "Nhà cung cấp tiện",
+    "col7": "Chi phí phay",
+    "col8": "Nhà cung cấp phay",
+    "col9": "Chi phí xử lý nhiệt",
+    "col10": "Nhà cung cấp xử lý nhiệt",
+    "col11": "Chi phí mài",
+    "col12": "Nhà cung cấp mài",
+    "col13": "Chi phí vận chuyển",
+    "col14": "Nhà cung cấp vận chuyển",
+    "col15": "Chi phí chung",
+    "col16": "Nhà cung cấp chung",
+    "col17": "Chi phí hàn",
+    "col18": "Nhà cung cấp hàn",
+    "col19": "Chi phí khác",
+    "col20": "Nhà cung cấp khác",
+    "col21": "Giá bán",
+    "col22": "Chi tiết lỗi",
+    "action": "Actions"
+  }
+}
