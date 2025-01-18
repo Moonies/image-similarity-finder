@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 // List of supported languages
-const languages = ['en', 'jp']
+const languages = ['en', 'jp', 'cn', 'vn']
 const defaultLanguage = 'en'
 
 export function middleware(request: NextRequest) {

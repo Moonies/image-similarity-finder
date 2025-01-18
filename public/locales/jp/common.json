@@ -1,4 +1,12 @@
 {
   "welcome": "ようこそ",
-  "description": "これはサンプルアプリケーションです"
+  "description": "これはサンプルアプリケーションです",
+  "inputUploadFile": "ファイルを選択",
+  "sideMenu": {
+    "home": "ホーム",
+    "search": "検索",
+    "dark": "ダークモード",
+    "light": "ライトモード",
+    "record": "記録を確認"
+  }
 }
