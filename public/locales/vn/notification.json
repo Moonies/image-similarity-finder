@@ -1,0 +1,17 @@
+{
+  "update": {
+    "success": "Cập nhật thành công!!",
+    "fail": "Cập nhật không thành công!!"
+  },
+  "create": {
+    "success": "Thêm thành công!!",
+    "fail": "Thêm không thành công!!"
+  },
+  "delete": {
+    "success": "Xóa thành công!!",
+    "fail": "Xóa không thành công!!"
+  },
+  "token": {
+    "reTask": "Vui lòng thử lại hành động của bạn."
+  }
+}

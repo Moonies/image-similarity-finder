@@ -28,5 +28,5 @@ export default async function getDrawingList(
   }
   const result = await response.json()
   //result._embedded.drawings[0] _embedded for test need to discuss
-  return { code: 200, message: 'success', data: result._embedded.drawings, page: result?.page }
+  return { code: 200, message: 'success', data: result.content, page: result?.page }
 }

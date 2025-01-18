@@ -1,0 +1,17 @@
+{
+  "update": {
+    "success": "更新成功!!",
+    "fail": "更新失败!!"
+  },
+  "create": {
+    "success": "添加成功!!",
+    "fail": "添加失败!!"
+  },
+  "delete": {
+    "success": "删除成功!!",
+    "fail": "删除失败!!"
+  },
+  "token": {
+    "reTask": "请再次尝试您的操作。"
+  }
+}

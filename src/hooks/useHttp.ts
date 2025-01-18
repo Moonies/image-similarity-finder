@@ -6,6 +6,7 @@ import { default as userApi } from '@/api/user'
 import { default as drawingApi } from '@/api/drawing'
 import { getCurrentToken, getCurrentUser, setCredentials } from '@/store/slices/authSlice'
 import { useAppDispatch } from './useRedux'
+import { useTranslation } from 'react-i18next'
 
 export type HttpRequest = (
   fetchFunction: () => Promise<Response>,
@@ -18,6 +19,8 @@ export default function useHttp() {
   const apiRef = useRef<any>({})
   const { setLoading } = useLoading()
   const dispatch = useAppDispatch()
+  const { t } = useTranslation('notification')
+
   const handleAPIError = useCallback(async (response: Response) => {
     console.log(response)
     try {
@@ -85,7 +88,7 @@ export default function useHttp() {
                     token: result.data,
                   })
                 )
-                notificationModal.info('Please try your action again.')
+                notificationModal.info(t('token.reTask'))
               } else {
                 notificationSnackbar.error('Authentication failed: ' + error?.message)
                 localStorage.removeItem('token')
@@ -115,6 +118,7 @@ export default function useHttp() {
       notificationSnackbar,
       dispatch,
       notificationModal,
+      t,
     ]
   )
 
