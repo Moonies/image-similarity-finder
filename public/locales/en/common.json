@@ -1,5 +1,12 @@
 {
   "welcome": "Welcome",
   "description": "This is a sample application",
-  "inputUploadFile": "Choose File"
+  "inputUploadFile": "Choose File",
+  "sideMenu": {
+    "home": "Home",
+    "search": "Upload",
+    "dark": "Dark Mode",
+    "light": "Light Mode",
+    "record": "Check Records"
+  }
 }

@@ -1,0 +1,12 @@
+{
+  "welcome": "欢迎",
+  "description": "这是一个示例应用程序",
+  "inputUploadFile": "选择文件",
+  "sideMenu": {
+    "home": "主页",
+    "search": "搜索",
+    "dark": "深色模式",
+    "light": "浅色模式",
+    "record": "检查记录"
+  }
+}
