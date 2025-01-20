@@ -12,6 +12,7 @@
     "build:major": "npm version major -m \"chore: bump version to %s\" && next build && git push && git push --tags",
     "docker:build": "docker build -t internal.sansenshimizu.com/hayaraku/frontend:$(npm run version --silent) .",
     "docker:push": "docker push internal.sansenshimizu.com/hayaraku/frontend:$(npm run version --silent)",
+    "release:dev": "npm run build && npm run docker:build && npm run docker:push",
     "release:patch": "npm run build:patch && npm run docker:build && npm run docker:push",
     "release:minor": "npm run build:minor && npm run docker:build && npm run docker:push",
     "release:major": "npm run build:major && npm run docker:build && npm run docker:push"
