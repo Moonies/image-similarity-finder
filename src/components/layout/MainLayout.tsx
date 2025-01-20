@@ -3,6 +3,7 @@
 import { styled } from '@mui/material/styles'
 import { Box } from '@mui/material'
 import SideMenu from '@/components/SideMenu'
+import { AnimatePresence } from 'framer-motion'
 
 const MainContent = styled('main')({
   flexGrow: 1,
@@ -21,7 +22,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
     <Box sx={{ display: 'flex' }}>
       <SideMenu />
       <MainContent sx={{ backgroundColor: theme => theme.palette.background.default }}>
-        {children}
+        <AnimatePresence mode='wait'>{children}</AnimatePresence>
       </MainContent>
     </Box>
   )

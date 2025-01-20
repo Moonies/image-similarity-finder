@@ -8,6 +8,7 @@ import DataTable from '@/components/DataTable'
 import useRecord from './hooks/useRecord'
 import CustomColumn from './components/CustomColumn'
 import { useTranslation } from 'react-i18next'
+import PageTransition from '@/components/PageTransition'
 
 export default function RecordPage() {
   const { t } = useTranslation('record-page')
@@ -58,47 +59,49 @@ export default function RecordPage() {
   }, [columns, prepareCategorySearch])
 
   return (
-    <Box display={'flex'} flex={1} flexDirection={'column'} padding={1}>
-      <Box flexDirection={'row'} display={'flex'} gap={2} padding={2}>
-        <Autocomplete
-          disablePortal
-          options={categorySearch?.map(item => item.label)}
-          onChange={(event, newValue) => handleChange('category', newValue)}
-          value={searchCriteria.category}
-          sx={{ width: 300 }}
-          renderInput={params => <TextField {...params} label={t('category')} />}
-        />
-        <TextField
-          name='keyword'
-          label={t('keyword')}
-          value={searchCriteria.keyword}
-          onChange={e => handleChange('keyword', e.target.value)}
-        />
-        <Box justifyContent={'center'} alignContent={'center'}>
-          <Button aria-label='search' variant='contained' size='small' onClick={handleSearch}>
-            <SearchIcon />
-          </Button>
+    <PageTransition>
+      <Box display={'flex'} flex={1} flexDirection={'column'} padding={1}>
+        <Box flexDirection={'row'} display={'flex'} gap={2} padding={2}>
+          <Autocomplete
+            disablePortal
+            options={categorySearch?.map(item => item.label)}
+            onChange={(event, newValue) => handleChange('category', newValue)}
+            value={searchCriteria.category}
+            sx={{ width: 300 }}
+            renderInput={params => <TextField {...params} label={t('category')} />}
+          />
+          <TextField
+            name='keyword'
+            label={t('keyword')}
+            value={searchCriteria.keyword}
+            onChange={e => handleChange('keyword', e.target.value)}
+          />
+          <Box justifyContent={'center'} alignContent={'center'}>
+            <Button aria-label='search' variant='contained' size='small' onClick={handleSearch}>
+              <SearchIcon />
+            </Button>
+          </Box>
+        </Box>
+        <Divider sx={{ borderWidth: 1, borderColor: theme => theme.palette.primary.light }} />
+        <Box marginTop={2} flex={1}>
+          <DataTable
+            data={drawingList}
+            columns={columns}
+            editMode='row'
+            totalRows={totalRows}
+            apiref={recordDataGridRef}
+            paginationModel={paginationModel}
+            onSelected={selectedRow => console.log(selectedRow)}
+            onRowModesModelChange={handleRowModesModelChange}
+            onPaginationModelChange={handlePaginationModelChange}
+            onRowEditStop={handleRowEditStop}
+            processRowUpdate={processRowUpdate}
+            rowModesModel={rowModesModel}
+            paginationMode='server'
+            sx={{ height: '100%' }}
+          />
         </Box>
       </Box>
-      <Divider sx={{ borderWidth: 1, borderColor: theme => theme.palette.primary.light }} />
-      <Box marginTop={2} flex={1}>
-        <DataTable
-          data={drawingList}
-          columns={columns}
-          editMode='row'
-          totalRows={totalRows}
-          apiref={recordDataGridRef}
-          paginationModel={paginationModel}
-          onSelected={selectedRow => console.log(selectedRow)}
-          onRowModesModelChange={handleRowModesModelChange}
-          onPaginationModelChange={handlePaginationModelChange}
-          onRowEditStop={handleRowEditStop}
-          processRowUpdate={processRowUpdate}
-          rowModesModel={rowModesModel}
-          paginationMode='server'
-          sx={{ height: '100%' }}
-        />
-      </Box>
-    </Box>
+    </PageTransition>
   )
 }
