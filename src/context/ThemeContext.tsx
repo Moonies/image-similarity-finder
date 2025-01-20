@@ -19,13 +19,7 @@ const ThemeContext = createContext<ThemeContextType>({
 export const useThemeContext = () => useContext(ThemeContext)
 
 export const ThemeContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [mode, setMode] = useState<ThemeMode>(() => {
-    if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('theme') as ThemeMode
-      return savedTheme || 'light'
-    }
-    return 'light'
-  })
+  const [mode, setMode] = useState<ThemeMode>('light')
 
   const theme = getTheme(mode)
 
@@ -40,10 +34,14 @@ export const ThemeContextProvider: React.FC<{ children: React.ReactNode }> = ({ 
     localStorage.setItem('theme', newMode)
   }
 
-  // Update body background when theme changes
-  // useEffect(() => {
-  //   document.body.style.backgroundColor = mode === 'dark' ? '#1A202C' : '#ffffff'
-  // }, [mode])
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme') as ThemeMode
+      if (savedTheme) {
+        setMode(savedTheme)
+      }
+    }
+  }, [])
 
   return (
     <ThemeContext.Provider
