@@ -4,12 +4,17 @@
   "private": true,
   "scripts": {
     "dev": "rm -rf .next && next dev",
+    "start": "next start",
+    "lint": "next lint",
     "build": "next build",
     "build:patch": "npm version patch -m \"chore: bump version to %s\" && next build && git push && git push --tags",
     "build:minor": "npm version minor -m \"chore: bump version to %s\" && next build && git push && git push --tags",
     "build:major": "npm version major -m \"chore: bump version to %s\" && next build && git push && git push --tags",
-    "start": "next start",
-    "lint": "next lint"
+    "docker:build": "docker build -t internal.sansenshimizu.com/hayaraku/frontend:$(npm run version --silent) .",
+    "docker:push": "docker push internal.sansenshimizu.com/hayaraku/frontend:$(npm run version --silent)",
+    "release:patch": "npm run build:patch && npm run docker:build && npm run docker:push",
+    "release:minor": "npm run build:minor && npm run docker:build && npm run docker:push",
+    "release:major": "npm run build:major && npm run docker:build && npm run docker:push"
   },
   "dependencies": {
     "@emotion/cache": "^11.13.5",
