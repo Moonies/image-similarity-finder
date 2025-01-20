@@ -11,6 +11,7 @@ import { UpdateDrawingImageDetail } from '@/api/drawing/updateDrawingDetail'
 import Image from 'next/image'
 import { DrawingImageDetail } from '@/api/drawing'
 import { useLoading } from '@/hooks/useLoading'
+import PageTransition from '@/components/PageTransition'
 
 type ImageUrl = {
   id: number
@@ -99,112 +100,113 @@ export default function SearchDetail() {
   )
 
   return (
-    <Box display={'flex'} flexDirection={'column'} flex={1}>
-      <Box
-        display={'flex'}
-        flexDirection={'column'}
-        flex={1}
-        sx={{ backgroundColor: theme => theme.palette.background.paper }}
-      >
+    <PageTransition>
+      <Box display={'flex'} flexDirection={'column'} flex={1}>
         <Box
           display={'flex'}
-          flexDirection={'row'}
+          flexDirection={'column'}
+          flex={1}
           sx={{ backgroundColor: theme => theme.palette.background.paper }}
-          padding={2}
         >
-          <Typography variant='h4' sx={{ color: theme => theme.palette.info.light }}>
-            {t('queryTitle')}
-          </Typography>
-        </Box>
-        <Divider sx={{ marginX: 2, borderWidth: 1 }} />
-        <Box display={'flex'} flex={1} flexDirection={'column'} alignItems={'center'} padding={2}>
-          <Box>
-            {uploadCachedData && (
-              <Image
-                loader={({ src }) => src}
-                src={uploadCachedData.uploadedImage}
-                alt='Preview'
-                width={750} //Next Image can't auto width&height fill is oversize
-                height={500}
-                style={{ maxWidth: '100%' }}
-                onClick={e => {
-                  setSelectedImage(imageUrls[0].url)
-                  setModalOpen(true)
-                }}
-              />
-            )}
+          <Box
+            display={'flex'}
+            flexDirection={'row'}
+            sx={{ backgroundColor: theme => theme.palette.background.paper }}
+            padding={2}
+          >
+            <Typography variant='h4' sx={{ color: theme => theme.palette.info.light }}>
+              {t('queryTitle')}
+            </Typography>
+          </Box>
+          <Divider sx={{ marginX: 2, borderWidth: 1 }} />
+          <Box display={'flex'} flex={1} flexDirection={'column'} alignItems={'center'} padding={2}>
+            <Box>
+              {uploadCachedData && (
+                <Image
+                  loader={({ src }) => src}
+                  src={uploadCachedData.uploadedImage}
+                  alt='Preview'
+                  width={750} //Next Image can't auto width&height fill is oversize
+                  height={500}
+                  style={{ maxWidth: '100%' }}
+                  onClick={e => {
+                    setSelectedImage(imageUrls[0].url)
+                    setModalOpen(true)
+                  }}
+                />
+              )}
+            </Box>
           </Box>
         </Box>
-      </Box>
-      <Box
-        display={'flex'}
-        flexDirection={'column'}
-        flex={1}
-        sx={{ backgroundColor: theme => theme.palette.background.paper }}
-      >
         <Box
           display={'flex'}
-          flexDirection={'row'}
-          padding={2}
-          // sx={{ backgroundColor: theme => theme.palette.primary.light }}
+          flexDirection={'column'}
+          flex={1}
+          sx={{ backgroundColor: theme => theme.palette.background.paper }}
         >
-          <Typography variant='h4' sx={{ color: theme => theme.palette.info.light }}>
-            {t('similarTitle')}
-          </Typography>
+          <Box
+            display={'flex'}
+            flexDirection={'row'}
+            padding={2}
+            // sx={{ backgroundColor: theme => theme.palette.primary.light }}
+          >
+            <Typography variant='h4' sx={{ color: theme => theme.palette.info.light }}>
+              {t('similarTitle')}
+            </Typography>
+          </Box>
+          <Divider sx={{ marginX: 2, borderWidth: 1 }} />
+          <Box display={'flex'} flexDirection={'row'} gap={2} padding={2}>
+            {imageUrls &&
+              imageUrls.length > 0 &&
+              imageUrls.map(item => {
+                return (
+                  <Card key={item.id} sx={{ minWidth: 345, maxWidth: 475 }}>
+                    <CardMedia
+                      component='img'
+                      height={345}
+                      // width={475}
+                      image={item.url}
+                      onClick={e => {
+                        setSelectedImage(item.url)
+                        setModalOpen(true)
+                      }}
+                      sx={{
+                        objectFit: 'contain',
+                      }}
+                    />
+                    <CardActions sx={{ justifyContent: 'space-between' }}>
+                      <Button
+                        size='small'
+                        onClick={() => handleOpenMoreInfo(item.name)}
+                        variant='contained'
+                      >
+                        {t('infoButton')}
+                      </Button>
+                      <Typography variant='h6'>
+                        {t('similarPecent')} : {getFileValue(item.name)}%
+                      </Typography>
+                    </CardActions>
+                  </Card>
+                )
+              })}
+          </Box>
         </Box>
-
-        <Divider sx={{ marginX: 2, borderWidth: 1 }} />
-        <Box display={'flex'} flexDirection={'row'} gap={2} padding={2}>
-          {imageUrls &&
-            imageUrls.length > 0 &&
-            imageUrls.map(item => {
-              return (
-                <Card key={item.id} sx={{ minWidth: 345, maxWidth: 475 }}>
-                  <CardMedia
-                    component='img'
-                    height={345}
-                    // width={475}
-                    image={item.url}
-                    onClick={e => {
-                      setSelectedImage(item.url)
-                      setModalOpen(true)
-                    }}
-                    sx={{
-                      objectFit: 'contain',
-                    }}
-                  />
-                  <CardActions sx={{ justifyContent: 'space-between' }}>
-                    <Button
-                      size='small'
-                      onClick={() => handleOpenMoreInfo(item.name)}
-                      variant='contained'
-                    >
-                      {t('infoButton')}
-                    </Button>
-                    <Typography variant='h6'>
-                      {t('similarPecent')} : {getFileValue(item.name)}%
-                    </Typography>
-                  </CardActions>
-                </Card>
-              )
-            })}
-        </Box>
+        {openInformation && (
+          <InformationForm
+            open={openInformation}
+            initialData={selectedImageDetail}
+            onClose={() => setOpenInformation(false)}
+            onSubmit={handleSubmit}
+          />
+        )}
+        {modalOpen && (
+          <ImageViewerModal
+            open={modalOpen}
+            onClose={() => setModalOpen(false)}
+            imagePreview={selectedImage}
+          />
+        )}
       </Box>
-      {openInformation && (
-        <InformationForm
-          open={openInformation}
-          initialData={selectedImageDetail}
-          onClose={() => setOpenInformation(false)}
-          onSubmit={handleSubmit}
-        />
-      )}
-      {modalOpen && (
-        <ImageViewerModal
-          open={modalOpen}
-          onClose={() => setModalOpen(false)}
-          imagePreview={selectedImage}
-        />
-      )}
-    </Box>
+    </PageTransition>
   )
 }
