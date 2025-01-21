@@ -191,14 +191,14 @@ export default function SearchDetail() {
               })}
           </Box>
         </Box>
-        {openInformation && (
-          <InformationForm
-            open={openInformation}
-            initialData={selectedImageDetail}
-            onClose={() => setOpenInformation(false)}
-            onSubmit={handleSubmit}
-          />
-        )}
+
+        <InformationForm
+          open={openInformation}
+          initialData={selectedImageDetail}
+          onClose={() => setOpenInformation(false)}
+          onSubmit={handleSubmit}
+        />
+
         {modalOpen && (
           <ImageViewerModal
             open={modalOpen}

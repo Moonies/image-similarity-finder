@@ -1,8 +1,7 @@
-import React from 'react'
 import {
   Home as HomeIcon,
   Upload as UploadIcon,
-  ArrowBack as ArrowBackIcon,
+  // ArrowBack as ArrowBackIcon,
   // ArrowForward as ArrowForwardIcon,
   DarkMode as DarkModeIcon,
   LightMode as LightModeIcon,
@@ -13,6 +12,7 @@ import {
 } from '@mui/icons-material'
 import { useTranslation } from 'react-i18next'
 import { useThemeContext } from '@/context/ThemeContext'
+import { EraserIcon, ChatIcon } from '@/components/customIcons'
 
 export default function useMenu() {
   const { mode } = useThemeContext()
@@ -28,6 +28,8 @@ export default function useMenu() {
       path: '',
     },
     { label: t('sideMenu.record'), key: 'database', icon: ContentPasteIcon, path: '/record' },
+    { label: t('sideMenu.eraser'), key: 'eraser', icon: EraserIcon, path: '' },
+    { label: t('sideMenu.chat'), key: 'chat', icon: ChatIcon, path: '' },
     { label: '', key: 'language', icon: LanguageIcon, path: '' },
   ]
   return { menuItems }
