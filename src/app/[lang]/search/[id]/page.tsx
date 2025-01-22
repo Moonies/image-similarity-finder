@@ -33,14 +33,21 @@ export default function SearchDetail() {
   const [imageUrls, setImageUrls] = useState<ImageUrl[]>([])
   const [metaData, setMetaData] = useState<MetaData>()
   const { handleGetDetailImage, handleUpdateDrawingDetail } = useSearchDetail()
+  const [informationMode, setInformationMode] = useState<'add' | 'view'>('view')
   const { setLoading } = useLoading()
 
   const handleOpenMoreInfo = useCallback(
-    async (drawingNumber: string) => {
-      const result = await handleGetDetailImage(drawingNumber)
-      if (result) {
-        setSelectedImageDetail(result)
+    async (drawingNumber?: string) => {
+      if (drawingNumber) {
+        const result = await handleGetDetailImage(drawingNumber)
+        if (result) {
+          setSelectedImageDetail(result)
+          setInformationMode('view')
+          setOpenInformation(true)
+        }
+      } else {
         setOpenInformation(true)
+        setInformationMode('add')
       }
     },
     [handleGetDetailImage]
@@ -113,10 +120,22 @@ export default function SearchDetail() {
             flexDirection={'row'}
             sx={{ backgroundColor: theme => theme.palette.background.paper }}
             padding={2}
+            justifyContent={'space-between'}
           >
-            <Typography variant='h4' sx={{ color: theme => theme.palette.info.light }}>
-              {t('queryTitle')}
-            </Typography>
+            <Box>
+              <Typography variant='h4' sx={{ color: theme => theme.palette.info.light }}>
+                {t('queryTitle')}
+              </Typography>
+            </Box>
+            <Box display={'flex'}>
+              <Button
+                // size='small'
+                onClick={() => handleOpenMoreInfo()}
+                variant='contained'
+              >
+                {t('addNewButton')}
+              </Button>
+            </Box>
           </Box>
           <Divider sx={{ marginX: 2, borderWidth: 1 }} />
           <Box display={'flex'} flex={1} flexDirection={'column'} alignItems={'center'} padding={2}>
@@ -129,8 +148,9 @@ export default function SearchDetail() {
                   width={750} //Next Image can't auto width&height fill is oversize
                   height={500}
                   style={{ maxWidth: '100%' }}
+                  unoptimized={true}
                   onClick={e => {
-                    setSelectedImage(imageUrls[0].url)
+                    setSelectedImage(uploadCachedData.uploadedImage)
                     setModalOpen(true)
                   }}
                 />
@@ -197,6 +217,7 @@ export default function SearchDetail() {
           initialData={selectedImageDetail}
           onClose={() => setOpenInformation(false)}
           onSubmit={handleSubmit}
+          mode={informationMode}
         />
 
         {modalOpen && (

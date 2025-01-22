@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useMemo } from 'react'
 import { useCache } from '@/context/CacheContext'
 import { useLoading } from '@/hooks/useLoading'
+import UTIF from 'utif'
 
 export default function useSearch() {
   const params = useParams()
@@ -31,12 +32,40 @@ export default function useSearch() {
       setLoading(true)
       const response = await searchDrawing(fileSelected)
       if (response) {
-        const uploadedFile = URL.createObjectURL(fileSelected)
         const rawDataImageList = await handleZipInput(response)
-        console.log(rawDataImageList)
-        setPageData('rawData', { uploadedImage: uploadedFile })
         setPageData('zipFile', rawDataImageList)
+        console.log(rawDataImageList)
         const id = encodeURIComponent(JSON.stringify(rawDataImageList))
+
+        if (fileSelected.type === 'image/tiff' || fileSelected.type === 'image/tif') {
+          const buffer = await fileSelected.arrayBuffer()
+          const ifds = UTIF.decode(buffer)
+          UTIF.decodeImage(buffer, ifds[0])
+          const rgba = UTIF.toRGBA8(ifds[0])
+
+          const canvas = document.createElement('canvas')
+          canvas.width = ifds[0].width
+          canvas.height = ifds[0].height
+
+          const ctx = canvas.getContext('2d')
+          if (ctx) {
+            const imgData = ctx.createImageData(canvas.width, canvas.height)
+            imgData.data.set(rgba)
+            ctx.putImageData(imgData, 0, 0)
+
+            const pngBlob = await new Promise<Blob>(resolve => {
+              canvas.toBlob(blob => {
+                if (blob) resolve(blob)
+              }, 'image/png')
+            })
+
+            const uploadedFile = URL.createObjectURL(pngBlob)
+            setPageData('rawData', { uploadedImage: uploadedFile })
+          }
+        } else {
+          const uploadedFile = URL.createObjectURL(fileSelected)
+          setPageData('rawData', { uploadedImage: uploadedFile })
+        }
         router.push(`/${lang}/search/${id}`)
       }
     },

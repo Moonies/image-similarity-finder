@@ -22,5 +22,6 @@
   "inputField20": "Other Supplier",
   "inputField21": "Selling Price",
   "inputField22": "Defect Details",
-  "saveButton": "Print"
+  "saveButton": "Save",
+  "printButton": "Print"
 }

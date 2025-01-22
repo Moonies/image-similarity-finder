@@ -2,5 +2,6 @@
   "queryTitle": "Query Image",
   "similarTitle": "Similar Image",
   "infoButton": "More info",
-  "similarPecent": "Similarity"
+  "similarPecent": "Similarity",
+  "addNewButton": "Add New Drawing"
 }

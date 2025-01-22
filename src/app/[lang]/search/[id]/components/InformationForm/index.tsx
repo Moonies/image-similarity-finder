@@ -13,6 +13,7 @@ interface InformationFormProps {
   initialData: Partial<DrawingImageDetail>
   onClose: () => void
   onSubmit: (formData: UpdateDrawingImageDetail) => void
+  mode?: 'add' | 'view'
 }
 
 export default function InformationForm({
@@ -20,6 +21,7 @@ export default function InformationForm({
   onSubmit,
   open,
   initialData,
+  mode = 'view',
 }: InformationFormProps) {
   const { t } = useTranslation('search-id-information')
   const [recordData, setRecordData] = useState<Partial<DrawingImageDetail>>()
@@ -29,7 +31,10 @@ export default function InformationForm({
   }
 
   const handleSubmit = () => {
-    onSubmit(recordData as UpdateDrawingImageDetail)
+    if (mode === 'add') {
+      //somthing add
+    }
+    // onSubmit(recordData as UpdateDrawingImageDetail)
   }
 
   useEffect(() => {
@@ -42,7 +47,7 @@ export default function InformationForm({
       anchor={'right'}
       open={open}
       onClose={(event, reason) => {
-        if (reason !== 'backdropClick') {
+        if (mode !== 'add') {
           onClose()
         }
       }}
@@ -305,7 +310,7 @@ export default function InformationForm({
             }}
           />
           <Button variant='contained' onClick={handleSubmit}>
-            {t('saveButton')}
+            {mode === 'add' ? t('saveButton') : t('printButton')}
           </Button>
         </Box>
       </Box>

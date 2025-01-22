@@ -22,5 +22,6 @@
   "inputField20": "その他の供給者",
   "inputField21": "販売価格",
   "inputField22": "欠陥の詳細",
-  "saveButton": "印刷"
+  "saveButton": "保存",
+  "printButton": "印刷"
 }
