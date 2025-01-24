@@ -27,7 +27,7 @@ export default function SideMenu() {
 
   const handleNavigation = (path: string) => {
     const [lang, currentPath] = pathname.replace(/^\//, '').split('/') // This will get 'en' and 'currentpaht' from '/en/viewer'
-    if (path === `/${currentPath}`) return
+    // if (path === `/${currentPath}`) return //if want to not return when still same parent path
     router.push(`/${lang}${path}`)
   }
 
