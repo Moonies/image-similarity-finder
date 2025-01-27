@@ -13,5 +13,16 @@
   },
   "token": {
     "reTask": "もう一度操作をお試しください。"
-  }
+  },
+  "title": {
+    "error": "エラー通知",
+    "warning": "警告通知",
+    "success": "成功通知",
+    "info": "情報通知"
+  },
+  "error": "エラー",
+  "status": "ステータス",
+  "closeButton": "閉じる",
+  "cancelButton": "キャンセル",
+  "confirmButton": "はい"
 }

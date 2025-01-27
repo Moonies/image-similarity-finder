@@ -13,5 +13,16 @@
   },
   "token": {
     "reTask": "Please try your action again."
-  }
+  },
+  "title": {
+    "error": "Error Notification",
+    "warning": "Warning Notification",
+    "success": "Success Notification",
+    "info": "Info Notification"
+  },
+  "error": "Error",
+  "status": "Status",
+  "closeButton": "Close",
+  "cancelButton": "Cancel",
+  "confirmButton": "Confirm"
 }

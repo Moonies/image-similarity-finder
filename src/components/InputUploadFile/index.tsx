@@ -34,7 +34,12 @@ export default function InputUploadFile({ onChoose, ref }: InputUploadFileProps)
       startIcon={<CloudUploadIcon />}
     >
       {t('inputUploadFile')}
-      <VisuallyHiddenInput type='file' onChange={event => onChoose(event.target.files)} ref={ref} />
+      <VisuallyHiddenInput
+        type='file'
+        onChange={event => onChoose(event.target.files)}
+        ref={ref}
+        accept='image/*'
+      />
     </Button>
   )
 }
