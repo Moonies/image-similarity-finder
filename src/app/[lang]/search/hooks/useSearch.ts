@@ -60,7 +60,10 @@ export default function useSearch() {
             })
 
             const uploadedFile = URL.createObjectURL(pngBlob)
-            setPageData('rawData', { uploadedImage: uploadedFile })
+            setPageData('rawData', {
+              uploadedImage: uploadedFile,
+              uploadedFileName: fileSelected.name,
+            })
           }
         } else {
           const uploadedFile = URL.createObjectURL(fileSelected)

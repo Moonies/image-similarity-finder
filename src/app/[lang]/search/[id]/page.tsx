@@ -20,7 +20,10 @@ type ImageUrl = {
 }
 type MetaData = {
   [key: string]: number
+} & {
+  newDrawing?: boolean
 }
+type informationMode = 'add' | 'view'
 export default function SearchDetail() {
   const { t } = useTranslation('search-id')
   const { getPageData } = useCache()
@@ -32,22 +35,18 @@ export default function SearchDetail() {
   const [selectedImageDetail, setSelectedImageDetail] = useState<Partial<DrawingImageDetail>>({})
   const [imageUrls, setImageUrls] = useState<ImageUrl[]>([])
   const [metaData, setMetaData] = useState<MetaData>()
+  const [isNewDrawing, setIsnewDrawing] = useState(false)
   const { handleGetDetailImage, handleUpdateDrawingDetail } = useSearchDetail()
-  const [informationMode, setInformationMode] = useState<'add' | 'view'>('view')
+  const [informationMode, setInformationMode] = useState<informationMode>('view')
   const { setLoading } = useLoading()
 
   const handleOpenMoreInfo = useCallback(
-    async (drawingNumber?: string) => {
-      if (drawingNumber) {
-        const result = await handleGetDetailImage(drawingNumber)
-        if (result) {
-          setSelectedImageDetail(result)
-          setInformationMode('view')
-          setOpenInformation(true)
-        }
-      } else {
+    async (drawingNumber: string, mode: informationMode) => {
+      const result = await handleGetDetailImage(drawingNumber)
+      if (result) {
+        setSelectedImageDetail(result)
+        setInformationMode(mode)
         setOpenInformation(true)
-        setInformationMode('add')
       }
     },
     [handleGetDetailImage]
@@ -57,7 +56,10 @@ export default function SearchDetail() {
     async (formData: UpdateDrawingImageDetail) => {
       if (formData) {
         const result = await handleUpdateDrawingDetail(formData)
-        if (result) setOpenInformation(false)
+        if (result) {
+          setIsnewDrawing(false)
+          setOpenInformation(false)
+        }
       }
     },
     [handleUpdateDrawingDetail]
@@ -85,6 +87,7 @@ export default function SearchDetail() {
         [newKey]: value,
       }
     }, {})
+    setIsnewDrawing(metaData.newDrawing)
     setMetaData(transformedContent)
     setLoading(false)
     // Cleanup
@@ -128,13 +131,15 @@ export default function SearchDetail() {
               </Typography>
             </Box>
             <Box display={'flex'}>
-              <Button
-                // size='small'
-                onClick={() => handleOpenMoreInfo()}
-                variant='contained'
-              >
-                {t('addNewButton')}
-              </Button>
+              {isNewDrawing && (
+                <Button
+                  // size='small'
+                  onClick={() => handleOpenMoreInfo(uploadCachedData?.uploadedFileName, 'add')}
+                  variant='contained'
+                >
+                  {t('addNewButton')}
+                </Button>
+              )}
             </Box>
           </Box>
           <Divider sx={{ marginX: 2, borderWidth: 1 }} />
@@ -197,7 +202,7 @@ export default function SearchDetail() {
                     <CardActions sx={{ justifyContent: 'space-between' }}>
                       <Button
                         size='small'
-                        onClick={() => handleOpenMoreInfo(item.name)}
+                        onClick={() => handleOpenMoreInfo(item.name, 'view')}
                         variant='contained'
                       >
                         {t('infoButton')}
