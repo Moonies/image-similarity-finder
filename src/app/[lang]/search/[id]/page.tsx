@@ -180,7 +180,13 @@ export default function SearchDetail() {
             </Typography>
           </Box>
           <Divider sx={{ marginX: 2, borderWidth: 1 }} />
-          <Box display={'flex'} flexDirection={'row'} gap={2} padding={2}>
+          <Box
+            display={'flex'}
+            flexDirection={'row'}
+            gap={2}
+            padding={2}
+            justifyContent={'space-around'}
+          >
             {imageUrls &&
               imageUrls.length > 0 &&
               imageUrls.map(item => {

@@ -1,6 +1,6 @@
 {
-  "category": "Category",
-  "keyword": "Keyword",
+  "category": "検索項目",
+  "keyword": "キーワード検索",
   "column": {
     "col1": "図面番号",
     "col2": "名前",

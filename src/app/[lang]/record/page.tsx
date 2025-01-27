@@ -49,7 +49,6 @@ export default function RecordPage() {
   )
 
   useEffect(() => {
-    console.log('mount')
     handleCache()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
