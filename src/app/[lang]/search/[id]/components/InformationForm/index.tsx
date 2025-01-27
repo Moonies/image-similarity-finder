@@ -33,8 +33,10 @@ export default function InformationForm({
   const handleSubmit = () => {
     if (mode === 'add') {
       //somthing add
+      onSubmit(recordData as UpdateDrawingImageDetail)
+    } else {
+      //print on view mode
     }
-    // onSubmit(recordData as UpdateDrawingImageDetail)
   }
 
   useEffect(() => {
@@ -74,7 +76,7 @@ export default function InformationForm({
             onChange={e => handleChange('drawingNumber', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
@@ -85,7 +87,7 @@ export default function InformationForm({
             onChange={e => handleChange('name', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
@@ -96,7 +98,7 @@ export default function InformationForm({
             onChange={e => handleChange('materialCost', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
@@ -107,7 +109,7 @@ export default function InformationForm({
             onChange={e => handleChange('materialSup', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
@@ -118,7 +120,7 @@ export default function InformationForm({
             onChange={e => handleChange('latheCost', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
@@ -129,7 +131,7 @@ export default function InformationForm({
             onChange={e => handleChange('latheSup', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
@@ -140,7 +142,7 @@ export default function InformationForm({
             onChange={e => handleChange('millingCost', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
@@ -151,7 +153,7 @@ export default function InformationForm({
             onChange={e => handleChange('millingSup', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
@@ -162,7 +164,7 @@ export default function InformationForm({
             onChange={e => handleChange('heatTreatmentCost', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
@@ -173,7 +175,7 @@ export default function InformationForm({
             onChange={e => handleChange('heatTreatmentSup', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
@@ -184,7 +186,7 @@ export default function InformationForm({
             onChange={e => handleChange('grindingCost', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
@@ -195,7 +197,7 @@ export default function InformationForm({
             onChange={e => handleChange('grindingSup', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
@@ -206,7 +208,7 @@ export default function InformationForm({
             onChange={e => handleChange('transportationCost', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
@@ -217,7 +219,7 @@ export default function InformationForm({
             onChange={e => handleChange('transportationSup', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
@@ -228,7 +230,7 @@ export default function InformationForm({
             onChange={e => handleChange('generalCost', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
@@ -239,7 +241,7 @@ export default function InformationForm({
             onChange={e => handleChange('generalSup', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
@@ -250,7 +252,7 @@ export default function InformationForm({
             onChange={e => handleChange('weldingCost', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
@@ -261,7 +263,7 @@ export default function InformationForm({
             onChange={e => handleChange('weldingSup', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
@@ -272,7 +274,7 @@ export default function InformationForm({
             onChange={e => handleChange('otherCost', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
@@ -283,7 +285,7 @@ export default function InformationForm({
             onChange={e => handleChange('otherSup', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
@@ -294,7 +296,7 @@ export default function InformationForm({
             onChange={e => handleChange('sellingPrice', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
@@ -305,7 +307,7 @@ export default function InformationForm({
             onChange={e => handleChange('defectDetails', e.target.value)}
             slotProps={{
               input: {
-                readOnly: true,
+                readOnly: mode === 'view',
               },
             }}
           />
