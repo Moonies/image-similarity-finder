@@ -32,5 +32,6 @@ export default function useMenu() {
     { label: t('sideMenu.chat'), key: 'chat', icon: ChatIcon, path: '' },
     { label: '', key: 'language', icon: LanguageIcon, path: '' },
   ]
-  return { menuItems }
+  const logoutMenu = t('sideMenu.logout')
+  return { menuItems, logoutMenu }
 }

@@ -27,6 +27,34 @@ const themeOption: ThemeOptions = {
         },
       },
     },
+    MuiTextField: {
+      styleOverrides: {
+        root: props => ({
+          '& .MuiOutlinedInput-root': {
+            '&.Mui-focused fieldset': {
+              borderColor:
+                props.theme.palette.mode === 'dark'
+                  ? props.theme.palette.text.primary
+                  : props.theme.palette.primary.main,
+            },
+          },
+          '& .MuiInputLabel-root.Mui-focused': {
+            color:
+              props.theme.palette.mode === 'dark'
+                ? props.theme.palette.text.primary
+                : props.theme.palette.primary.main,
+          },
+        }),
+      },
+    },
+    MuiDialogContent: {
+      styleOverrides: {
+        root: {
+          padding: '24px !important',
+          margin: '16px',
+        },
+      },
+    },
     // Add more component overrides
   },
   typography: {

@@ -13,5 +13,16 @@
   },
   "token": {
     "reTask": "请再次尝试您的操作。"
-  }
+  },
+  "title": {
+    "error": "错误通知",
+    "warning": "警告通知",
+    "success": "成功通知",
+    "info": "信息通知"
+  },
+  "error": "错误",
+  "status": "状态",
+  "closeButton": "关闭",
+  "cancelButton": "取消",
+  "confirmButton": "确认"
 }

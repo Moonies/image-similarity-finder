@@ -36,6 +36,7 @@ export default function useHttp() {
     } catch {
       try {
         // If not JSON, try to get as text
+        console.log(response)
         const text = await response.text()
         return text || response.statusText
       } catch {
@@ -97,14 +98,13 @@ export default function useHttp() {
             }
             break
           case 413:
-            notificationSnackbar.error('Error: ' + error?.description + `\n ${error?.message}`)
+            notificationSnackbar.error(`${t('error')}: ${error?.description}  \n ${error?.message}`)
             break
           default:
             notificationSnackbar.error(
-              'Error: ' +
-                error?.description +
-                `\n status: ${error?.status}` +
-                `\n ${error?.message}`
+              `${t('error')}: ${error?.description}
+                \n status: ${error?.status}
+                \n ${error?.message}`
             )
             break
         }

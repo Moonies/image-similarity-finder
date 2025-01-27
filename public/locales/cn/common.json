@@ -9,6 +9,7 @@
     "light": "浅色模式",
     "record": "检查记录",
     "eraser": "橡皮擦",
-    "chat": "打印"
+    "chat": "打印",
+    "logout": "注销"
   }
 }

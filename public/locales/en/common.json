@@ -9,6 +9,7 @@
     "light": "Light Mode",
     "record": "Check Records",
     "eraser": "Eraser",
-    "chat": "Chat"
+    "chat": "Chat",
+    "logout": "Logout"
   }
 }

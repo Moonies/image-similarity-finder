@@ -13,5 +13,16 @@
   },
   "token": {
     "reTask": "Vui lòng thử lại hành động của bạn."
-  }
+  },
+  "title": {
+    "error": "Thông báo lỗi",
+    "warning": "Thông báo cảnh báo",
+    "success": "Thông báo thành công",
+    "info": "Thông báo thông tin"
+  },
+  "error": "Lỗi",
+  "status": "Trạng thái",
+  "closeButton": "Đóng",
+  "cancelButton": "Hủy bỏ",
+  "confirmButton": "Xác nhận"
 }

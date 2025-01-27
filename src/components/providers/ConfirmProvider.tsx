@@ -8,6 +8,7 @@ import {
   Button,
   Typography,
 } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 interface ConfirmModalOptions {
   title: string
@@ -27,26 +28,30 @@ interface ConfirmModalProviderProps {
 }
 
 export const ConfirmModalProvider: React.FC<ConfirmModalProviderProps> = ({ children }) => {
+  const { t } = useTranslation('notification')
   const [modalState, setModalState] = useState<ConfirmModalOptions & { isOpen: boolean }>({
     isOpen: false,
     title: '',
     message: '',
-    confirmText: 'はい',
-    cancelText: 'いいえ',
+    confirmText: t('confirmButton'),
+    cancelText: t('cancelButton'),
   })
   const [resolveCallback, setResolveCallback] = useState<((value: boolean) => void) | null>(null)
 
-  const openConfirmModal = useCallback((options: ConfirmModalOptions): Promise<boolean> => {
-    return new Promise(resolve => {
-      setModalState({
-        isOpen: true,
-        ...options,
-        confirmText: options.confirmText || 'はい',
-        cancelText: options.cancelText || 'いいえ',
+  const openConfirmModal = useCallback(
+    (options: ConfirmModalOptions): Promise<boolean> => {
+      return new Promise(resolve => {
+        setModalState({
+          isOpen: true,
+          ...options,
+          confirmText: options.confirmText || t('confirmButton'),
+          cancelText: options.cancelText || t('cancelButton'),
+        })
+        setResolveCallback(() => resolve)
       })
-      setResolveCallback(() => resolve)
-    })
-  }, [])
+    },
+    [t]
+  )
 
   const handleConfirm = useCallback(() => {
     setModalState(prev => ({ ...prev, isOpen: false }))

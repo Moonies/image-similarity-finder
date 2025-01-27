@@ -8,13 +8,15 @@ import {
   MenuItem,
   SelectChangeEvent,
 } from '@mui/material'
-import { ArrowBack as ArrowBackIcon } from '@mui/icons-material'
-import { useState } from 'react'
+import { ArrowBack as ArrowBackIcon, Logout as LogoutIcon } from '@mui/icons-material'
+import { useCallback, useState } from 'react'
 import { StyledDrawer, StyledSelect, StyledSidebarButton } from './style'
 import { useRouter, usePathname } from 'next/navigation'
 import { useThemeContext } from '@/context/ThemeContext'
 import { useTranslation } from 'react-i18next'
 import useMenu from './hooks/useMenu'
+import { useAppDispatch } from '@/hooks/useRedux'
+import { logout } from '@/store/slices/authSlice'
 
 export default function SideMenu() {
   const router = useRouter()
@@ -23,7 +25,8 @@ export default function SideMenu() {
   const { toggleTheme } = useThemeContext()
   const { i18n } = useTranslation()
   const [languageSwitcher, SetLanguageSwitcher] = useState(i18n.language)
-  const { menuItems } = useMenu()
+  const { menuItems, logoutMenu } = useMenu()
+  const dispatch = useAppDispatch()
 
   const handleNavigation = (path: string) => {
     const [lang, currentPath] = pathname.replace(/^\//, '').split('/') // This will get 'en' and 'currentpaht' from '/en/viewer'
@@ -67,6 +70,12 @@ export default function SideMenu() {
     updatePathname(i18n.language)
   }
 
+  const handleLogoutClick = useCallback(() => {
+    dispatch(logout())
+    router.push('/')
+    router.refresh()
+  }, [dispatch, router])
+
   return (
     <StyledDrawer variant='permanent' open={open}>
       <Box display={'flex'} flex={1} flexDirection={'column'}>
@@ -101,10 +110,20 @@ export default function SideMenu() {
           })}
           {/* <ListItemText primary={t('home')} key={forceUpdate} /> */}
         </Box>
-        <Box flex={1} display={'flex'} alignItems={'flex-end'}>
-          <StyledSidebarButton onClick={() => setOpen(!open)}>
-            {open ? <ArrowBackIcon /> : <ArrowBackIcon sx={{ transform: 'rotate(180deg)' }} />}
-          </StyledSidebarButton>
+        <Box flex={1} display={'flex'} flexDirection={'column'} justifyContent={'flex-end'}>
+          <Box display={'flex'}>
+            <ListItemButton onClick={handleLogoutClick}>
+              <ListItemIcon>
+                <LogoutIcon sx={{ color: 'white' }} />
+              </ListItemIcon>
+              <ListItemText primary={logoutMenu} />
+            </ListItemButton>
+          </Box>
+          <Box display={'flex'}>
+            <StyledSidebarButton onClick={() => setOpen(!open)}>
+              {open ? <ArrowBackIcon /> : <ArrowBackIcon sx={{ transform: 'rotate(180deg)' }} />}
+            </StyledSidebarButton>
+          </Box>
         </Box>
       </Box>
     </StyledDrawer>

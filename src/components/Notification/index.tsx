@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useCallback } from 'react'
 import {
   Dialog,
   DialogTitle,
@@ -12,10 +12,27 @@ import {
 } from '@mui/material'
 import { useNotification } from '@/hooks/useNotification'
 import { StyledAlert } from './style'
+import { useTranslation } from 'react-i18next'
 
 export const Notification: React.FC = () => {
   const { notificationModal, notificationSnackbar, modal, snackbar } = useNotification()
-
+  const { t } = useTranslation('notification')
+  const getTitle = useCallback(
+    (modalType: string) => {
+      switch (modal.type) {
+        case 'error':
+          return t('title.error')
+        case 'warning':
+          return t('title.warning')
+        case 'success':
+          return t('title.success')
+        case 'info':
+        default:
+          return t('title.info')
+      }
+    },
+    [modal.type, t]
+  )
   // Determine which notification to render
   const renderNotification = () => {
     // Modal has priority
@@ -63,7 +80,7 @@ export const Notification: React.FC = () => {
               })(),
             })}
           >
-            {modal.type.toUpperCase()} Notification
+            {getTitle(modal.type)}
           </DialogTitle>
           <DialogContent>
             <DialogContentText id='notification-dialog-description'>
@@ -71,8 +88,8 @@ export const Notification: React.FC = () => {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={notificationModal.close} color='primary' autoFocus>
-              Close
+            <Button onClick={notificationModal.close} color='primary' variant='contained'>
+              {t('closeButton')}
             </Button>
           </DialogActions>
         </Dialog>
