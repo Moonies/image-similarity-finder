@@ -2,7 +2,7 @@
 
 import InputUploadFile from '@/components/InputUploadFile'
 import { Box, Button, Typography } from '@mui/material'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import useSearch from './hooks/useSearch'
 import { useNotification } from '@/hooks/useNotification'
@@ -13,6 +13,12 @@ export default function SearchPage() {
   const [uploadFile, setUploadFile] = useState<File>()
   const { handleUpload } = useSearch()
   const { notificationModal } = useNotification()
+  const buttonUploadRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    buttonUploadRef.current?.click()
+    return () => {}
+  }, [])
 
   const handleChooseFile = useCallback(
     (chooseFile: FileList | null) => {
@@ -27,9 +33,9 @@ export default function SearchPage() {
     if (uploadFile) {
       handleUpload(uploadFile)
     } else {
-      notificationModal.warning('Please Select file after click button.')
+      notificationModal.warning(t('alertUploadFile'))
     }
-  }, [handleUpload, notificationModal, uploadFile])
+  }, [handleUpload, notificationModal, t, uploadFile])
 
   return (
     <PageTransition>
@@ -51,7 +57,7 @@ export default function SearchPage() {
           sx={{ backgroundColor: theme => theme.palette.background.paper }}
         >
           <Box display={'flex'} flexDirection={'row'} gap={2}>
-            <InputUploadFile onChoose={files => handleChooseFile(files)} />
+            <InputUploadFile onChoose={files => handleChooseFile(files)} ref={buttonUploadRef} />
             <Typography>{uploadFile ? uploadFile.name : t('imagePlaceholder')}</Typography>
           </Box>
           <Box display={'flex'} flexDirection={'row'}>

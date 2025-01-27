@@ -8,11 +8,11 @@ import {
   // Refresh as RefreshIcon,
   // ImageSearch as ImageSearchIcon,
   Language as LanguageIcon,
-  ContentPaste as ContentPasteIcon,
+  // ContentPaste as ContentPasteIcon,
 } from '@mui/icons-material'
 import { useTranslation } from 'react-i18next'
 import { useThemeContext } from '@/context/ThemeContext'
-import { EraserIcon, ChatIcon } from '@/components/customIcons'
+import { EraserIcon, ChatIcon, DatabaseIcon } from '@/components/customIcons'
 
 export default function useMenu() {
   const { mode } = useThemeContext()
@@ -27,7 +27,7 @@ export default function useMenu() {
       icon: mode === 'dark' ? DarkModeIcon : LightModeIcon,
       path: '',
     },
-    { label: t('sideMenu.record'), key: 'database', icon: ContentPasteIcon, path: '/record' },
+    { label: t('sideMenu.record'), key: 'database', icon: DatabaseIcon, path: '/record' },
     { label: t('sideMenu.eraser'), key: 'eraser', icon: EraserIcon, path: '' },
     { label: t('sideMenu.chat'), key: 'chat', icon: ChatIcon, path: '' },
     { label: '', key: 'language', icon: LanguageIcon, path: '' },
