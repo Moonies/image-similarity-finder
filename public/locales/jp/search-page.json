@@ -1,5 +1,6 @@
 {
   "title": "画像をアップロード",
   "imagePlaceholder": "ファイルが選択されていません",
-  "submitButton": "アップロード"
+  "submitButton": "アップロード",
+  "alertUploadFile": "ボタンをクリックする前にファイルを選択してください。"
 }

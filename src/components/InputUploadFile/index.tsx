@@ -1,7 +1,7 @@
 'use client'
 
 import { Button, styled } from '@mui/material'
-import React from 'react'
+import React, { RefObject } from 'react'
 import { CloudUpload as CloudUploadIcon } from '@mui/icons-material'
 import { useTranslation } from 'react-i18next'
 
@@ -19,9 +19,10 @@ const VisuallyHiddenInput = styled('input')({
 
 type InputUploadFileProps = {
   onChoose: (file: FileList | null) => void
+  ref: RefObject<HTMLInputElement>
 }
 
-export default function InputUploadFile({ onChoose }: InputUploadFileProps) {
+export default function InputUploadFile({ onChoose, ref }: InputUploadFileProps) {
   const { t } = useTranslation('common')
 
   return (
@@ -33,7 +34,7 @@ export default function InputUploadFile({ onChoose }: InputUploadFileProps) {
       startIcon={<CloudUploadIcon />}
     >
       {t('inputUploadFile')}
-      <VisuallyHiddenInput type='file' onChange={event => onChoose(event.target.files)} />
+      <VisuallyHiddenInput type='file' onChange={event => onChoose(event.target.files)} ref={ref} />
     </Button>
   )
 }
