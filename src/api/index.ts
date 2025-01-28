@@ -1,7 +1,8 @@
 import { getCurrentToken } from '@/store/slices/authSlice'
+import axios, { AxiosInstance } from 'axios'
 
 export type ApiResponse<T> = {
-  code: number
+  code: number | string
   message: string
   data: T | null | undefined
   page?: {
@@ -12,31 +13,55 @@ export type ApiResponse<T> = {
   } | null
 }
 
-export const createFetchInstance = (baseURL: string) => {
-  return async (path: string, options: RequestInit = {}) => {
+// export const createFetchInstance = (baseURL: string) => {
+//   return async (path: string, options: RequestInit = {}) => {
+//     const storedToken = getCurrentToken()
+
+//     // Base headers that can be fully replaced if needed
+//     const defaultHeaders: Record<string, string> = {
+//       Accept: '*/*',
+//       'Access-Control-Allow-Origin': '*',
+//       Authorization: storedToken ? `Bearer ${storedToken.token}` : '',
+//     }
+
+//     // Add Content-Type only if it's not FormData
+//     if (!(options.body instanceof FormData)) {
+//       defaultHeaders['Content-Type'] = 'application/json'
+//     }
+
+//     const requestOptions: RequestInit = {
+//       ...options,
+//       headers: options.headers ? { ...defaultHeaders, ...options.headers } : defaultHeaders,
+//     }
+
+//     return fetch(`${baseURL}${path}`, requestOptions)
+//   }
+// }
+
+// export const fetchInstance = createFetchInstance(
+//   process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+// )
+
+export const axiosInstance: AxiosInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
+  timeout: 10000, // 10 seconds
+  headers: {
+    Accept: '*/*',
+    'Access-Control-Allow-Origin': '*',
+    'Content-Type': 'application/json',
+  },
+})
+
+// Set up interceptor to ensure token is always current
+axiosInstance.interceptors.request.use(
+  config => {
     const storedToken = getCurrentToken()
-
-    // Base headers that can be fully replaced if needed
-    const defaultHeaders: Record<string, string> = {
-      Accept: '*/*',
-      'Access-Control-Allow-Origin': '*',
-      Authorization: storedToken ? `Bearer ${storedToken.token}` : '',
+    if (storedToken) {
+      config.headers.Authorization = `Bearer ${storedToken.token}` // Best practice: use Authorization header
     }
-
-    // Add Content-Type only if it's not FormData
-    if (!(options.body instanceof FormData)) {
-      defaultHeaders['Content-Type'] = 'application/json'
-    }
-
-    const requestOptions: RequestInit = {
-      ...options,
-      headers: options.headers ? { ...defaultHeaders, ...options.headers } : defaultHeaders,
-    }
-
-    return fetch(`${baseURL}${path}`, requestOptions)
+    return config
+  },
+  error => {
+    return Promise.reject(error)
   }
-}
-
-export const fetchInstance = createFetchInstance(
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
 )
