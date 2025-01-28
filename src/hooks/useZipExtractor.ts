@@ -33,45 +33,67 @@ export const useZipExtractor = () => {
     return 'binary'
   }
 
-  const processEntry = useCallback(async (entry: any): Promise<ZipContent> => {
-    const type = getFileType(entry.filename)
-    let content: string | Blob | ArrayBuffer
+  const cleanDsStore = useCallback((obj: any): any => {
+    if (typeof obj !== 'object' || obj === null) return obj
 
-    switch (type) {
-      case 'text':
-      case 'json':
-        const jsonText = await entry.getData(new TextWriter())
-        try {
-          content = JSON.parse(jsonText)
-        } catch {
-          // If JSON parsing fails, treat it as text
-          // content = jsonText
-          content = await entry.getData(new TextWriter())
-        }
-        break
-
-      case 'image':
-      case 'pdf':
-        content = await entry.getData(
-          new BlobWriter(type === 'image' ? 'image/*' : 'application/pdf')
-        )
-        break
-
-      default:
-        content = await entry.getData(new BlobWriter())
+    if (Array.isArray(obj)) {
+      return obj.map(item => cleanDsStore(item))
     }
 
-    const path = entry.filename.split('/')
-    const name = path.pop()!
-
-    return {
-      name,
-      content,
-      type,
-      size: entry.uncompressedSize,
-      path,
-    }
+    return Object.fromEntries(
+      Object.entries(obj)
+        .filter(([key]) => !key.includes('.DS_Store'))
+        .map(([key, value]) => [key, cleanDsStore(value)])
+    )
   }, [])
+
+  const processEntry = useCallback(
+    async (entry: any): Promise<ZipContent> => {
+      const type = getFileType(entry.filename)
+      let content: string | Blob | ArrayBuffer
+
+      // Skip .DS_Store files
+      if (entry.filename.endsWith('.DS_Store')) {
+        throw new Error('DS_Store file skipped')
+      }
+      switch (type) {
+        case 'text':
+        case 'json':
+          const jsonText = await entry.getData(new TextWriter())
+          try {
+            const parsedContent = JSON.parse(jsonText)
+            content = cleanDsStore(parsedContent)
+          } catch {
+            // If JSON parsing fails, treat it as text
+            // content = jsonText
+            content = await entry.getData(new TextWriter())
+          }
+          break
+
+        case 'image':
+        case 'pdf':
+          content = await entry.getData(
+            new BlobWriter(type === 'image' ? 'image/*' : 'application/pdf')
+          )
+          break
+
+        default:
+          content = await entry.getData(new BlobWriter())
+      }
+
+      const path = entry.filename.split('/')
+      const name = path.pop()!
+
+      return {
+        name,
+        content,
+        type,
+        size: entry.uncompressedSize,
+        path,
+      }
+    },
+    [cleanDsStore]
+  )
 
   const handleZipInput = useCallback(
     async (input: File | Blob | ArrayBuffer | string): Promise<ZipContent[]> => {

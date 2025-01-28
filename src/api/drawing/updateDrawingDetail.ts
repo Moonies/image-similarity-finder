@@ -1,5 +1,6 @@
 import { HttpRequest } from '@/hooks/useHttp'
-import { ApiResponse, fetchInstance } from '@/api'
+import { ApiResponse, axiosInstance } from '@/api'
+import axios from 'axios'
 
 export type UpdateDrawingImageDetail = {
   id: string
@@ -32,21 +33,36 @@ export default async function updateDrawingDetail(
   httpRequest: HttpRequest,
   data: UpdateDrawingImageDetail
 ): Promise<ApiResponse<null>> {
+  // const response = await httpRequest(() =>
+  //   fetchInstance(`/api/drawings/${data.id}`, {
+  //     method: 'PATCH',
+  //     body: JSON.stringify(data),
+  //   })
+  // )
+
+  // if (!response.ok) {
+  //   return {
+  //     code: response.status,
+  //     message: response.statusText,
+  //     data: undefined,
+  //   }
+  // }
+  // // const result = await response.json()
+  // //result._embedded.drawings[0] _embedded for test need to discuss
+  // return { code: 200, message: 'success', data: null }
+
   const response = await httpRequest(() =>
-    fetchInstance(`/api/drawings/${data.id}`, {
-      method: 'PATCH',
-      body: JSON.stringify(data),
+    axiosInstance.patch(`/api/drawings/${data.id}`, {
+      ...data,
     })
   )
 
-  if (!response.ok) {
-    return {
-      code: response.status,
-      message: response.statusText,
-      data: undefined,
-    }
+  if (axios.isAxiosError(response)) {
+    return { code: response?.code ?? 500, message: response.message, data: undefined }
   }
-  // const result = await response.json()
-  //result._embedded.drawings[0] _embedded for test need to discuss
-  return { code: 200, message: 'success', data: null }
+  return {
+    code: 200,
+    message: 'success',
+    data: null,
+  }
 }

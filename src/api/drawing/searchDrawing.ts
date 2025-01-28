@@ -1,5 +1,6 @@
-import { ApiResponse, fetchInstance } from '@/api'
+import { ApiResponse, axiosInstance } from '@/api'
 import { HttpRequest } from '@/hooks/useHttp'
+import axios from 'axios'
 
 export default async function searchDrawing(
   httpRequest: HttpRequest,
@@ -8,23 +9,37 @@ export default async function searchDrawing(
   const formData = new FormData()
   formData.append('file', searchImage)
 
+  // const response = await httpRequest(() =>
+  //   fetchInstance('/api/drawings/search', {
+  //     method: 'POST',
+  //     body: formData,
+  //   })
+  // )
+
+  // if (!response.ok) {
+  //   console.log(response)
+  //   // const errorData = await response.json()
+  //   return {
+  //     code: response.status,
+  //     message: response.statusText,
+  //     data: undefined,
+  //   }
+  // }
+  // const result = await response.blob()
+
+  // return { code: 200, message: 'success', data: result }
+
   const response = await httpRequest(() =>
-    fetchInstance('/api/drawings/search', {
-      method: 'POST',
-      body: formData,
+    axiosInstance.post('/api/drawings/search', formData, {
+      responseType: 'blob',
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'multipart/form-data',
+      },
     })
   )
-
-  if (!response.ok) {
-    console.log(response)
-    // const errorData = await response.json()
-    return {
-      code: response.status,
-      message: response.statusText,
-      data: undefined,
-    }
+  if (axios.isAxiosError(response)) {
+    return { code: response?.code ?? 500, message: response.message, data: undefined }
   }
-  const result = await response.blob()
-
-  return { code: 200, message: 'success', data: result }
+  return { code: 200, message: 'success', data: response?.data }
 }
