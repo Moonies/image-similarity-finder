@@ -64,7 +64,7 @@ export default function RecordDetail() {
                 alt='Preview'
                 width={750} //Next Image can't auto width&height fill is oversize
                 height={500}
-                style={{ height: 'auto' }}
+                className='w-full h-auto'
                 onClick={e => {
                   setSelectedImage(drawingImage)
                   setModalOpen(true)

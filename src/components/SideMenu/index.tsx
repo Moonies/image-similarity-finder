@@ -29,7 +29,7 @@ export default function SideMenu() {
   const dispatch = useAppDispatch()
 
   const handleNavigation = (path: string) => {
-    const [lang, currentPath] = pathname.replace(/^\//, '').split('/') // This will get 'en' and 'currentpaht' from '/en/viewer'
+    const [lang, _currentPath] = pathname.replace(/^\//, '').split('/') // This will get 'en' and 'currentpaht' from '/en/viewer'
     // if (path === `/${currentPath}`) return //if want to not return when still same parent path
     router.push(`/${lang}${path}`)
   }
@@ -95,20 +95,27 @@ export default function SideMenu() {
             ) : (
               <StyledSelect
                 labelId='select-label-language'
-                id='select'
+                id='select-language'
                 value={languageSwitcher}
                 onChange={handleLanguageClick}
                 key={index}
                 size='small'
               >
-                <MenuItem value={'en'}>English</MenuItem>
-                <MenuItem value={'jp'}>日本語</MenuItem>
-                <MenuItem value={'cn'}>中文</MenuItem>
-                <MenuItem value={'vn'}>Tiếng Việt</MenuItem>
+                <MenuItem value={'en'} id='select-en'>
+                  English
+                </MenuItem>
+                <MenuItem value={'jp'} id='select-jp'>
+                  日本語
+                </MenuItem>
+                <MenuItem value={'cn'} id='select-cn'>
+                  中文
+                </MenuItem>
+                <MenuItem value={'vn'} id='select-vn'>
+                  Tiếng Việt
+                </MenuItem>
               </StyledSelect>
             )
           })}
-          {/* <ListItemText primary={t('home')} key={forceUpdate} /> */}
         </Box>
         <Box flex={1} display={'flex'} flexDirection={'column'} justifyContent={'flex-end'}>
           <Box display={'flex'}>
