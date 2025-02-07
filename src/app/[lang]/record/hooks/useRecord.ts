@@ -49,7 +49,7 @@ export default function useRecord() {
   const router = useRouter()
   const { setPageData, getPageData } = useCache()
   const { api } = useHttp()
-  const { setLoading } = useLoading()
+  const { setLoading, withLoading } = useLoading()
 
   const getDrawingList = useMemo(
     () =>
@@ -73,8 +73,8 @@ export default function useRecord() {
   )
 
   const handleSearch = useCallback(async () => {
-    getDrawingList(paginationModel)
-  }, [getDrawingList, paginationModel])
+    withLoading(getDrawingList(paginationModel))
+  }, [getDrawingList, paginationModel, withLoading])
 
   const prepareCategorySearch = useCallback((columns: GridColDef[]) => {
     const result: CategorySaleSearch[] = []
