@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react'
 import { Box, Point } from '../page'
+import useEraser from './useEraser'
 
 export const useCanvas = (
   canvasRef: React.RefObject<HTMLCanvasElement>,
@@ -19,7 +20,8 @@ export const useCanvas = (
   const [startX, setStartX] = useState(0)
   const [startY, setStartY] = useState(0)
   const [isOverlayActive, setIsOverlayActive] = useState(false)
-
+  const [drawnCoordinates, setDrawnCoordinates] = useState<{ x: number; y: number }[]>([])
+  const { convertDrawnCoordinatesToOriginal } = useEraser()
   const maskContext = maskCanvasRef.current?.getContext('2d')
 
   // Get mouse position relative to the canvas
@@ -180,6 +182,8 @@ export const useCanvas = (
         maskContext.lineWidth = 5
         maskContext.stroke()
       }
+      // Add the current coordinates to the drawnCoordinates list
+      setDrawnCoordinates(prevCoordinates => [...prevCoordinates, { x, y }])
     } else if (boxSelectionMode && isBoxDrawing) {
       redrawCanvas()
       // Clear and redraw all layers (image, mask, points, boxes)
@@ -201,8 +205,24 @@ export const useCanvas = (
 
     if (isDrawing) {
       setIsDrawing(false)
-      // sendDrawnMaskToServer()
       redrawCanvas()
+      const canvasWidth = canvasRef.current.width
+      const canvasHeight = canvasRef.current.height
+      const originalWidth = originalImage.width
+      const originalHeight = originalImage.height
+
+      const result = convertDrawnCoordinatesToOriginal(
+        drawnCoordinates,
+        canvasWidth,
+        canvasHeight,
+        originalWidth,
+        originalHeight
+      )
+      console.log('Drawn Coordinates:', result)
+      // sendDrawnMaskToServer()
+
+      // Optionally, clear the coordinates after processing
+      setDrawnCoordinates([])
     } else if (isBoxDrawing) {
       // Save the box to the state
       const box = {
