@@ -1,7 +1,9 @@
 import { DrawingImageDetail } from '@/api/drawing'
 import { useCache } from '@/context/CacheContext'
+import { useConfirmModal } from '@/hooks/useConfirm'
 import useHttp from '@/hooks/useHttp'
 import { useLoading } from '@/hooks/useLoading'
+import { useNotification } from '@/hooks/useNotification'
 import {
   GridColDef,
   GridEventListener,
@@ -50,31 +52,43 @@ export default function useRecord() {
   const { setPageData, getPageData } = useCache()
   const { api } = useHttp()
   const { setLoading } = useLoading()
+  const { notificationSnackbar } = useNotification()
+  const { openConfirmModal } = useConfirmModal()
 
   const getDrawingList = useMemo(
-    () =>
-      async ({ page, pageSize }: GridPaginationModel) => {
-        const searchCriteriaParams = {
-          ...searchCriteria,
-          page,
-          pageSize,
-        }
-        const result = await api.drawing.getDrawingList(searchCriteriaParams)
-        if (result.code === 200 && result.data) {
-          setDrawingList(result.data)
-          setTotalRows(result.page?.totalElements ?? 0)
-          setCachedData(prevCache => ({
-            ...prevCache,
-            [`${page}-${pageSize}`]: result.data ? result.data : [],
-          }))
-        }
-      },
-    [api.drawing, searchCriteria]
+    () => async () => {
+      const { page, pageSize } = paginationModel
+      const currentSearchCriteria = searchCriteria
+      const searchCriteriaParams = {
+        ...currentSearchCriteria,
+        page,
+        pageSize,
+      }
+      const result = await api.drawing.getDrawingList(searchCriteriaParams)
+      if (result.code === 200 && result.data) {
+        setDrawingList(result.data)
+        setTotalRows(result.page?.totalElements ?? 0)
+        setCachedData(prevCache => ({
+          ...prevCache,
+          [`${page}-${pageSize}`]: result.data ? result.data : [],
+        }))
+        setLoading(false)
+      }
+    },
+    [paginationModel, searchCriteria, setLoading, api]
+  )
+
+  const removeDrawing = useMemo(
+    () => async (drawingId: string) => {
+      const result = await api.drawing.removeDrawing(drawingId)
+      return result
+    },
+    [api.drawing]
   )
 
   const handleSearch = useCallback(async () => {
-    getDrawingList(paginationModel)
-  }, [getDrawingList, paginationModel])
+    getDrawingList()
+  }, [getDrawingList])
 
   const prepareCategorySearch = useCallback((columns: GridColDef[]) => {
     const result: CategorySaleSearch[] = []
@@ -137,10 +151,29 @@ export default function useRecord() {
   )
 
   const handleDeleteClick = useCallback(
-    (id: GridRowId) => () => {
-      setDrawingList(drawingList.filter(row => row.id !== id))
+    (drawingId: GridRowId) => async () => {
+      const selectedData = drawingList.find(item => item.id === drawingId)
+
+      const confirmed = await openConfirmModal({
+        title: 'confirm',
+        message: `Are you sure to remove drawing number is${selectedData?.drawingNumber}`,
+      })
+      if (confirmed) {
+        setLoading(true)
+        try {
+          const result = await removeDrawing(drawingId as string)
+          if (result.code === 200) {
+            notificationSnackbar.success('remove success')
+            await getDrawingList()
+          }
+        } catch (error) {
+          notificationSnackbar.error(JSON.stringify(error))
+        } finally {
+          setLoading(false)
+        }
+      }
     },
-    [drawingList, setDrawingList]
+    [drawingList, openConfirmModal, setLoading, removeDrawing, notificationSnackbar, getDrawingList]
   )
 
   const handleCancelClick = useCallback(
@@ -198,7 +231,7 @@ export default function useRecord() {
       setDrawingList(cachedData[cacheKey])
       return
     } else if (drawingList.length !== 0) {
-      getDrawingList(newModel)
+      getDrawingList()
     }
   }
 

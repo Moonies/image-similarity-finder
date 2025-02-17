@@ -27,7 +27,7 @@ export default function RecordDetail() {
   useEffect(() => {
     if (isFirstMount.current) {
       const cachedData = getPageData('rawData')
-      if (cachedData) withLoading(getDrawingImage(cachedData[`drawingNumber`]))
+      if (cachedData) withLoading(getDrawingImage(cachedData[`id`]))
       isFirstMount.current = false
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
