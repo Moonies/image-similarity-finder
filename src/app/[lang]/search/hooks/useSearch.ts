@@ -67,7 +67,10 @@ export default function useSearch() {
           }
         } else {
           const uploadedFile = URL.createObjectURL(fileSelected)
-          setPageData('rawData', { uploadedImage: uploadedFile })
+          setPageData('rawData', {
+            uploadedImage: uploadedFile,
+            uploadedFileName: fileSelected.name,
+          })
         }
         router.push(`/${lang}/search/${id}`)
       }

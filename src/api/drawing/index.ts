@@ -5,6 +5,7 @@ import { default as getDrawingDetail } from './getDrawingDetail'
 import { default as updateDrawingDetail, UpdateDrawingImageDetail } from './updateDrawingDetail'
 import { default as getDrawingList, DrawingListSearchCriteria } from './getDrawingList'
 import { default as getDrawingImage } from './getDrawingImage'
+import { default as removeDrawing } from './removeDrawing'
 
 export type DrawingImageDetail = {
   id: string
@@ -38,6 +39,7 @@ export interface SearchApi {
   updateDrawingDetail: (params: UpdateDrawingImageDetail) => Promise<ApiResponse<null>>
   getDrawingList: (params: DrawingListSearchCriteria) => Promise<ApiResponse<DrawingImageDetail[]>>
   getDrawingImage: (drawingId: string) => Promise<ApiResponse<string>>
+  removeDrawing: (drawingId: string) => Promise<ApiResponse<null>>
 }
 
 export default function search(httpRequest: HttpRequest): SearchApi {
@@ -47,5 +49,6 @@ export default function search(httpRequest: HttpRequest): SearchApi {
     updateDrawingDetail: params => updateDrawingDetail(httpRequest, params),
     getDrawingList: params => getDrawingList(httpRequest, params),
     getDrawingImage: drawingId => getDrawingImage(httpRequest, drawingId),
+    removeDrawing: drawingId => removeDrawing(httpRequest, drawingId),
   }
 }

@@ -39,7 +39,7 @@ export default function useSearchDetail() {
 
   const handleGetDetailImage = useCallback(
     async (selectedDrawing: string) => {
-      // const mockNumber = '$FGY5PC001'
+      // console.log(selectedDrawing) //H4440022xxxx.xxx example file name
       const drawingNumber = selectedDrawing.split('.')[0]
       const response = await withLoading(getDrawingDetail(drawingNumber))
       if (response) {

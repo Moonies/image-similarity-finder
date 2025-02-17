@@ -58,17 +58,22 @@ export default function InformationForm({
         '& .MuiDrawer-paper': {
           width: '40%',
         },
-        // background: theme => theme.palette.background.paper,
       }}
     >
-      <Box display={'flex'} flex={1} flexDirection={'column'} gap={2}>
+      <Box display={'flex'} flex={1} flexDirection={'column'} gap={2} height={'100%'}>
         <Box display={'flex'} justifyContent={'space-between'} padding={2}>
           <Typography variant='h4'>{t('title')}</Typography>
           <IconButton onClick={onClose}>
             <CloseIcon />
           </IconButton>
         </Box>
-        <Box display={'flex'} flexDirection={'column'} flex={1} padding={4}>
+        <Box
+          display={'flex'}
+          flexDirection={'column'}
+          flexShrink={1}
+          paddingX={4}
+          sx={{ overflowY: 'auto' }}
+        >
           <TextFieldBox
             id='inputField-drawingNumber'
             text={t('inputField1')}
@@ -311,6 +316,8 @@ export default function InformationForm({
               },
             }}
           />
+        </Box>
+        <Box display={'flex'} flexDirection={'column'} flex={1}>
           <Button variant='contained' onClick={handleSubmit}>
             {mode === 'add' ? t('saveButton') : t('printButton')}
           </Button>

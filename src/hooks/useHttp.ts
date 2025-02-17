@@ -22,33 +22,6 @@ export default function useHttp() {
   const dispatch = useAppDispatch()
   const { t } = useTranslation('notification')
 
-  const handleAPIError = useCallback(async (response: Response) => {
-    console.log(response)
-    try {
-      // Try to parse as JSON first
-      const data = await response.json()
-      console.log(data)
-      // return data.message || data.error || response.statusText;
-      return {
-        status: data.status,
-        message: data.message || data.detail,
-        description: data.description || data.title,
-      }
-    } catch {
-      try {
-        // If not JSON, try to get as text
-        console.log(response)
-        const text = await response.text()
-        return text || response.statusText
-      } catch {
-        console.log(response)
-        // If all fails, return status text
-        // return response.statusText;
-        return { status: response.status, message: response.statusText, description: null }
-      }
-    }
-  }, [])
-
   const httpRequest: HttpRequest = useCallback(
     async (apiFunction: () => Promise<AxiosResponse>, disableDisplayError = false) => {
       try {
@@ -112,12 +85,15 @@ export default function useHttp() {
 
   // Create api and store in ref
   const api = useMemo(() => {
-    const apiInstance = {
-      user: userApi(httpRequest),
-      drawing: drawingApi(httpRequest),
+    if (!apiRef.current.user || !apiRef.current.drawing) {
+      // Only create the API instance if it doesn't already exist
+      // when have a new group api must have to add in if statement
+      apiRef.current = {
+        user: userApi(httpRequest),
+        drawing: drawingApi(httpRequest),
+      }
     }
-    apiRef.current = apiInstance // Store in ref
-    return apiInstance
+    return apiRef.current
   }, [httpRequest])
 
   return { api }
