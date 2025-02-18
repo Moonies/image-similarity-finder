@@ -3,19 +3,30 @@ import {
   Close as CloseIcon,
   ZoomIn as ZoomInIcon,
   ZoomOut as ZoomOutIcon,
+  Edit as EditIcon,
 } from '@mui/icons-material'
 import { useRef, useState } from 'react'
+import ImageUploadModal from '@/components/modals/ImageUploadModal'
 
 interface imageViewerProps {
   open: boolean
   imagePreview: string
   onClose: () => void
+  editable?: boolean
+  onUpdate?: (newImage: File) => void
 }
 const zoomLevels = [1, 1.5, 2, 2.5, 3]
-export default function ImageViewerModal({ imagePreview, onClose, open }: imageViewerProps) {
+export default function ImageViewerModal({
+  imagePreview,
+  onClose,
+  open,
+  editable = false,
+  onUpdate,
+}: imageViewerProps) {
   const [currentZoomIndex, setCurrentZoomIndex] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
   const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [penUploadImageModal, setOpenUploadImageModal] = useState(false)
   const imageRef = useRef<HTMLImageElement>(null)
 
   // Refs to store drag start positions
@@ -88,10 +99,22 @@ export default function ImageViewerModal({ imagePreview, onClose, open }: imageV
     }
   }
 
-  const resetZoom = () => {
-    setCurrentZoomIndex(0)
-    setPosition({ x: 0, y: 0 })
+  const handleEditClick = () => {
+    setOpenUploadImageModal(true)
   }
+
+  const handleUploadImage = (newImage?: File) => {
+    setOpenUploadImageModal(false)
+    if (newImage && onUpdate) {
+      onUpdate(newImage)
+      onClose()
+    }
+  }
+
+  // const resetZoom = () => {
+  //   setCurrentZoomIndex(0)
+  //   setPosition({ x: 0, y: 0 })
+  // }
 
   return (
     <Dialog
@@ -106,74 +129,89 @@ export default function ImageViewerModal({ imagePreview, onClose, open }: imageV
       maxWidth={'lg'}
       keepMounted
       scroll={'paper'}
-      // TransitionComponent={Slide}
+      // TransitionComponent={slide}
     >
-      <DialogTitle>
-        <Box display='flex' alignItems='center' justifyContent='space-between'>
-          <Typography variant='h6'></Typography>
-          <Box display={'flex'} gap={2}>
-            <IconButton
-              edge='end'
-              color='inherit'
-              onClick={handleZoomIn}
-              aria-label='zoomIn'
-              disabled={currentZoomIndex === zoomLevels.length - 1}
-            >
-              <ZoomInIcon />
-            </IconButton>
-            <IconButton
-              edge='end'
-              color='inherit'
-              onClick={handleZoomOut}
-              aria-label='zoomOut'
-              disabled={currentZoomIndex === 0}
-            >
-              <ZoomOutIcon />
-            </IconButton>
-            <IconButton edge='end' color='inherit' onClick={onClose} aria-label='close'>
-              <CloseIcon />
-            </IconButton>
+      <Box>
+        <DialogTitle>
+          <Box display='flex' alignItems='center' justifyContent='space-between'>
+            <Typography variant='h6'></Typography>
+            <Box display={'flex'} gap={2}>
+              {editable && (
+                <IconButton
+                  edge='end'
+                  color='inherit'
+                  onClick={handleEditClick}
+                  aria-label='upload'
+                >
+                  <EditIcon />
+                </IconButton>
+              )}
+              <IconButton
+                edge='end'
+                color='inherit'
+                onClick={handleZoomIn}
+                aria-label='zoomIn'
+                disabled={currentZoomIndex === zoomLevels.length - 1}
+              >
+                <ZoomInIcon />
+              </IconButton>
+              <IconButton
+                edge='end'
+                color='inherit'
+                onClick={handleZoomOut}
+                aria-label='zoomOut'
+                disabled={currentZoomIndex === 0}
+              >
+                <ZoomOutIcon />
+              </IconButton>
+              <IconButton edge='end' color='inherit' onClick={onClose} aria-label='close'>
+                <CloseIcon />
+              </IconButton>
+            </Box>
           </Box>
-        </Box>
-      </DialogTitle>
-      <DialogContent>
-        <Box display={'flex'} justifyContent='center' sx={{ maxWidth: 'lg' }}>
-          <Box
-            sx={{
-              width: 'lg',
-              // height: containerHeight,
-              overflow: 'hidden',
-              position: 'relative',
-              cursor: currentZoomIndex === 0 ? 'default' : isDragging ? 'grabbing' : 'grab',
-            }}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-          >
+        </DialogTitle>
+        <DialogContent>
+          <Box display={'flex'} justifyContent='center' sx={{ maxWidth: 'lg' }}>
             <Box
-              ref={imageRef}
-              component='img'
-              src={imagePreview}
-              onDragStart={preventImageDrag}
-              alt='Zoomable and draggable image'
               sx={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'contain',
-                transition: isDragging ? 'none' : 'transform 0.3s ease',
-                transform:
-                  currentZoomIndex === 0
-                    ? 'none'
-                    : `scale(${zoomLevels[currentZoomIndex]}) translate(${
-                        position.x / zoomLevels[currentZoomIndex]
-                      }px, ${position.y / zoomLevels[currentZoomIndex]}px)`,
-                userSelect: 'none',
+                width: 'lg',
+                // height: containerHeight,
+                overflow: 'hidden',
+                position: 'relative',
+                cursor: currentZoomIndex === 0 ? 'default' : isDragging ? 'grabbing' : 'grab',
               }}
-            />
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+            >
+              <Box
+                ref={imageRef}
+                component='img'
+                src={imagePreview}
+                onDragStart={preventImageDrag}
+                alt='Zoomable and draggable image'
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
+                  transition: isDragging ? 'none' : 'transform 0.3s ease',
+                  transform:
+                    currentZoomIndex === 0
+                      ? 'none'
+                      : `scale(${zoomLevels[currentZoomIndex]}) translate(${
+                          position.x / zoomLevels[currentZoomIndex]
+                        }px, ${position.y / zoomLevels[currentZoomIndex]}px)`,
+                  userSelect: 'none',
+                }}
+              />
+            </Box>
           </Box>
-        </Box>
-      </DialogContent>
+          {penUploadImageModal && (
+            <ImageUploadModal onClose={handleUploadImage} open={penUploadImageModal} />
+          )}
+        </DialogContent>
+      </Box>
     </Dialog>
   )
 }

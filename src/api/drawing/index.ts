@@ -6,7 +6,7 @@ import { default as updateDrawingDetail, UpdateDrawingImageDetail } from './upda
 import { default as getDrawingList, DrawingListSearchCriteria } from './getDrawingList'
 import { default as getDrawingImage } from './getDrawingImage'
 import { default as removeDrawing } from './removeDrawing'
-
+import { default as updateDrawingImage } from './updateDrawingImage'
 export type DrawingImageDetail = {
   id: string
   drawingNumber: string
@@ -33,16 +33,21 @@ export type DrawingImageDetail = {
   sellingPrice: number
   defectDetails: string
 }
-export interface SearchApi {
+export interface DrawingApi {
   searchDrawing: (file: File) => Promise<ApiResponse<Blob | undefined>>
   getDrawingDetail: (drawingNumber: string) => Promise<ApiResponse<DrawingImageDetail>>
   updateDrawingDetail: (params: UpdateDrawingImageDetail) => Promise<ApiResponse<null>>
   getDrawingList: (params: DrawingListSearchCriteria) => Promise<ApiResponse<DrawingImageDetail[]>>
   getDrawingImage: (drawingId: string) => Promise<ApiResponse<string>>
   removeDrawing: (drawingId: string) => Promise<ApiResponse<null>>
+  updateDrawingImage: (
+    file: File,
+    drawingId: string,
+    disableDisplayError?: boolean
+  ) => Promise<ApiResponse<null>>
 }
 
-export default function search(httpRequest: HttpRequest): SearchApi {
+export default function search(httpRequest: HttpRequest): DrawingApi {
   return {
     searchDrawing: file => searchDrawing(httpRequest, file),
     getDrawingDetail: drawingNumber => getDrawingDetail(httpRequest, drawingNumber),
@@ -50,5 +55,7 @@ export default function search(httpRequest: HttpRequest): SearchApi {
     getDrawingList: params => getDrawingList(httpRequest, params),
     getDrawingImage: drawingId => getDrawingImage(httpRequest, drawingId),
     removeDrawing: drawingId => removeDrawing(httpRequest, drawingId),
+    updateDrawingImage: (file, drawingId, disableDisplayError) =>
+      updateDrawingImage(httpRequest, file, drawingId, disableDisplayError),
   }
 }
