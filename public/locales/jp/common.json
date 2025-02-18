@@ -11,5 +11,8 @@
     "eraser": "消しゴム",
     "chat": "チャット",
     "logout": "ログアウト"
-  }
+  },
+  "uploadDrawingImageModalTitle": "新しい図面をアップロード",
+  "submitButton": "提出する",
+  "imagePlaceholder": "ファイルが選択されていません"
 }

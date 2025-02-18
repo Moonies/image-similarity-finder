@@ -9,26 +9,6 @@ export default async function searchDrawing(
   const formData = new FormData()
   formData.append('file', searchImage)
 
-  // const response = await httpRequest(() =>
-  //   fetchInstance('/api/drawings/search', {
-  //     method: 'POST',
-  //     body: formData,
-  //   })
-  // )
-
-  // if (!response.ok) {
-  //   console.log(response)
-  //   // const errorData = await response.json()
-  //   return {
-  //     code: response.status,
-  //     message: response.statusText,
-  //     data: undefined,
-  //   }
-  // }
-  // const result = await response.blob()
-
-  // return { code: 200, message: 'success', data: result }
-
   const response = await httpRequest(() =>
     axiosInstance.post('/api/drawings/search', formData, {
       responseType: 'blob',

@@ -45,7 +45,7 @@ export default function RecordPage() {
         rowModesModel,
         t: t,
       }),
-    [rowModesModel, t, handleCancelClick, handleEditClick, handleSaveClick, handleDeleteClick]
+    [handleCancelClick, handleEditClick, handleSaveClick, handleDeleteClick, rowModesModel, t]
   )
 
   useEffect(() => {

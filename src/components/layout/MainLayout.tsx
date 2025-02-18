@@ -1,17 +1,7 @@
 'use client'
-
-import { styled } from '@mui/material/styles'
 import { Box } from '@mui/material'
 import SideMenu from '@/components/SideMenu'
 import { AnimatePresence } from 'framer-motion'
-
-const MainContent = styled('main')({
-  flexGrow: 1,
-  display: 'flex',
-  minHeight: '100vh',
-  flexDirection: 'column',
-  overflow: 'hidden',
-})
 
 interface MainLayoutProps {
   children: React.ReactNode
@@ -19,11 +9,16 @@ interface MainLayoutProps {
 
 export default function MainLayout({ children }: MainLayoutProps) {
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box display={'flex'} flex={1} height={'100vh'}>
       <SideMenu />
-      <MainContent sx={{ backgroundColor: theme => theme.palette.background.default }}>
+      <Box
+        component='main'
+        display={'flex'}
+        flexGrow={1}
+        sx={{ backgroundColor: theme => theme.palette.background.default }}
+      >
         <AnimatePresence mode='wait'>{children}</AnimatePresence>
-      </MainContent>
+      </Box>
     </Box>
   )
 }

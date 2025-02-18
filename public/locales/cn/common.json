@@ -11,5 +11,8 @@
     "eraser": "橡皮擦",
     "chat": "打印",
     "logout": "注销"
-  }
+  },
+  "uploadDrawingImageModalTitle": "上传新绘图",
+  "submitButton": "提交",
+  "imagePlaceholder": "未选择文件"
 }
