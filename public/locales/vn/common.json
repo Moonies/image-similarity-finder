@@ -11,5 +11,8 @@
     "eraser": "Tẩy",
     "chat": "Trò chuyện",
     "logout": "Đăng xuất"
-  }
+  },
+  "uploadDrawingImageModalTitle": "Tải lên bản vẽ mới",
+  "submitButton": "Nộp",
+  "imagePlaceholder": "Không có tập tin được chọn"
 }

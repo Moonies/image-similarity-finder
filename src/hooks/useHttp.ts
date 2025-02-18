@@ -2,8 +2,8 @@ import { useCallback, useMemo, useRef } from 'react'
 import { useConfirmModal } from '@/hooks/useConfirm'
 import { useLoading } from '@/hooks/useLoading'
 import { useNotification } from '@/hooks/useNotification'
-import { default as userApi } from '@/api/user'
-import { default as drawingApi } from '@/api/drawing'
+import { UserApi, default as userApi } from '@/api/user'
+import { DrawingApi, default as drawingApi } from '@/api/drawing'
 import { getCurrentToken, getCurrentUser, setCredentials } from '@/store/slices/authSlice'
 import { useAppDispatch } from './useRedux'
 import { useTranslation } from 'react-i18next'
@@ -14,10 +14,15 @@ export type HttpRequest = (
   disableDisplayError?: boolean
 ) => Promise<AxiosResponse | AxiosError | undefined>
 
+type ApiType = {
+  user: UserApi
+  drawing: DrawingApi
+}
+
 export default function useHttp() {
   const { notificationSnackbar, notificationModal } = useNotification()
   const { openConfirmModal } = useConfirmModal()
-  const apiRef = useRef<any>({})
+  const apiRef = useRef<ApiType | null>(null)
   const { setLoading } = useLoading()
   const dispatch = useAppDispatch()
   const { t } = useTranslation('notification')
@@ -43,12 +48,12 @@ export default function useHttp() {
                   const user = getCurrentUser()
                   const storedToken = getCurrentToken()
 
-                  const result = await apiRef.current.user.checkAuth(
+                  const result = await apiRef.current?.user.checkAuth(
                     user,
-                    storedToken?.refreshToken
+                    storedToken?.refreshToken ?? ''
                   )
 
-                  if (result.code === 200 && result.data) {
+                  if (result?.code === 200 && result.data) {
                     // refreshToken(result.data)
                     dispatch(
                       setCredentials({
@@ -71,7 +76,7 @@ export default function useHttp() {
                 notificationSnackbar.error(
                   `${t('error')}: ${error?.code}
                 \n status: ${error?.status}
-                \n ${error?.message}`
+                \n ${error?.response.data.detail}`
                 )
                 break
             }
@@ -85,7 +90,7 @@ export default function useHttp() {
 
   // Create api and store in ref
   const api = useMemo(() => {
-    if (!apiRef.current.user || !apiRef.current.drawing) {
+    if (!apiRef.current) {
       // Only create the API instance if it doesn't already exist
       // when have a new group api must have to add in if statement
       apiRef.current = {
