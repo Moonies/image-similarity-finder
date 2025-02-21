@@ -21,7 +21,7 @@ jobs:
       with:
         docker_username: ${{ env.DOCKER_USERNAME }}
         docker_password: ${{ env.DOCKER_PASSWORD }}
-        file : Dockerfile.development
+        dockerfile : Dockerfile.development
         project: isf
         repository: frontend
         tag_version: test
