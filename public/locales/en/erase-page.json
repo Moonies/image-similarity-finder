@@ -1,0 +1,14 @@
+{
+  "title": "Upload Image",
+  "imagePlaceholder": "No File Chosen",
+  "submitButton": "Upload",
+  "alertUploadFile": "Please Select file before click upload button.",
+  "processButton": "Process",
+  "printButton": "Print",
+  "undoButton": "Undo",
+  "resetButton": "Reset",
+  "drawingButton": "Drawing",
+  "stopDrawingButton": "Stop Drawing",
+  "drawBoxButton": "Draw Box",
+  "stopDrawBoxButton": "Stop Draw Box"
+}

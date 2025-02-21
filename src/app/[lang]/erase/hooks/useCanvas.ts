@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react'
 import { Box, Point } from '../page'
-import useEraser from './useEraser'
+import useEraser from './useErase'
+import { useLoading } from '@/hooks/useLoading'
 
 export const useCanvas = (
   canvasRef: React.RefObject<HTMLCanvasElement>,
@@ -10,8 +11,8 @@ export const useCanvas = (
   originalImage: HTMLImageElement | null,
   setPoints: React.Dispatch<React.SetStateAction<Point[]>>,
   setBoxes: React.Dispatch<React.SetStateAction<Box[]>>,
-  setActions: React.Dispatch<React.SetStateAction<any[]>>
-  // sendPointsToServer: () => void
+  setActions: React.Dispatch<React.SetStateAction<number>>,
+  setOriginalImage: React.Dispatch<React.SetStateAction<HTMLImageElement | null>>
 ) => {
   const [isDrawing, setIsDrawing] = useState(false)
   const [isBoxDrawing, setIsBoxDrawing] = useState(false)
@@ -19,10 +20,10 @@ export const useCanvas = (
   const [boxSelectionMode, setBoxSelectionMode] = useState(false)
   const [startX, setStartX] = useState(0)
   const [startY, setStartY] = useState(0)
-  const [isOverlayActive, setIsOverlayActive] = useState(false)
+  // const [isOverlayActive, setIsOverlayActive] = useState(false)
   const [drawnCoordinates, setDrawnCoordinates] = useState<{ x: number; y: number }[]>([])
-  const { convertDrawnCoordinatesToOriginal } = useEraser()
-  const maskContext = maskCanvasRef.current?.getContext('2d')
+  const { convertDrawnCoordinatesToOriginal, sendPointsToServer, updateEraseDrawing } = useEraser()
+  const { setLoading } = useLoading()
 
   // Get mouse position relative to the canvas
   const getMousePosition = (event: React.MouseEvent<HTMLCanvasElement>) => {
@@ -37,24 +38,35 @@ export const useCanvas = (
   const drawPoint = useCallback(
     (x: number, y: number, label: number) => {
       const context = canvasRef.current?.getContext('2d')
-      if (context) {
-        context.beginPath()
-        context.arc(x, y, 5, 0, 2 * Math.PI)
-        context.fillStyle = label === 1 ? 'green' : 'red'
-        context.fill()
-        context.strokeStyle = 'white'
-        context.lineWidth = 2
-        context.stroke()
-      }
+      const maskContext = maskCanvasRef.current?.getContext('2d')
+      if (!context || !maskContext) return
+
+      context.beginPath()
+      context.arc(x, y, 5, 0, 2 * Math.PI)
+      context.fillStyle = label === 1 ? 'green' : 'red'
+      context.fill()
+      context.strokeStyle = 'white'
+      context.lineWidth = 2
+      context.stroke()
+
+      maskContext.beginPath()
+      maskContext.arc(x, y, 5, 0, 2 * Math.PI)
+      maskContext.fillStyle = label === 1 ? 'green' : 'red'
+      maskContext.fill()
+      maskContext.strokeStyle = 'white'
+      maskContext.lineWidth = 2
+      maskContext.stroke()
     },
-    [canvasRef]
+    [canvasRef, maskCanvasRef]
   )
 
   // Draw boxes
   const drawBoxes = useCallback(
     (boxList: Box[]) => {
       const context = canvasRef.current?.getContext('2d')
-      if (!context) return
+      const maskContext = maskCanvasRef.current?.getContext('2d')
+
+      if (!context || !maskContext) return
 
       boxList.forEach(box => {
         context.fillStyle = 'rgba(0, 0, 255, 0.3)'
@@ -63,8 +75,16 @@ export const useCanvas = (
         context.fillRect(box.x, box.y, box.width, box.height)
         context.strokeRect(box.x, box.y, box.width, box.height)
       })
+
+      boxList.forEach(box => {
+        maskContext.fillStyle = 'rgba(0, 0, 255, 0.3)'
+        maskContext.strokeStyle = 'green'
+        maskContext.lineWidth = 2
+        maskContext.fillRect(box.x, box.y, box.width, box.height)
+        maskContext.strokeRect(box.x, box.y, box.width, box.height)
+      })
     },
-    [canvasRef]
+    [canvasRef, maskCanvasRef]
   )
 
   // Redraw the canvas
@@ -73,10 +93,13 @@ export const useCanvas = (
       if (!originalImage || !canvasRef.current || !maskCanvasRef.current) return
 
       const context = canvasRef.current.getContext('2d')
-      if (!context) return
+      const maskContext = maskCanvasRef.current?.getContext('2d')
+
+      if (!context || !maskContext) return
 
       // Clear the canvas
       context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
+      maskContext.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
 
       // Draw the base image
       // context.drawImage(originalImage, 0, 0)
@@ -111,14 +134,12 @@ export const useCanvas = (
 
       // Draw the grey overlay (unmasked areas)
       // Apply grey overlay
-      if (isOverlayActive) {
-        context.globalAlpha = 0.5 // Set transparency for the overlay
-        context.fillStyle = 'grey'
-        context.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height)
-        context.globalAlpha = 1.0 // Reset transparency}
-      }
-      // Draw the mask layer
-      context.drawImage(maskCanvasRef.current, 0, 0)
+      // if (isOverlayActive) {
+      //   context.globalAlpha = 0.5 // Set transparency for the overlay
+      //   context.fillStyle = 'grey'
+      //   context.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height)
+      //   context.globalAlpha = 1.0 // Reset transparency}
+      // }
 
       // Draw all points
       points.forEach(point => {
@@ -128,7 +149,7 @@ export const useCanvas = (
       // Draw all boxes
       drawBoxes(boxList)
     },
-    [boxes, canvasRef, drawBoxes, drawPoint, isOverlayActive, maskCanvasRef, originalImage, points]
+    [boxes, canvasRef, drawBoxes, drawPoint, maskCanvasRef, originalImage, points]
   )
   // Handle mouse down
   const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
@@ -141,6 +162,7 @@ export const useCanvas = (
     if (drawingMode) {
       setIsDrawing(true)
       const context = canvasRef.current.getContext('2d')
+      const maskContext = maskCanvasRef.current?.getContext('2d')
       if (context && maskContext) {
         context.beginPath()
         context.moveTo(x, y)
@@ -151,14 +173,15 @@ export const useCanvas = (
       setIsBoxDrawing(true)
       setStartX(x)
       setStartY(y)
-      setIsOverlayActive(true)
+      // setIsOverlayActive(true)
     } else if (!drawingMode && !boxSelectionMode) {
       const label = event.button === 0 ? 1 : 0 // Left-click: foreground, Right-click: background
       setPoints(prevPoints => [...prevPoints, { point: [x, y], label }])
-      setActions(prevActions => [...prevActions, { type: 'point', data: { point: [x, y], label } }])
+      // setActions(prevActions => [...prevActions, { type: 'point', data: { point: [x, y], label } }])
+      setActions(prevActions => prevActions + 1)
       drawPoint(x, y, label)
-      setIsOverlayActive(true)
-      // sendPointsToServer()
+      // setIsOverlayActive(true)
+      sendPointsToServer(maskCanvasRef)
     }
   }
 
@@ -168,23 +191,27 @@ export const useCanvas = (
     const { x, y } = getMousePosition(event)
 
     const context = canvasRef.current.getContext('2d')
+    const maskContext = maskCanvasRef.current?.getContext('2d')
     if (!context) return
 
     if (drawingMode && isDrawing) {
       if (context && maskContext) {
+        // redrawCanvas()
+
         context.lineTo(x, y)
         context.strokeStyle = 'rgba(255, 0, 0, 0.5)'
         context.lineWidth = 5
         context.stroke()
 
         maskContext.lineTo(x, y)
-        maskContext.strokeStyle = 'rgba(255, 0, 0, 0.5)'
+        maskContext.strokeStyle = 'rgb(0, 0, 0)'
         maskContext.lineWidth = 5
         maskContext.stroke()
       }
       // Add the current coordinates to the drawnCoordinates list
       setDrawnCoordinates(prevCoordinates => [...prevCoordinates, { x, y }])
     } else if (boxSelectionMode && isBoxDrawing) {
+      if (!maskContext) return
       redrawCanvas()
       // Clear and redraw all layers (image, mask, points, boxes)
 
@@ -195,17 +222,23 @@ export const useCanvas = (
       context.strokeStyle = 'green'
       context.lineWidth = 2
       context.strokeRect(startX, startY, width, height)
+
+      maskContext.fillStyle = 'rgba(0, 0, 255, 0.3)'
+      maskContext.strokeStyle = 'green'
+      maskContext.lineWidth = 2
+      maskContext.strokeRect(startX, startY, width, height)
     }
   }
 
   // Handle mouse up
-  const handleMouseUp = (event: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleMouseUp = async (event: React.MouseEvent<HTMLCanvasElement>) => {
     if (!originalImage || !canvasRef.current) return
     const { x, y } = getMousePosition(event)
 
     if (isDrawing) {
+      setLoading(true)
       setIsDrawing(false)
-      redrawCanvas()
+      // redrawCanvas()
       const canvasWidth = canvasRef.current.width
       const canvasHeight = canvasRef.current.height
       const originalWidth = originalImage.width
@@ -219,11 +252,22 @@ export const useCanvas = (
         originalHeight
       )
       console.log('Drawn Coordinates:', result)
-      // sendDrawnMaskToServer()
 
+      const response = await updateEraseDrawing(maskCanvasRef)
+      if (!response) return
+      if (response.code === 200 && response.data) {
+        const img = new Image()
+        img.src = response.data
+        img.onload = () => setOriginalImage(img)
+        setTimeout(() => {
+          setLoading(false)
+        }, 1000)
+      }
+      setActions(prevActions => prevActions + 1)
       // Optionally, clear the coordinates after processing
       setDrawnCoordinates([])
     } else if (isBoxDrawing) {
+      setLoading(true)
       // Save the box to the state
       const box = {
         x: Math.min(startX, x),
@@ -234,11 +278,26 @@ export const useCanvas = (
       const updatedBoxes = [...boxes, box]
 
       setBoxes(updatedBoxes)
-      setActions(prevActions => [...prevActions, { type: 'box', data: box }])
+      // setActions(prevActions => [...prevActions, { type: 'box', data: box }])
+      setActions(prevActions => prevActions + 1)
 
       redrawCanvas(updatedBoxes)
       // Stop box drawing
       setIsBoxDrawing(false)
+
+      // sendBoxToServer(maskCanvasRef)
+      const response = await updateEraseDrawing(maskCanvasRef)
+      if (!response) return
+      if (response.code === 200 && response.data) {
+        const img = new Image()
+        img.src = response.data
+        img.onload = () => setOriginalImage(img)
+        setBoxes([])
+        redrawCanvas()
+        setTimeout(() => {
+          setLoading(false)
+        }, 1000)
+      }
     }
   }
 

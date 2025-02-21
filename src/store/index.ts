@@ -3,12 +3,14 @@ import loadingReducer from './slices/loadingSlice'
 import authReducer from './slices/authSlice'
 import loginReducer from './slices/loginSlice'
 import notificationReducer from './slices/notificationSlice'
+import eraseReducer from './slices/eraseSlice'
 export const store = configureStore({
   reducer: {
     loading: loadingReducer,
     auth: authReducer,
     login: loginReducer,
     notification: notificationReducer,
+    erase: eraseReducer,
     // ... other reducers
   },
 })

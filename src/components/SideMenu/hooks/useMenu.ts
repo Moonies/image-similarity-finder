@@ -28,7 +28,7 @@ export default function useMenu() {
       path: '',
     },
     { label: t('sideMenu.record'), key: 'database', icon: DatabaseIcon, path: '/record' },
-    { label: t('sideMenu.eraser'), key: 'eraser', icon: EraserIcon, path: '/eraser' },
+    { label: t('sideMenu.eraser'), key: 'eraser', icon: EraserIcon, path: '/erase' },
     { label: t('sideMenu.chat'), key: 'chat', icon: ChatIcon, path: '' },
     { label: '', key: 'language', icon: LanguageIcon, path: '' },
   ]
