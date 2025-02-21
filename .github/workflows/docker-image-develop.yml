@@ -1,0 +1,27 @@
+name: Docker Image CI - main
+
+on:
+  push:
+    branches:        
+      - develop
+
+jobs:
+  build-and-push:
+    env:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Execute Common Docker Steps
+      uses: Sansen-Shimizu/common-actions/./docker@v1
+      with:
+        docker_username: ${{ env.DOCKER_USERNAME }}
+        docker_password: ${{ env.DOCKER_PASSWORD }}
+        file : Dockerfile.development
+        project: isf
+        repository: frontend
+        tag_version: test
