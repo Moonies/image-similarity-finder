@@ -24,4 +24,4 @@ jobs:
         dockerfile : Dockerfile.production
         project: isf
         repository: frontend
-        tag_version: test
+        tag_version: develop
