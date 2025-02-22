@@ -8,8 +8,8 @@ import { useCanvas } from './hooks/useCanvas'
 import useEraser from './hooks/useErase'
 import { useLoading } from '@/hooks/useLoading'
 import { default as NextImage } from 'next/image'
-import { clearPredictorId } from '@/store/slices/eraseSlice'
-import { useAppDispatch } from '@/hooks/useRedux'
+import { clearPredictorId, clearFileDetail } from '@/store/slices/eraseSlice'
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux'
 import { useNotification } from '@/hooks/useNotification'
 import { useConfirmModal } from '@/hooks/useConfirm'
 
@@ -30,6 +30,8 @@ export default function ErasePage() {
   // const [uploadFile, setUploadFile] = useState<File>()
   const buttonUploadRef = useRef<HTMLInputElement>(null)
   const { setLoading } = useLoading()
+  const [currentProceesedFile, setCurrentProcessedFile] = useState<File>()
+  const { fileName } = useAppSelector(state => state.erase)
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const maskCanvasRef = useRef<HTMLCanvasElement>(null)
@@ -65,12 +67,22 @@ export default function ErasePage() {
     setOriginalImage
   )
 
-  const { addEraseDrawing, undoEraserDrawing, processEraserDrawing } = useEraser()
+  const {
+    addEraseDrawing,
+    undoEraserDrawing,
+    processEraserDrawing,
+    resetEraserDrawing,
+    updateEraserDrawingImage,
+  } = useEraser()
 
   const handleProcessImage = async () => {
     const result = await processEraserDrawing()
     if (!result) return
-    setErasedDrawing(result)
+    console.log(result)
+    const file = new File([result], fileName, { type: result.type })
+    console.log(file)
+    setCurrentProcessedFile(file)
+    setErasedDrawing(URL.createObjectURL(result))
   }
 
   const handleUndo = async () => {
@@ -96,6 +108,16 @@ export default function ErasePage() {
       message: 'Are you sure you want to reset the application? All actions will be lost.',
     })
     if (confirmed) {
+      const result = await resetEraserDrawing()
+      if (result) {
+        setOriginalImage(null)
+        setErasedDrawing(undefined)
+        setCanvasDimension({ width: 0, height: 0 })
+        setActions(0)
+        setBoxSelectionMode(false)
+        setDrawingMode(false)
+        dispatch(clearPredictorId())
+      }
     }
   }
 
@@ -112,25 +134,26 @@ export default function ErasePage() {
           img.onload = () => setOriginalImage(img)
           setLoading(false)
         }
+        if (buttonUploadRef.current) {
+          buttonUploadRef.current.value = ''
+        }
       }
     },
     [addEraseDrawing, setLoading]
   )
 
-  // const convertToBase64 = (file: File): Promise<string> => {
-  //   return new Promise((resolve, reject) => {
-  //     const fileReader = new FileReader()
-  //     fileReader.readAsDataURL(file)
+  const handleSave = useCallback(async () => {
+    const confirmed = await openConfirmModal({
+      title: 'confirm',
+      message: 'Are you sure you want to save current processed image',
+    })
+    if (confirmed && currentProceesedFile) {
+      console.log(currentProceesedFile)
+      await updateEraserDrawingImage(currentProceesedFile)
+    }
+  }, [currentProceesedFile, openConfirmModal, updateEraserDrawingImage])
 
-  //     fileReader.onload = () => {
-  //       resolve(fileReader.result as string)
-  //     }
-
-  //     fileReader.onerror = error => {
-  //       reject(error)
-  //     }
-  //   })
-  // }
+  const handleSaveAs = useCallback(() => {}, [])
 
   useEffect(() => {
     redrawCanvas()
@@ -138,44 +161,57 @@ export default function ErasePage() {
 
   useEffect(() => {
     dispatch(clearPredictorId())
-
+    dispatch(clearFileDetail())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
     <Box display={'flex'} flexDirection={'column'} padding={1} flex={1}>
       <Box display={'flex'} flexDirection={'row'} gap={2}>
-        <Box display={'flex'} flexDirection={'row'} gap={2}>
+        {/* <Box display={'flex'} flexDirection={'row'} gap={2}>
           <InputUploadFile onChoose={files => handleChooseFile(files)} ref={buttonUploadRef} />
-          {/* <Typography alignContent={'center'}>
-            {uploadFile ? uploadFile.name : t('imagePlaceholder')}
-          </Typography> */}
-        </Box>
-        <Box display={'flex'} flexDirection={'row'} gap={2}>
-          <Button variant='contained' onClick={handleProcessImage} disabled={actions === 0}>
-            {t('processButton')}
-          </Button>
-          <Button variant='contained'> {t('printButton')}</Button>
-          <Button variant='contained' onClick={handleUndo} disabled={actions === 0}>
-            {t('undoButton')}
-          </Button>
-          <Button variant='contained' onClick={handleReset}>
-            {t('resetButton')}
-          </Button>
-          <Button
-            variant='contained'
-            onClick={() => setDrawingMode(!drawingMode)}
-            disabled={boxSelectionMode}
-          >
-            {drawingMode ? t('stopDrawingButton') : t('drawingButton')}
-          </Button>
-          <Button
-            variant='contained'
-            onClick={() => setBoxSelectionMode(!boxSelectionMode)}
-            disabled={drawingMode}
-          >
-            {boxSelectionMode ? t('stopDrawBoxButton') : t('drawBoxButton')}
-          </Button>
+        </Box> */}
+        <Box
+          display={'flex'}
+          flexDirection={'row'}
+          gap={2}
+          flex={1}
+          // justifyContent={'space-around'}
+        >
+          <Box display={'flex'} flex={1} gap={2}>
+            <InputUploadFile onChoose={files => handleChooseFile(files)} ref={buttonUploadRef} />
+
+            <Button variant='contained' onClick={handleProcessImage} disabled={actions === 0}>
+              {t('processButton')}
+            </Button>
+            <Button variant='contained' onClick={handleUndo} disabled={actions === 0}>
+              {t('undoButton')}
+            </Button>
+            <Button variant='contained' onClick={handleReset}>
+              {t('resetButton')}
+            </Button>
+            <Button
+              variant='contained'
+              onClick={() => setDrawingMode(!drawingMode)}
+              disabled={boxSelectionMode}
+            >
+              {drawingMode ? t('stopDrawingButton') : t('drawingButton')}
+            </Button>
+            <Button
+              variant='contained'
+              onClick={() => setBoxSelectionMode(!boxSelectionMode)}
+              disabled={drawingMode}
+            >
+              {boxSelectionMode ? t('stopDrawBoxButton') : t('drawBoxButton')}
+            </Button>
+          </Box>
+
+          <Box display={'flex'} gap={2} flex={1} marginLeft={'auto'}>
+            <Button variant='contained'> {t('printButton')}</Button>
+            <Button variant='contained' onClick={handleSave} disabled={!erasedDrawing}>
+              Save
+            </Button>
+          </Box>
         </Box>
       </Box>
       <Box overflow={'auto'} padding={2}>

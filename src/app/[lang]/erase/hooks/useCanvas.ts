@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react'
 import { Box, Point } from '../page'
 import useEraser from './useErase'
 import { useLoading } from '@/hooks/useLoading'
+import { PredictData } from '@/api/eraser/addPredictDrawing'
 
 export const useCanvas = (
   canvasRef: React.RefObject<HTMLCanvasElement>,
@@ -22,7 +23,7 @@ export const useCanvas = (
   const [startY, setStartY] = useState(0)
   // const [isOverlayActive, setIsOverlayActive] = useState(false)
   const [drawnCoordinates, setDrawnCoordinates] = useState<{ x: number; y: number }[]>([])
-  const { convertDrawnCoordinatesToOriginal, sendPointsToServer, updateEraseDrawing } = useEraser()
+  const { convertDrawnCoordinatesToOriginal, updateEraseDrawing, addPredictDrawing } = useEraser()
   const { setLoading } = useLoading()
 
   // Get mouse position relative to the canvas
@@ -152,7 +153,7 @@ export const useCanvas = (
     [boxes, canvasRef, drawBoxes, drawPoint, maskCanvasRef, originalImage, points]
   )
   // Handle mouse down
-  const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleMouseDown = async (event: React.MouseEvent<HTMLCanvasElement>) => {
     if (!originalImage || !canvasRef.current) {
       alert('Please upload an image first.')
       return
@@ -175,13 +176,30 @@ export const useCanvas = (
       setStartY(y)
       // setIsOverlayActive(true)
     } else if (!drawingMode && !boxSelectionMode) {
+      setLoading(true)
       const label = event.button === 0 ? 1 : 0 // Left-click: foreground, Right-click: background
       setPoints(prevPoints => [...prevPoints, { point: [x, y], label }])
       // setActions(prevActions => [...prevActions, { type: 'point', data: { point: [x, y], label } }])
       setActions(prevActions => prevActions + 1)
       drawPoint(x, y, label)
       // setIsOverlayActive(true)
-      sendPointsToServer(maskCanvasRef)
+      // sendPointsToServer(maskCanvasRef)
+      const predictData: PredictData = {
+        x: x,
+        y: y,
+        label: label,
+      }
+      const result = await addPredictDrawing(predictData)
+      if (result.code === 200 && result.data) {
+        const img = new Image()
+        img.src = result.data
+        img.onload = () => setOriginalImage(img)
+        setTimeout(() => {
+          setPoints([])
+          redrawCanvas()
+          setLoading(false)
+        }, 1000)
+      }
     }
   }
 

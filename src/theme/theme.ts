@@ -8,6 +8,7 @@ const themeOption: ThemeOptions = {
       styleOverrides: {
         root: {
           textTransform: 'none',
+          minWidth: 80,
         },
       },
     },

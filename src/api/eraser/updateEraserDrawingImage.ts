@@ -2,17 +2,20 @@ import { HttpRequest } from '@/hooks/useHttp'
 import { ApiResponse, axiosInstance } from '@/api'
 import axios from 'axios'
 
-export default async function processEraserDrawing(
+export default async function updateEraserDrawingImage(
   httpRequest: HttpRequest,
-  predictorId: string
-): Promise<ApiResponse<File>> {
+  processedFile: File
+): Promise<ApiResponse<null>> {
+  const formData = new FormData()
+  console.log(processedFile)
+  formData.append('file', processedFile, processedFile.name)
+
   const response = await httpRequest(() =>
-    axiosInstance.get(`/api/erase/${predictorId}`, {
-      responseType: 'blob',
+    axiosInstance.post(`/api/erase/save`, formData, {
+      // responseType: 'blob',
       headers: {
         'Access-Control-Allow-Origin': '*',
-        // 'Content-Type': 'multipart/form-data',
-        'Content-Type': 'application/octet-stream',
+        'Content-Type': 'multipart/form-data',
       },
     })
   )
@@ -23,7 +26,6 @@ export default async function processEraserDrawing(
   return {
     code: 200,
     message: 'success',
-    // data: URL.createObjectURL(response?.data),
-    data: response?.data,
+    data: null,
   }
 }

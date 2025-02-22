@@ -2,12 +2,15 @@ import useHttp from '@/hooks/useHttp'
 import { Box } from '../page'
 import { v4 as uuidv4 } from 'uuid'
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux'
-import { setPredictorId } from '@/store/slices/eraseSlice'
+import { setPredictorId, setFileName } from '@/store/slices/eraseSlice'
+import { useNotification } from '@/hooks/useNotification'
+import { PredictData } from '@/api/eraser/addPredictDrawing'
 
 export default function useEraser() {
   const { api } = useHttp()
   const dispatch = useAppDispatch()
   const { predictorId } = useAppSelector(state => state.erase)
+  const { notificationSnackbar } = useNotification()
 
   const calculateScalingAndOffsets = (
     canvasWidth: number,
@@ -119,7 +122,7 @@ export default function useEraser() {
     const result = await api.eraser.addEraserDrawingImage(drawingImage, id)
     if (result.code === 200 && result.data) {
       dispatch(setPredictorId({ predictorId: id }))
-      console.log(result.data)
+      dispatch(setFileName({ fileName: drawingImage.name }))
       return result.data
     }
   }
@@ -134,9 +137,32 @@ export default function useEraser() {
   const processEraserDrawing = async () => {
     const result = await api.eraser.processEraserDrawing(predictorId)
     if (result.code === 200 && result.data) {
+      // dispatch(setFileDetail({ file: result.data }))
+      // return URL.createObjectURL(result.data)
       return result.data
     }
   }
+
+  const resetEraserDrawing = async () => {
+    const result = await api.eraser.resetEraserDrawingImage(predictorId)
+    if (result.code === 200) {
+      notificationSnackbar.success('remove success!!')
+      return true
+    }
+  }
+
+  const addPredictDrawing = async (predictData: PredictData) => {
+    const result = await api.eraser.addPredictDrawing(predictData, predictorId)
+    return result
+  }
+
+  const updateEraserDrawingImage = async (currentProceesedFile: File) => {
+    const result = await api.eraser.updateEraserDrawingImage(currentProceesedFile)
+    if (result.code === 200) {
+    }
+  }
+
+  const addNewDrawing = async () => {}
 
   return {
     sendPointsToServer,
@@ -148,5 +174,8 @@ export default function useEraser() {
     undoEraserDrawing,
     updateEraseDrawing,
     processEraserDrawing,
+    resetEraserDrawing,
+    addPredictDrawing,
+    updateEraserDrawingImage,
   }
 }

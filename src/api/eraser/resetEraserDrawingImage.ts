@@ -1,18 +1,17 @@
-import { HttpRequest } from '@/hooks/useHttp'
 import { ApiResponse, axiosInstance } from '@/api'
+import { HttpRequest } from '@/hooks/useHttp'
 import axios from 'axios'
 
-export default async function processEraserDrawing(
+export default async function resetEraserDrawingImage(
   httpRequest: HttpRequest,
   predictorId: string
-): Promise<ApiResponse<File>> {
+): Promise<ApiResponse<null>> {
   const response = await httpRequest(() =>
-    axiosInstance.get(`/api/erase/${predictorId}`, {
-      responseType: 'blob',
+    axiosInstance.delete(`/api/erase/delete/${predictorId}`, {
+      // responseType: 'blob',
       headers: {
         'Access-Control-Allow-Origin': '*',
         // 'Content-Type': 'multipart/form-data',
-        'Content-Type': 'application/octet-stream',
       },
     })
   )
@@ -23,7 +22,6 @@ export default async function processEraserDrawing(
   return {
     code: 200,
     message: 'success',
-    // data: URL.createObjectURL(response?.data),
-    data: response?.data,
+    data: null,
   }
 }

@@ -4,6 +4,9 @@ import { default as addEraserDrawingImage, EraserDrawingDetail } from './addEras
 import { default as updateEraserDrawing } from './updateEraserDrawing'
 import { default as undoEraserDrawing } from './undoEraserDrawing'
 import { default as processEraserDrawing } from './processEraserDrawing'
+import { default as resetEraserDrawingImage } from './resetEraserDrawingImage'
+import { default as addPredictDrawing, PredictData } from './addPredictDrawing'
+import { default as updateEraserDrawingImage } from './updateEraserDrawingImage'
 export interface EraserApi {
   addEraserDrawingImage: (
     file: File,
@@ -11,7 +14,10 @@ export interface EraserApi {
   ) => Promise<ApiResponse<EraserDrawingDetail>>
   updateEraserDrawing: (newEraser: string, predictorId: string) => Promise<ApiResponse<string>>
   undoEraserDrawing: (predictorId: string) => Promise<ApiResponse<string>>
-  processEraserDrawing: (predictorId: string) => Promise<ApiResponse<string>>
+  processEraserDrawing: (predictorId: string) => Promise<ApiResponse<File>>
+  resetEraserDrawingImage: (predictorId: string) => Promise<ApiResponse<null>>
+  addPredictDrawing: (params: PredictData, predictorId: string) => Promise<ApiResponse<string>>
+  updateEraserDrawingImage: (file: File) => Promise<ApiResponse<null>>
 }
 
 export default function search(httpRequest: HttpRequest): EraserApi {
@@ -22,5 +28,8 @@ export default function search(httpRequest: HttpRequest): EraserApi {
       updateEraserDrawing(httpRequest, newEraser, predictorId),
     undoEraserDrawing: predictorId => undoEraserDrawing(httpRequest, predictorId),
     processEraserDrawing: predictorId => processEraserDrawing(httpRequest, predictorId),
+    resetEraserDrawingImage: predictorId => resetEraserDrawingImage(httpRequest, predictorId),
+    addPredictDrawing: (params, predictorId) => addPredictDrawing(httpRequest, params, predictorId),
+    updateEraserDrawingImage: file => updateEraserDrawingImage(httpRequest, file),
   }
 }
