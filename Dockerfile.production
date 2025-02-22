@@ -2,7 +2,7 @@
 FROM node:22.3 AS base
 WORKDIR /app
 # Copy only package files to ensure that dependency installation is cached separately
-COPY package*.json ./
+COPY package.json package-lock.json ./
 
 # Stage 2: Install dependencies using a deterministic installation process
 FROM base AS deps
@@ -15,15 +15,16 @@ FROM deps AS builder
 COPY . .
 RUN npm run build
 
-RUN ls -la /app
-
 # Stage 4: Create the production image
 FROM node:22.3-slim AS production
 WORKDIR /app
 # Copy the installed dependencies from the 'deps' stage
 COPY --from=deps /app/node_modules ./node_modules
-# Copy the build output from the 'builder' stage
-COPY --from=builder /app/dist ./dist
+# Copy only the necessary files from the builder stage
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/next.config.js ./
 # If your application requires additional files (e.g., configuration), copy them here.
 EXPOSE 3000
 CMD [ "npm", "run", "start" ]
