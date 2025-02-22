@@ -7,9 +7,7 @@ COPY package.json package-lock.json ./
 # Stage 2: Install dependencies using a deterministic installation process
 FROM base AS deps
 # Using 'npm ci' ensures that dependencies are installed exactly as specified in package-lock.json
-# Use a cache mount for npm’s cache directory to speed up dependency installation.
-RUN --mount=type=cache,target=/root/.npm \
-    npm ci
+RUN npm ci
 
 # Stage 3: Build the application
 FROM deps AS builder
