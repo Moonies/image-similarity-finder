@@ -1,4 +1,4 @@
-name: Docker Image CI - main
+name: Docker Image CI - tag
 
 on:
   push:
