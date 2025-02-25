@@ -44,7 +44,7 @@ export type ApiResponse<T> = {
 
 export const axiosInstance: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
-  timeout: 10000, // 10 seconds
+  timeout: 300000, // 5 minute
   headers: {
     Accept: '*/*',
     'Access-Control-Allow-Origin': '*',

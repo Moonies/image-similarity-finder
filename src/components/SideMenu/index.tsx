@@ -48,6 +48,7 @@ export default function SideMenu() {
       case 'search':
       case 'preview':
       case 'database':
+      case 'eraser':
         handleNavigation(path)
         break
       case 'mode':

@@ -2,8 +2,9 @@ import { useCallback, useMemo, useRef } from 'react'
 import { useConfirmModal } from '@/hooks/useConfirm'
 import { useLoading } from '@/hooks/useLoading'
 import { useNotification } from '@/hooks/useNotification'
-import { UserApi, default as userApi } from '@/api/user'
-import { DrawingApi, default as drawingApi } from '@/api/drawing'
+import { default as userApi, UserApi } from '@/api/user'
+import { default as drawingApi, DrawingApi } from '@/api/drawing'
+import { default as eraserApi, EraserApi } from '@/api/eraser'
 import { getCurrentToken, getCurrentUser, setCredentials } from '@/store/slices/authSlice'
 import { useAppDispatch } from './useRedux'
 import { useTranslation } from 'react-i18next'
@@ -17,6 +18,7 @@ export type HttpRequest = (
 type ApiType = {
   user: UserApi
   drawing: DrawingApi
+  eraser: EraserApi
 }
 
 export default function useHttp() {
@@ -96,6 +98,7 @@ export default function useHttp() {
       apiRef.current = {
         user: userApi(httpRequest),
         drawing: drawingApi(httpRequest),
+        eraser: eraserApi(httpRequest),
       }
     }
     return apiRef.current
