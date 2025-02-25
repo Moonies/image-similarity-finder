@@ -1,0 +1,21 @@
+{
+  "title": "上传图片",
+  "imagePlaceholder": "未选择文件",
+  "submitButton": "上传",
+  "alertUploadFile": "请在单击上传按钮前选择文件。",
+  "processButton": "处理",
+  "printButton": "打印",
+  "undoButton": "撤消",
+  "resetButton": "重置",
+  "drawingButton": "绘图",
+  "stopDrawingButton": "停止绘图",
+  "drawBoxButton": "绘制框",
+  "stopDrawBoxButton": "停止绘制框",
+  "titleConfirmModal": "确认",
+  "saveMessage": "您确定要保存当前处理的图片吗",
+  "saveButton": "保存",
+  "saveAsButton": "另存为",
+  "resultTitle": "处理后的图片",
+  "resetMessage": "您确定要重置应用程序吗？所有操作都将丢失。",
+  "alertNonUpload": "应用程序已经处于初始状态"
+}

@@ -1,0 +1,21 @@
+{
+  "title": "画像をアップロード",
+  "imagePlaceholder": "ファイルが選択されていません",
+  "submitButton": "アップロード",
+  "alertUploadFile": "アップロード ボタンをクリックする前にファイルを選択してください",
+  "processButton": "処理",
+  "printButton": "印刷",
+  "undoButton": "元に戻す",
+  "resetButton": "リセット",
+  "drawingButton": "描画",
+  "stopDrawingButton": "描画を停止",
+  "drawBoxButton": "ボックスを描画",
+  "stopDrawBoxButton": "ボックスを描画を停止",
+  "titleConfirmModal": "確認",
+  "saveMessage": "現在処理済みの画像を保存しますか",
+  "saveButton": "保存",
+  "saveAsButton": "名前を付けて保存",
+  "resultTitle": "処理済みの画像",
+  "resetMessage": "アプリケーションをリセットしてもよろしいですか? すべてのアクションが失われます",
+  "alertNonUpload": "アプリケーションはすでに初期状態です"
+}

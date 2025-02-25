@@ -14,5 +14,8 @@
   },
   "uploadDrawingImageModalTitle": "Tải lên bản vẽ mới",
   "submitButton": "Nộp",
-  "imagePlaceholder": "Không có tập tin được chọn"
+  "imagePlaceholder": "Không có tập tin được chọn",
+  "titleSaveAs": "Lưu dưới dạng",
+  "alertNoneText": "Vui lòng nhập tên tệp mới trước khi nhấp vào nút gửi",
+  "inputAddNewDrawingFileName": "Tên tệp bản vẽ"
 }

@@ -1,0 +1,21 @@
+{
+  "title": "Tải ảnh lên",
+  "imagePlaceholder": "Không có tệp nào được chọn",
+  "submitButton": "Tải lên",
+  "alertUploadFile": "Vui lòng chọn tệp trước khi nhấp vào nút tải lên",
+  "processButton": "Xử lý",
+  "printButton": "In",
+  "undoButton": "Hoàn tác",
+  "resetButton": "Đặt lại",
+  "drawingButton": "Vẽ",
+  "stopDrawingButton": "Dừng vẽ",
+  "drawBoxButton": "Hộp vẽ",
+  "stopDrawBoxButton": "Dừng vẽ",
+  "titleConfirmModal": "Xác nhận",
+  "saveMessage": "Bạn có chắc chắn muốn lưu ảnh đã xử lý hiện tại không",
+  "saveButton": "Lưu",
+  "saveAsButton": "Lưu dưới dạng",
+  "resultTitle": "Ảnh đã xử lý",
+  "resetMessage": "Bạn có chắc chắn muốn đặt lại ứng dụng không? Tất cả các hành động sẽ bị mất",
+  "alertNonUpload": "Ứng dụng đã ở trạng thái ban đầu"
+}

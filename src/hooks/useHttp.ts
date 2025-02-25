@@ -78,7 +78,7 @@ export default function useHttp() {
                 notificationSnackbar.error(
                   `${t('error')}: ${error?.code}
                 \n status: ${error?.status}
-                \n ${error?.response.data.detail}`
+                \n ${error?.response.data.message}`
                 )
                 break
             }

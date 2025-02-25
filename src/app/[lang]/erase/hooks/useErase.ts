@@ -87,14 +87,6 @@ export default function useEraser() {
     )
   }
 
-  const sendPointsToServer = (maskCanvasRef: any) => {
-    if (!maskCanvasRef) return
-    const maskDataURL = maskCanvasRef.current.toDataURL('image/png')
-
-    console.log(maskDataURL)
-    console.log(predictorId)
-  }
-
   const sendDrawnMaskToServer = async (maskCanvasRef: any) => {
     if (!maskCanvasRef) return
     const maskDataURL = maskCanvasRef.current.toDataURL('image/png')
@@ -103,14 +95,13 @@ export default function useEraser() {
     const result = await api.eraser.updateEraserDrawing(maskDataBase64, predictorId)
     console.log(result)
     return result
-    // if(result.code===)
   }
 
   const updateEraseDrawing = async (maskCanvasRef: React.RefObject<HTMLCanvasElement>) => {
     // setLoading(true)
     if (!maskCanvasRef.current) return
     const maskDataURL = maskCanvasRef.current.toDataURL('image/png')
-    console.log(maskDataURL)
+    // console.log(maskDataURL)
     const maskDataBase64 = maskDataURL.split(',')[1]
     const result = await api.eraser.updateEraserDrawing(maskDataBase64, predictorId)
     // console.log(result)
@@ -158,14 +149,17 @@ export default function useEraser() {
 
   const updateEraserDrawingImage = async (currentProceesedFile: File) => {
     const result = await api.eraser.updateEraserDrawingImage(currentProceesedFile)
+    return result
+  }
+
+  const addNewDrawing = async (newDrawingFile: File) => {
+    const result = await api.drawing.addNewDrawingImage(newDrawingFile)
     if (result.code === 200) {
+      return true
     }
   }
 
-  const addNewDrawing = async () => {}
-
   return {
-    sendPointsToServer,
     sendDrawnMaskToServer,
     convertCanvasToOriginalCoordinates,
     convertBoxToOriginalCoordinates,
@@ -177,5 +171,6 @@ export default function useEraser() {
     resetEraserDrawing,
     addPredictDrawing,
     updateEraserDrawingImage,
+    addNewDrawing,
   }
 }

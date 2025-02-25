@@ -12,6 +12,7 @@ import { clearPredictorId, clearFileDetail } from '@/store/slices/eraseSlice'
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux'
 import { useNotification } from '@/hooks/useNotification'
 import { useConfirmModal } from '@/hooks/useConfirm'
+import AddNewDrawingModal from '@/components/modals/AddNewDrawingModal'
 
 export interface Point {
   point: [number, number]
@@ -32,6 +33,7 @@ export default function ErasePage() {
   const { setLoading } = useLoading()
   const [currentProceesedFile, setCurrentProcessedFile] = useState<File>()
   const { fileName } = useAppSelector(state => state.erase)
+  const [openModalAddNewDrawing, setOpenModalAddNewDrawing] = useState(false)
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const maskCanvasRef = useRef<HTMLCanvasElement>(null)
@@ -41,7 +43,7 @@ export default function ErasePage() {
   const [points, setPoints] = useState<Point[]>([])
   const [boxes, setBoxes] = useState<Box[]>([])
   const [actions, setActions] = useState<number>(0)
-  const { notificationModal } = useNotification()
+  const { notificationModal, notificationSnackbar } = useNotification()
   const { openConfirmModal } = useConfirmModal()
 
   const dispatch = useAppDispatch()
@@ -73,14 +75,14 @@ export default function ErasePage() {
     processEraserDrawing,
     resetEraserDrawing,
     updateEraserDrawingImage,
+    addNewDrawing,
   } = useEraser()
 
   const handleProcessImage = async () => {
     const result = await processEraserDrawing()
     if (!result) return
-    console.log(result)
     const file = new File([result], fileName, { type: result.type })
-    console.log(file)
+    // console.log(file)
     setCurrentProcessedFile(file)
     setErasedDrawing(URL.createObjectURL(result))
   }
@@ -99,13 +101,13 @@ export default function ErasePage() {
 
   const handleReset = async () => {
     if (!originalImage) {
-      notificationModal.warning('Application is already in the initial state.')
+      notificationModal.warning(t('alertNonUpload'))
       return
     }
 
     const confirmed = await openConfirmModal({
-      title: 'confirm',
-      message: 'Are you sure you want to reset the application? All actions will be lost.',
+      title: t('titleConfirmModal'),
+      message: t('resetMessage'),
     })
     if (confirmed) {
       const result = await resetEraserDrawing()
@@ -144,16 +146,49 @@ export default function ErasePage() {
 
   const handleSave = useCallback(async () => {
     const confirmed = await openConfirmModal({
-      title: 'confirm',
-      message: 'Are you sure you want to save current processed image',
+      title: t('titleConfirmModal'),
+      message: t('saveMessage'),
     })
     if (confirmed && currentProceesedFile) {
-      console.log(currentProceesedFile)
-      await updateEraserDrawingImage(currentProceesedFile)
+      const result = await updateEraserDrawingImage(currentProceesedFile)
+      console.log(result)
+      if (result.code === 404) {
+        const confirmed = await openConfirmModal({
+          title: t('titleConfirmModal'),
+          message: 'Current Drawing number is not existed. you need to add new Drawing.',
+        })
+        if (confirmed) {
+          const response = await addNewDrawing(currentProceesedFile)
+          if (response) {
+            notificationSnackbar.success('add new drawing is success!!')
+          }
+        }
+      }
     }
-  }, [currentProceesedFile, openConfirmModal, updateEraserDrawingImage])
+  }, [
+    addNewDrawing,
+    currentProceesedFile,
+    notificationSnackbar,
+    openConfirmModal,
+    t,
+    updateEraserDrawingImage,
+  ])
 
-  const handleSaveAs = useCallback(() => {}, [])
+  const handleSaveAs = useCallback(
+    async (newDrawingFileName: string) => {
+      if (!currentProceesedFile) return
+      const extension = currentProceesedFile.name.split('.').pop()
+
+      const file = new File([currentProceesedFile], `${newDrawingFileName}.${extension}`, {
+        type: currentProceesedFile.type,
+      })
+      const result = await addNewDrawing(file)
+      if (result) {
+        notificationSnackbar.success('add new drawing is success!!')
+      }
+    },
+    [addNewDrawing, currentProceesedFile, notificationSnackbar]
+  )
 
   useEffect(() => {
     redrawCanvas()
@@ -206,10 +241,19 @@ export default function ErasePage() {
             </Button>
           </Box>
 
-          <Box display={'flex'} gap={2} flex={1} marginLeft={'auto'}>
-            <Button variant='contained'> {t('printButton')}</Button>
+          <Box display={'flex'} gap={2}>
+            <Button variant='contained' disabled={!erasedDrawing}>
+              {t('printButton')}
+            </Button>
             <Button variant='contained' onClick={handleSave} disabled={!erasedDrawing}>
-              Save
+              {t('saveButton')}
+            </Button>
+            <Button
+              variant='contained'
+              onClick={() => setOpenModalAddNewDrawing(true)}
+              disabled={!erasedDrawing}
+            >
+              {t('saveAsButton')}
             </Button>
           </Box>
         </Box>
@@ -243,7 +287,7 @@ export default function ErasePage() {
         {erasedDrawing && (
           <Box display={'flex'} flexDirection={'column'} flex={1} marginTop={4}>
             <Box display={'flex'} flex={1}>
-              <Typography variant='h3'>Processed Image</Typography>
+              <Typography variant='h3'>{t('resultTitle')}</Typography>
             </Box>
             <NextImage
               loader={({ src }) => src}
@@ -259,6 +303,13 @@ export default function ErasePage() {
               }}
             />
           </Box>
+        )}
+        {openModalAddNewDrawing && (
+          <AddNewDrawingModal
+            onClose={() => setOpenModalAddNewDrawing(false)}
+            open={openModalAddNewDrawing}
+            onSubmit={handleSaveAs}
+          />
         )}
       </Box>
     </Box>
