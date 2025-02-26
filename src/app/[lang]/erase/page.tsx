@@ -151,16 +151,16 @@ export default function ErasePage() {
     })
     if (confirmed && currentProceesedFile) {
       const result = await updateEraserDrawingImage(currentProceesedFile)
-      console.log(result)
+      // console.log(result)
       if (result.code === 404) {
         const confirmed = await openConfirmModal({
           title: t('titleConfirmModal'),
-          message: 'Current Drawing number is not existed. you need to add new Drawing.',
+          message: t('alertAddNewDrawing'),
         })
         if (confirmed) {
           const response = await addNewDrawing(currentProceesedFile)
           if (response) {
-            notificationSnackbar.success('add new drawing is success!!')
+            notificationSnackbar.success(t('addNewDrawingMessageSuccess'))
           }
         }
       }
@@ -184,10 +184,10 @@ export default function ErasePage() {
       })
       const result = await addNewDrawing(file)
       if (result) {
-        notificationSnackbar.success('add new drawing is success!!')
+        notificationSnackbar.success(t('addNewDrawingMessageSuccess'))
       }
     },
-    [addNewDrawing, currentProceesedFile, notificationSnackbar]
+    [addNewDrawing, currentProceesedFile, notificationSnackbar, t]
   )
 
   useEffect(() => {

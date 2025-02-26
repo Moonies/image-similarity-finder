@@ -17,5 +17,7 @@
   "saveAsButton": "名前を付けて保存",
   "resultTitle": "処理済みの画像",
   "resetMessage": "アプリケーションをリセットしてもよろしいですか? すべてのアクションが失われます",
-  "alertNonUpload": "アプリケーションはすでに初期状態です"
+  "alertNonUpload": "アプリケーションはすでに初期状態です",
+  "alertAddNewDrawing": "現在の図面番号が存在しません。新しい図面を追加する必要がありますか?",
+  "addNewDrawingMessageSuccess": "新しい図面の追加が成功しました!!"
 }
