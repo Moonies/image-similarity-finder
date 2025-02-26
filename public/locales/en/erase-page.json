@@ -10,5 +10,14 @@
   "drawingButton": "Drawing",
   "stopDrawingButton": "Stop Drawing",
   "drawBoxButton": "Draw Box",
-  "stopDrawBoxButton": "Stop Draw Box"
+  "stopDrawBoxButton": "Stop Draw Box",
+  "titleConfirmModal": "Confirm",
+  "saveMessage": "Are you sure you want to save current processed image",
+  "saveButton": "Save",
+  "saveAsButton": "Save As",
+  "resultTitle": "Processed Image",
+  "resetMessage": "Are you sure you want to reset the application? All actions will be lost.",
+  "alertNonUpload": "Application is already in the initial state.",
+  "alertAddNewDrawing": "Current Drawing Number is not Existed. Do You Need To Add New Drawing?",
+  "addNewDrawingMessageSuccess": "add new drawing is success!!"
 }

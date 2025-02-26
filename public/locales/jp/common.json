@@ -14,5 +14,8 @@
   },
   "uploadDrawingImageModalTitle": "新しい図面をアップロード",
   "submitButton": "提出する",
-  "imagePlaceholder": "ファイルが選択されていません"
+  "imagePlaceholder": "ファイルが選択されていません",
+  "titleSaveAs": "名前を付けて保存",
+  "alertNoneText": "送信ボタンをクリックする前に新しいファイル名を入力してください",
+  "inputAddNewDrawingFileName": "図面ファイル名"
 }

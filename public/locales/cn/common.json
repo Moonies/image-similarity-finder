@@ -14,5 +14,8 @@
   },
   "uploadDrawingImageModalTitle": "上传新绘图",
   "submitButton": "提交",
-  "imagePlaceholder": "未选择文件"
+  "imagePlaceholder": "未选择文件",
+  "titleSaveAs": "另存为",
+  "alertNoneText": "请在点击提交按钮前输入新文件名",
+  "inputAddNewDrawingFileName": "绘图文件名"
 }

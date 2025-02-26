@@ -14,5 +14,8 @@
   },
   "uploadDrawingImageModalTitle": "Upload new Drawing",
   "submitButton": "Submit",
-  "imagePlaceholder": "No File Chosen"
+  "imagePlaceholder": "No File Chosen",
+  "titleSaveAs": "Save As",
+  "alertNoneText": "Please Input New File Name before click submit button",
+  "inputAddNewDrawingFileName": "Drawing File Name"
 }

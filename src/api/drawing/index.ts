@@ -7,6 +7,7 @@ import { default as getDrawingList, DrawingListSearchCriteria } from './getDrawi
 import { default as getDrawingImage } from './getDrawingImage'
 import { default as removeDrawing } from './removeDrawing'
 import { default as updateDrawingImage } from './updateDrawingImage'
+import { default as addNewDrawingImage } from './addNewDrawingImage'
 export type DrawingImageDetail = {
   id: string
   drawingNumber: string
@@ -45,6 +46,7 @@ export interface DrawingApi {
     drawingId: string,
     disableDisplayError?: boolean
   ) => Promise<ApiResponse<null>>
+  addNewDrawingImage: (file: File) => Promise<ApiResponse<null>>
 }
 
 export default function search(httpRequest: HttpRequest): DrawingApi {
@@ -57,5 +59,6 @@ export default function search(httpRequest: HttpRequest): DrawingApi {
     removeDrawing: drawingId => removeDrawing(httpRequest, drawingId),
     updateDrawingImage: (file, drawingId, disableDisplayError) =>
       updateDrawingImage(httpRequest, file, drawingId, disableDisplayError),
+    addNewDrawingImage: file => addNewDrawingImage(httpRequest, file),
   }
 }
