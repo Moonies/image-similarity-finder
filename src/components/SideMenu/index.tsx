@@ -49,6 +49,7 @@ export default function SideMenu() {
       case 'preview':
       case 'database':
       case 'eraser':
+      case 'chat':
         handleNavigation(path)
         break
       case 'mode':
