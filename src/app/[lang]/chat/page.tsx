@@ -4,19 +4,12 @@ import { Avatar, Box, IconButton, Skeleton, TextField, Typography } from '@mui/m
 import { Send as SendIcon } from '@mui/icons-material'
 
 import React, { useEffect, useRef, useState } from 'react'
-
-interface Message {
-  id: number
-  text: string
-  sender: 'user' | 'bot'
-  timestamp: string
-}
+import useChat from './hooks/useChat'
 
 export default function ChatPage() {
-  const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
-  const [loadingBot, setLoadingBot] = useState(false) // State to track loading
   const chatContainerRef = useRef<HTMLDivElement>(null)
+  const { handleSendMessage, loadingBot, messages } = useChat()
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -24,47 +17,12 @@ export default function ChatPage() {
     }
   }
 
-  const handleSendMessage = () => {
-    if (!input.trim()) return
-    const newMessage: Message = {
-      id: messages.length + 1,
-      text: input,
-      sender: 'user',
-      timestamp: new Date().toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-        hourCycle: 'h24',
-      }),
-    }
-    setMessages([...messages, newMessage])
-    handleReciveMessage()
-    setInput('')
-  }
-
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault() // Prevents the default behavior of form submission
-      handleSendMessage()
+      handleSendMessage(input)
+      setInput('')
     }
-  }
-
-  const handleReciveMessage = () => {
-    setLoadingBot(true)
-    console.log(messages)
-    const newMessage: Message = {
-      id: messages.length + 2,
-      text: 'test recive Message',
-      sender: 'bot',
-      timestamp: new Date().toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-        hourCycle: 'h24',
-      }),
-    }
-    setTimeout(() => {
-      setMessages(prevMessage => [...prevMessage, newMessage])
-      setLoadingBot(false)
-    }, 2000)
   }
 
   useEffect(() => {
@@ -79,19 +37,11 @@ export default function ChatPage() {
       borderRadius={2}
       sx={{
         border: '1px solid #ddd',
-        // borderRadius: '8px',
         // overflow: 'hidden',
       }}
     >
       {/* Chat Header */}
-      <Box
-        sx={{
-          padding: '16px',
-          // backgroundColor: '#1976d2',
-          // color: '#fff',
-          textAlign: 'center',
-        }}
-      >
+      <Box padding={2} textAlign={'center'}>
         <Typography variant='h6'>Chat</Typography>
       </Box>
 
@@ -102,12 +52,9 @@ export default function ChatPage() {
         flexDirection={'column'}
         flex={1}
         gap={2}
+        padding={2}
         sx={{
-          // flex: 1,
-          padding: '16px',
           overflowY: 'auto',
-          // display: 'flex',
-          // flexDirection: 'column',
           backgroundColor: theme => theme.palette.background.paper,
         }}
       >
@@ -181,7 +128,7 @@ export default function ChatPage() {
           onKeyDown={handleKeyDown}
           disabled={loadingBot}
         />
-        <IconButton color='primary' onClick={handleSendMessage}>
+        <IconButton color='primary' onClick={() => handleSendMessage(input)}>
           <SendIcon />
         </IconButton>
       </Box>

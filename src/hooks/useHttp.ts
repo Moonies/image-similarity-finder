@@ -5,6 +5,7 @@ import { useNotification } from '@/hooks/useNotification'
 import { default as userApi, UserApi } from '@/api/user'
 import { default as drawingApi, DrawingApi } from '@/api/drawing'
 import { default as eraserApi, EraserApi } from '@/api/eraser'
+import { default as chatApi, ChatApi } from '@/api/chat'
 import { getCurrentToken, getCurrentUser, setCredentials } from '@/store/slices/authSlice'
 import { useAppDispatch } from './useRedux'
 import { useTranslation } from 'react-i18next'
@@ -19,6 +20,7 @@ type ApiType = {
   user: UserApi
   drawing: DrawingApi
   eraser: EraserApi
+  chat: ChatApi
 }
 
 export default function useHttp() {
@@ -99,6 +101,7 @@ export default function useHttp() {
         user: userApi(httpRequest),
         drawing: drawingApi(httpRequest),
         eraser: eraserApi(httpRequest),
+        chat: chatApi(httpRequest),
       }
     }
     return apiRef.current
