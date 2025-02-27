@@ -10,7 +10,8 @@
     "record": "Check Records",
     "eraser": "Eraser",
     "chat": "Chat",
-    "logout": "Logout"
+    "logout": "Logout",
+    "user": "User Management"
   },
   "uploadDrawingImageModalTitle": "Upload new Drawing",
   "submitButton": "Submit",
