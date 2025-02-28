@@ -65,6 +65,15 @@ const DataTable = React.memo<TableProps>(
           // autosizeOnMount
           paginationMode={totalRows ? 'server' : 'client'} //when change to fetch by api should be 'server' only
           autosizeOptions={autosizeOption}
+          getCellClassName={params => {
+            // if (
+            //   params.colDef.field.includes('quantity') ||
+            //   params.colDef.field.includes('inStock')
+            // ) {
+            //   return 'center'
+            // }
+            return params.colDef.type === 'number' ? 'right' : 'center'
+          }}
           {...props}
         />
       </DataGridContainer>

@@ -1,0 +1,19 @@
+{
+  "addButton": "Add New User",
+  "inputLabel": "Keyword",
+  "column": {
+    "col1": "Employee ID",
+    "col2": "Username",
+    "col3": "Name",
+    "col4": "Email",
+    "col5": "Role",
+    "action": "Action"
+  },
+  "form": {
+    "inputField1": "Username",
+    "inputField2": "Name",
+    "inputField3": "Lastname",
+    "inputField4": "Email",
+    "inputField5": "Role"
+  }
+}
