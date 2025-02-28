@@ -1,10 +1,12 @@
 import { useCallback, useMemo, useState } from 'react'
 import useHttp from '@/hooks/useHttp'
 import { DrawingMessage } from '@/api/chat/getMessage'
+import { GridColDef, GridRowsProp } from '@mui/x-data-grid'
 
 interface Message {
   id: number
   text: string
+  data?: { column: GridColDef[]; row: GridRowsProp }
   sender: 'user' | 'bot'
   timestamp: string
 }
@@ -26,32 +28,58 @@ export default function useChat() {
     [api.chat]
   )
 
-  const handleReciveMessage = useCallback((reciveMessage: DrawingMessage[]) => {
-    // setLoadingBot(true)
-    reciveMessage.forEach((detail, index) => {
-      setTimeout(() => {
-        setMessages(prevMessages => {
-          const newMessage: Message = {
-            id: prevMessages.length + 1,
-            text: JSON.stringify(detail),
-            sender: 'bot',
-            timestamp: new Date().toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit',
-              hourCycle: 'h24',
-            }),
-          }
+  const handleReciveMessage = useCallback(
+    (reciveMessage: DrawingMessage) => {
+      if (reciveMessage.column[0] === 'error') {
+        const newMessage: Message = {
+          id: messages.length + 2, //to safe update id
+          text: `${reciveMessage.row[0]['error']}`,
+          sender: 'bot',
+          timestamp: new Date().toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+            hourCycle: 'h24',
+          }),
+        }
 
-          return [...prevMessages, newMessage]
+        setMessages(prevMessage => [...prevMessage, newMessage])
+      } else {
+        // Generate columns dynamically
+        const columns = reciveMessage.column.map(col => {
+          // Find the matching property name in the row object
+          const field = Object.keys(reciveMessage.row[0]).find(
+            key => key.toLowerCase() === col.toLowerCase().replace(/\s+/g, '_')
+          )
+
+          return {
+            field: field || col, // Use the matching property or fallback to the column name
+            headerName: col.charAt(0).toUpperCase() + col.slice(1), // Capitalize for header
+            // width: 200,
+          }
         })
 
-        // If this is the last message, stop loading
-        if (index === reciveMessage.length - 1) {
-          setLoadingBot(false) // Set loading to false after all messages are processed
+        const newMessage: Message = {
+          id: messages.length + 2, //to safe update id
+          text: '',
+          data: {
+            column: columns,
+            row: reciveMessage.row,
+          },
+          sender: 'bot',
+          timestamp: new Date().toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+            hourCycle: 'h24',
+          }),
         }
-      }, index * 1000)
-    })
-  }, [])
+
+        setMessages(prevMessage => [...prevMessage, newMessage])
+      }
+
+      setLoadingBot(false)
+    },
+    [messages]
+  )
 
   const handleSendMessage = useCallback(
     async (input: string) => {
@@ -71,6 +99,7 @@ export default function useChat() {
 
       const reciveMessage = await getMessage(input)
       if (!reciveMessage) return
+
       handleReciveMessage(reciveMessage)
     },
     [getMessage, handleReciveMessage, messages]

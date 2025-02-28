@@ -5,11 +5,18 @@ import { Send as SendIcon } from '@mui/icons-material'
 
 import React, { useEffect, useRef, useState } from 'react'
 import useChat from './hooks/useChat'
+import DataTable from '@/components/DataTable'
+import { useGridApiRef } from '@mui/x-data-grid'
+import PageTransition from '@/components/PageTransition'
+import { useTranslation } from 'react-i18next'
 
 export default function ChatPage() {
+  const { t } = useTranslation('chat-page')
+
   const [input, setInput] = useState('')
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const { handleSendMessage, loadingBot, messages } = useChat()
+  const messageDataGridRef = useGridApiRef()
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -30,108 +37,125 @@ export default function ChatPage() {
   }, [messages])
 
   return (
-    <Box
-      display={'flex'}
-      flexDirection={'column'}
-      flex={1}
-      borderRadius={2}
-      sx={{
-        border: '1px solid #ddd',
-        // overflow: 'hidden',
-      }}
-    >
-      {/* Chat Header */}
-      <Box padding={2} textAlign={'center'}>
-        <Typography variant='h6'>Chat</Typography>
-      </Box>
-
-      {/* Chat Messages */}
+    <PageTransition>
       <Box
-        ref={chatContainerRef}
         display={'flex'}
         flexDirection={'column'}
         flex={1}
-        gap={2}
-        padding={2}
+        borderRadius={2}
         sx={{
-          overflowY: 'auto',
-          backgroundColor: theme => theme.palette.background.paper,
+          border: '1px solid',
         }}
       >
-        {messages.map(message => (
-          <Box
-            key={message.id}
-            sx={{
-              display: 'flex',
-              alignItems: 'flex-end',
-              flexDirection: message.sender === 'user' ? 'row-reverse' : 'row',
-              gap: '8px',
-            }}
-          >
-            <Avatar
-              sx={{
-                bgcolor: message.sender === 'user' ? 'primary.main' : 'secondary.main',
-              }}
-            >
-              {message.sender === 'user' ? 'U' : 'B'}
-            </Avatar>
+        {/* Chat Header */}
+        <Box padding={2} textAlign={'center'}>
+          <Typography variant='h6'>{t('title')}</Typography>
+        </Box>
+        {/* Chat Messages */}
+        <Box
+          ref={chatContainerRef}
+          display={'flex'}
+          flexDirection={'column'}
+          flex={1}
+          gap={2}
+          padding={2}
+          sx={{
+            overflowY: 'auto',
+            backgroundColor: theme => theme.palette.background.paper,
+          }}
+        >
+          {messages.map(message => (
             <Box
+              key={message.id}
               sx={{
-                maxWidth: '50%',
-                padding: '8px 12px',
-                borderRadius: '16px',
-                backgroundColor: theme =>
-                  message.sender === 'user'
-                    ? theme.palette.primary.light
-                    : theme.palette.secondary.light,
-                color: theme =>
-                  message.sender === 'user'
-                    ? theme.palette.text.primary
-                    : theme.palette.text.secondary,
+                display: 'flex',
+                alignItems: 'flex-end',
+                flexDirection: message.sender === 'user' ? 'row-reverse' : 'row',
+                gap: '8px',
               }}
             >
-              <Typography variant='body1' sx={{ wordBreak: 'break-word' }}>
-                {message.text.split('\n')}
-              </Typography>
-              <Typography variant='caption' sx={{ display: 'block', textAlign: 'right' }}>
-                {message.timestamp}
-              </Typography>
+              <Avatar
+                sx={{
+                  bgcolor: message.sender === 'user' ? 'primary.main' : 'secondary.main',
+                }}
+              >
+                {message.sender === 'user' ? 'U' : 'B'}
+              </Avatar>
+              <Box
+                sx={{
+                  maxWidth: '50%',
+                  padding: '8px 12px',
+                  borderRadius: '16px',
+                  backgroundColor: theme =>
+                    message.sender === 'user'
+                      ? theme.palette.primary.light
+                      : theme.palette.secondary.light,
+                  color: theme =>
+                    message.sender === 'user'
+                      ? theme.palette.text.primary
+                      : theme.palette.text.secondary,
+                }}
+              >
+                <Typography variant='body1' sx={{ wordBreak: 'break-word' }}>
+                  {message.text.split('\n')}
+                </Typography>
+                {message.data && (
+                  <Box>
+                    <DataTable
+                      data={message.data.row}
+                      columns={message.data.column}
+                      apiref={messageDataGridRef}
+                      onSelected={selectedRow => console.log(selectedRow)}
+                      hideFooter={true}
+                      getRowId={row => row.drawing_number}
+                      sx={{ height: '300px', width: '500px' }}
+                    />
+                  </Box>
+                )}
+                <Typography variant='caption' sx={{ display: 'block', textAlign: 'right' }}>
+                  {message.timestamp}
+                </Typography>
+              </Box>
             </Box>
-          </Box>
-        ))}
-        {/* Skeleton Loader for Bot */}
-        {loadingBot && (
-          <Box display={'flex'} flexDirection={'row'} gap={1}>
-            <Skeleton variant='circular' width={40} height={40} />
-            <Skeleton variant='rectangular' width='40%' height={40} sx={{ borderRadius: '16px' }} />
-          </Box>
-        )}
+          ))}
+          {/* Skeleton Loader for Bot */}
+          {loadingBot && (
+            <Box display={'flex'} flexDirection={'row'} gap={1}>
+              <Skeleton variant='circular' width={40} height={40} />
+              <Skeleton
+                variant='rectangular'
+                width='40%'
+                height={40}
+                sx={{ borderRadius: '16px' }}
+              />
+            </Box>
+          )}
+        </Box>
+        {/* Input Box */}
+        <Box
+          display={'flex'}
+          padding={1}
+          sx={{
+            borderTop: '1px solid #ddd',
+          }}
+        >
+          <TextField
+            fullWidth
+            multiline
+            size='small'
+            placeholder={t('inputPlaceholder')}
+            value={input}
+            minRows={1}
+            maxRows={4}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            disabled={loadingBot}
+          />
+          <IconButton color='primary' onClick={() => handleSendMessage(input)}>
+            <SendIcon />
+          </IconButton>
+        </Box>
       </Box>
-
-      {/* Input Box */}
-      <Box
-        display={'flex'}
-        padding={1}
-        sx={{
-          borderTop: '1px solid #ddd',
-        }}
-      >
-        <TextField
-          fullWidth
-          multiline
-          size='small'
-          placeholder='Type a message...'
-          value={input}
-          minRows={1}
-          maxRows={4}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          disabled={loadingBot}
-        />
-        <IconButton color='primary' onClick={() => handleSendMessage(input)}>
-          <SendIcon />
-        </IconButton>
-      </Box>
-    </Box>
+    </PageTransition>
   )
 }

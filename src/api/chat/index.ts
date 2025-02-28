@@ -3,7 +3,7 @@ import { HttpRequest } from '@/hooks/useHttp'
 import { default as getMessage, DrawingMessage } from './getMessage'
 
 export interface ChatApi {
-  getMessage: (message: string) => Promise<ApiResponse<DrawingMessage[]>>
+  getMessage: (message: string) => Promise<ApiResponse<DrawingMessage>>
 }
 
 export default function search(httpRequest: HttpRequest): ChatApi {
