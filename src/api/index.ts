@@ -1,4 +1,6 @@
 import { getCurrentToken } from '@/store/slices/authSlice'
+import { getCurrentLanguage } from '@/store/slices/httpSlice'
+
 import axios, { AxiosInstance } from 'axios'
 
 export type ApiResponse<T> = {
@@ -29,6 +31,7 @@ axiosInstance.interceptors.request.use(
     const storedToken = getCurrentToken()
     if (storedToken) {
       config.headers.Authorization = `Bearer ${storedToken.token}` // Best practice: use Authorization header
+      config.headers['Accept-Language'] = getCurrentLanguage()
     }
     return config
   },

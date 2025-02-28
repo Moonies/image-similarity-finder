@@ -9,7 +9,7 @@ import {
   SelectChangeEvent,
 } from '@mui/material'
 import { ArrowBack as ArrowBackIcon, Logout as LogoutIcon } from '@mui/icons-material'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { StyledDrawer, StyledSelect, StyledSidebarButton } from './style'
 import { useRouter, usePathname } from 'next/navigation'
 import { useThemeContext } from '@/context/ThemeContext'
@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next'
 import useMenu from './hooks/useMenu'
 import { useAppDispatch } from '@/hooks/useRedux'
 import { logout } from '@/store/slices/authSlice'
+import { setLanguage, clearLanguage } from '@/store/slices/httpSlice'
 
 export default function SideMenu() {
   const router = useRouter()
@@ -70,14 +71,24 @@ export default function SideMenu() {
   const handleLanguageClick = async (event: SelectChangeEvent<unknown>) => {
     SetLanguageSwitcher(event.target.value as string)
     await i18n.changeLanguage(event.target.value as string)
+    dispatch(setLanguage({ acceptLanguage: i18n.language }))
     updatePathname(i18n.language)
   }
 
   const handleLogoutClick = useCallback(() => {
     dispatch(logout())
+    dispatch(clearLanguage())
     router.push('/')
     router.refresh()
   }, [dispatch, router])
+
+  useEffect(() => {
+    const [lang, _currentPath] = pathname.replace(/^\//, '').split('/')
+    if (languageSwitcher !== lang) {
+      SetLanguageSwitcher(lang)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <StyledDrawer variant='permanent' open={open}>
@@ -110,10 +121,10 @@ export default function SideMenu() {
                 <MenuItem value={'jp'} id='select-jp'>
                   日本語
                 </MenuItem>
-                <MenuItem value={'cn'} id='select-cn'>
+                <MenuItem value={'zh'} id='select-zh'>
                   中文
                 </MenuItem>
-                <MenuItem value={'vn'} id='select-vn'>
+                <MenuItem value={'vi'} id='select-vi'>
                   Tiếng Việt
                 </MenuItem>
               </StyledSelect>
