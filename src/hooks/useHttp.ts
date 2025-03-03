@@ -6,6 +6,7 @@ import { default as userApi, UserApi } from '@/api/user'
 import { default as drawingApi, DrawingApi } from '@/api/drawing'
 import { default as eraserApi, EraserApi } from '@/api/eraser'
 import { default as chatApi, ChatApi } from '@/api/chat'
+import { default as roleApi, RoleApi } from '@/api/role'
 import { getCurrentToken, getCurrentUser, setCredentials } from '@/store/slices/authSlice'
 import { useAppDispatch } from './useRedux'
 import { useTranslation } from 'react-i18next'
@@ -21,6 +22,7 @@ type ApiType = {
   drawing: DrawingApi
   eraser: EraserApi
   chat: ChatApi
+  role: RoleApi
 }
 
 export default function useHttp() {
@@ -102,6 +104,7 @@ export default function useHttp() {
         drawing: drawingApi(httpRequest),
         eraser: eraserApi(httpRequest),
         chat: chatApi(httpRequest),
+        role: roleApi(httpRequest),
       }
     }
     return apiRef.current

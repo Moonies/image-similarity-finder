@@ -1,0 +1,35 @@
+{
+  "addButton": "Add New User",
+  "saveButton": "Save",
+  "inputLabel": "Keyword",
+  "title": {
+    "add": "Add New User",
+    "edit": "Edit User Detail"
+  },
+  "column": {
+    "col1": "Employee ID",
+    "col2": "Username",
+    "col3": "Full Name",
+    "col4": "Email",
+    "col5": "Role",
+    "action": "Action"
+  },
+  "form": {
+    "inputField1": "Employee Number",
+    "inputField2": "Username",
+    "inputField3": "Password",
+    "inputField4": "Firstname",
+    "inputField5": "Lastname",
+    "inputField6": "Email",
+    "inputField7": "Role"
+  },
+  "notification": {
+    "titleConfirmRemove": "Are you sure want to remove user",
+    "confirmRemoveMessage": "Selected user is",
+    "success": {
+      "add": "Add New User Success!!",
+      "update": "Update User Success!!",
+      "remove": "Remove User Success!!"
+    }
+  }
+}

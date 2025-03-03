@@ -15,7 +15,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
         component='main'
         display={'flex'}
         flexGrow={1}
-        sx={{ backgroundColor: theme => theme.palette.background.default }}
+        sx={{
+          backgroundColor: theme => theme.palette.background.default,
+          width: '100%',
+          overflow: 'hidden',
+        }}
       >
         <AnimatePresence mode='wait'>{children}</AnimatePresence>
       </Box>

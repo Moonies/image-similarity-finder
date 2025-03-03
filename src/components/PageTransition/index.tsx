@@ -20,7 +20,7 @@ export default function PageTransition({ children }: { children: React.ReactNode
         restDelta: 0.001,
         duration: 3, // Added duration control
       }}
-      style={{ display: 'flex', flexDirection: 'column', flex: 1 }}
+      style={{ display: 'flex', flexDirection: 'column', flex: 1, width: '100%' }}
     >
       {children}
     </motion.div>

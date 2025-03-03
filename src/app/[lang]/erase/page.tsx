@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks/useRedux'
 import { useNotification } from '@/hooks/useNotification'
 import { useConfirmModal } from '@/hooks/useConfirm'
 import AddNewDrawingModal from '@/components/modals/AddNewDrawingModal'
+import PageTransition from '@/components/PageTransition'
 
 export interface Point {
   point: [number, number]
@@ -201,117 +202,117 @@ export default function ErasePage() {
   }, [])
 
   return (
-    <Box display={'flex'} flexDirection={'column'} padding={1} flex={1}>
-      <Box display={'flex'} flexDirection={'row'} gap={2}>
-        {/* <Box display={'flex'} flexDirection={'row'} gap={2}>
-          <InputUploadFile onChoose={files => handleChooseFile(files)} ref={buttonUploadRef} />
-        </Box> */}
-        <Box
-          display={'flex'}
-          flexDirection={'row'}
-          gap={2}
-          flex={1}
-          // justifyContent={'space-around'}
-        >
-          <Box display={'flex'} flex={1} gap={2}>
+    <PageTransition>
+      <Box display={'flex'} flexDirection={'column'} padding={1} flex={1}>
+        <Box display={'flex'} flexDirection={'row'} gap={2}>
+          {/* <Box display={'flex'} flexDirection={'row'} gap={2}>
             <InputUploadFile onChoose={files => handleChooseFile(files)} ref={buttonUploadRef} />
-
-            <Button variant='contained' onClick={handleProcessImage} disabled={actions === 0}>
-              {t('processButton')}
-            </Button>
-            <Button variant='contained' onClick={handleUndo} disabled={actions === 0}>
-              {t('undoButton')}
-            </Button>
-            <Button variant='contained' onClick={handleReset}>
-              {t('resetButton')}
-            </Button>
-            <Button
-              variant='contained'
-              onClick={() => setDrawingMode(!drawingMode)}
-              disabled={boxSelectionMode}
-            >
-              {drawingMode ? t('stopDrawingButton') : t('drawingButton')}
-            </Button>
-            <Button
-              variant='contained'
-              onClick={() => setBoxSelectionMode(!boxSelectionMode)}
-              disabled={drawingMode}
-            >
-              {boxSelectionMode ? t('stopDrawBoxButton') : t('drawBoxButton')}
-            </Button>
-          </Box>
-
-          <Box display={'flex'} gap={2}>
-            <Button variant='contained' disabled={!erasedDrawing}>
-              {t('printButton')}
-            </Button>
-            <Button variant='contained' onClick={handleSave} disabled={!erasedDrawing}>
-              {t('saveButton')}
-            </Button>
-            <Button
-              variant='contained'
-              onClick={() => setOpenModalAddNewDrawing(true)}
-              disabled={!erasedDrawing}
-            >
-              {t('saveAsButton')}
-            </Button>
-          </Box>
-        </Box>
-      </Box>
-      <Box overflow={'auto'} padding={2}>
-        {canvasDimension.width > 0 && canvasDimension.height > 0 && (
+          </Box> */}
           <Box
             display={'flex'}
+            flexDirection={'row'}
+            gap={2}
             flex={1}
-            flexDirection={'column'}
-            width={`${canvasDimension.width}px`}
-            height={`${canvasDimension.height}px`}
+            // justifyContent={'space-around'}
           >
-            <canvas
-              ref={canvasRef}
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUp}
-              style={{ cursor: 'crosshair' }}
-              height={canvasDimension.height}
-              width={canvasDimension.width}
-            />
-            <canvas
-              ref={maskCanvasRef}
-              style={{ display: 'none' }}
-              height={canvasDimension.height}
-              width={canvasDimension.width}
-            />
-          </Box>
-        )}
-        {erasedDrawing && (
-          <Box display={'flex'} flexDirection={'column'} flex={1} marginTop={4}>
-            <Box display={'flex'} flex={1}>
-              <Typography variant='h3'>{t('resultTitle')}</Typography>
+            <Box display={'flex'} flex={1} gap={2}>
+              <InputUploadFile onChoose={files => handleChooseFile(files)} ref={buttonUploadRef} />
+              <Button variant='contained' onClick={handleProcessImage} disabled={actions === 0}>
+                {t('processButton')}
+              </Button>
+              <Button variant='contained' onClick={handleUndo} disabled={actions === 0}>
+                {t('undoButton')}
+              </Button>
+              <Button variant='contained' onClick={handleReset}>
+                {t('resetButton')}
+              </Button>
+              <Button
+                variant='contained'
+                onClick={() => setDrawingMode(!drawingMode)}
+                disabled={boxSelectionMode}
+              >
+                {drawingMode ? t('stopDrawingButton') : t('drawingButton')}
+              </Button>
+              <Button
+                variant='contained'
+                onClick={() => setBoxSelectionMode(!boxSelectionMode)}
+                disabled={drawingMode}
+              >
+                {boxSelectionMode ? t('stopDrawBoxButton') : t('drawBoxButton')}
+              </Button>
             </Box>
-            <NextImage
-              loader={({ src }) => src}
-              src={erasedDrawing}
-              alt='Preview'
-              height={canvasDimension.height}
-              width={canvasDimension.width}
-              // style={{ maxWidth: '100%' }}
-              unoptimized={true}
-              onClick={e => {
-                // setSelectedImage(uploadCachedData.uploadedImage)
-                // setModalOpen(true)
-              }}
-            />
+            <Box display={'flex'} gap={2}>
+              <Button variant='contained' disabled={!erasedDrawing}>
+                {t('printButton')}
+              </Button>
+              <Button variant='contained' onClick={handleSave} disabled={!erasedDrawing}>
+                {t('saveButton')}
+              </Button>
+              <Button
+                variant='contained'
+                onClick={() => setOpenModalAddNewDrawing(true)}
+                disabled={!erasedDrawing}
+              >
+                {t('saveAsButton')}
+              </Button>
+            </Box>
           </Box>
-        )}
-        {openModalAddNewDrawing && (
-          <AddNewDrawingModal
-            onClose={() => setOpenModalAddNewDrawing(false)}
-            open={openModalAddNewDrawing}
-            onSubmit={handleSaveAs}
-          />
-        )}
+        </Box>
+        <Box overflow={'auto'} padding={2}>
+          {canvasDimension.width > 0 && canvasDimension.height > 0 && (
+            <Box
+              display={'flex'}
+              flex={1}
+              flexDirection={'column'}
+              width={`${canvasDimension.width}px`}
+              height={`${canvasDimension.height}px`}
+            >
+              <canvas
+                ref={canvasRef}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                style={{ cursor: 'crosshair' }}
+                height={canvasDimension.height}
+                width={canvasDimension.width}
+              />
+              <canvas
+                ref={maskCanvasRef}
+                style={{ display: 'none' }}
+                height={canvasDimension.height}
+                width={canvasDimension.width}
+              />
+            </Box>
+          )}
+          {erasedDrawing && (
+            <Box display={'flex'} flexDirection={'column'} flex={1} marginTop={4}>
+              <Box display={'flex'} flex={1}>
+                <Typography variant='h3'>{t('resultTitle')}</Typography>
+              </Box>
+              <NextImage
+                loader={({ src }) => src}
+                src={erasedDrawing}
+                alt='Preview'
+                height={canvasDimension.height}
+                width={canvasDimension.width}
+                // style={{ maxWidth: '100%' }}
+                unoptimized={true}
+                onClick={e => {
+                  // setSelectedImage(uploadCachedData.uploadedImage)
+                  // setModalOpen(true)
+                }}
+              />
+            </Box>
+          )}
+          {openModalAddNewDrawing && (
+            <AddNewDrawingModal
+              onClose={() => setOpenModalAddNewDrawing(false)}
+              open={openModalAddNewDrawing}
+              onSubmit={handleSaveAs}
+            />
+          )}
+        </Box>
       </Box>
-    </Box>
+    </PageTransition>
   )
 }

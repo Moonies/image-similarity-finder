@@ -97,7 +97,7 @@ export default function RecordPage() {
             processRowUpdate={processRowUpdate}
             rowModesModel={rowModesModel}
             paginationMode='server'
-            sx={{ height: '100%' }}
+            sx={{ height: '100%', width: '100%' }}
           />
         </Box>
       </Box>
