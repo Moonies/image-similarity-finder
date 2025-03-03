@@ -1,4 +1,6 @@
+import { AddNewUser } from '@/api/user/addNewUser'
 import { UserDetail, UserListSearchCriteria } from '@/api/user/getUserList'
+import { UpdateUserDetail } from '@/api/user/updateUserDetail'
 import useHttp from '@/hooks/useHttp'
 import { GridPaginationModel } from '@mui/x-data-grid'
 import { useCallback, useMemo, useState } from 'react'
@@ -10,36 +12,6 @@ export type SearchCriteria = {
 interface CachedData {
   [key: string]: UserDetail[]
 }
-
-const mock: UserDetail[] = [
-  {
-    id: '1',
-    employeeNumber: '001',
-    email: 'abc@gmail.com',
-    lastname: '山本',
-    name: '武',
-    role: '',
-    username: 'test01',
-  },
-  {
-    id: '2',
-    employeeNumber: '002',
-    email: '',
-    lastname: '高木',
-    name: '美夜',
-    role: '',
-    username: 'it00',
-  },
-  {
-    id: '3',
-    employeeNumber: '003',
-    email: '',
-    lastname: 'abc',
-    name: 'defg',
-    role: '',
-    username: 'test02',
-  },
-]
 
 export default function useUser() {
   const { api } = useHttp()
@@ -76,6 +48,36 @@ export default function useUser() {
     [api.user, paginationModel, searchCriteria]
   )
 
+  const addNewUser = useMemo(
+    () => async (data: AddNewUser) => {
+      const result = await api.user.addNewUser(data)
+      if (result.code === 200) {
+        return true
+      }
+    },
+    [api.user]
+  )
+
+  const updateUserDetail = useMemo(
+    () => async (data: UpdateUserDetail) => {
+      const result = await api.user.updateUserDetail(data)
+      if (result.code === 200) {
+        return true
+      }
+    },
+    [api.user]
+  )
+
+  const removeUser = useMemo(
+    () => async (userId: string) => {
+      const result = await api.user.removeUser(userId)
+      if (result.code === 200) {
+        return true
+      }
+    },
+    [api.user]
+  )
+
   const handlePaginationModelChange = async (newModel: GridPaginationModel) => {
     if (newModel.pageSize !== paginationModel.pageSize) {
       // If page size has changed, reset to the first page
@@ -99,8 +101,7 @@ export default function useUser() {
   }, [])
 
   const handleSearch = useCallback(() => {
-    // getUserList()
-    setUserList(mock)
+    getUserList()
   }, [getUserList])
 
   return {
@@ -111,5 +112,8 @@ export default function useUser() {
     searchCriteria,
     paginationModel,
     handleSearch,
+    addNewUser,
+    updateUserDetail,
+    removeUser,
   }
 }

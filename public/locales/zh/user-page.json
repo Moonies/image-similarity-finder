@@ -1,0 +1,35 @@
+{
+  "addButton": "添加新用户",
+  "saveButton": "保存",
+  "inputLabel": "关键字",
+  "title": {
+    "add": "添加新用户",
+    "edit": "编辑用户详细信息"
+  },
+  "column": {
+    "col1": "员工 ID",
+    "col2": "用户名",
+    "col3": "全名",
+    "col4": "电子邮件",
+    "col5": "角色",
+    "action": "操作"
+  },
+  "form": {
+    "inputField1": "员工编号",
+    "inputField2": "用户名",
+    "inputField3": "密码",
+    "inputField4": "名字",
+    "inputField5": "姓氏",
+    "inputField6": "电子邮件",
+    "inputField7": "角色"
+  },
+  "notification": {
+    "titleConfirmRemove": "您确定要删除用户吗",
+    "confirmRemoveMessage": "选定的用户是",
+    "success": {
+      "add": "添加新用户成功！！",
+      "update": "更新用户成功！！",
+      "remove": "删除用户成功！！"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "addButton": "ユーザーを追加",
+  "saveButton": "保存",
+  "inputLabel": "キーワード",
+  "title": {
+    "add": "新しいユーザーを追加",
+    "edit": "ユーザーを編集"
+  },
+  "column": {
+    "col1": "社員番号",
+    "col2": "ユーザー",
+    "col3": "氏名",
+    "col4": "メール",
+    "col5": "役割",
+    "action": "Action"
+  },
+  "form": {
+    "inputField1": "社員番号",
+    "inputField2": "ユーザー",
+    "inputField3": "パスワード",
+    "inputField4": "名",
+    "inputField5": "姓",
+    "inputField6": "メール",
+    "inputField7": "役割"
+  },
+  "notification": {
+    "titleConfirmRemove": "ユーザーを削除してもよろしいですか",
+    "confirmRemoveMessage": "選択されたユーザーは",
+    "success": {
+      "add": "新しいユーザーの追加に成功しました!!",
+      "update": "ユーザーの更新に成功しました!!",
+      "remove": "ユーザーの削除に成功しました!!"
+    }
+  }
+}

@@ -12,7 +12,7 @@ interface CustomColumn {
 export default function CustomColumn({ edit, remove, t }: CustomColumn): GridColDef[] {
   return [
     {
-      field: 'employeeNumber',
+      field: 'number',
       headerName: t('column.col1'),
       headerAlign: 'center',
       flex: 1,
@@ -28,10 +28,10 @@ export default function CustomColumn({ edit, remove, t }: CustomColumn): GridCol
       headerName: t('column.col3'),
       headerAlign: 'center',
       flex: 1,
-      valueGetter: (value, row: UserDetail) => `${row.lastname}　${row.name}`,
+      valueGetter: (value, row: UserDetail) => `${row.lastName}　${row.firstName}`,
     },
     {
-      field: 'email',
+      field: 'mail',
       headerName: t('column.col4'),
       headerAlign: 'center',
       flex: 1,
@@ -41,6 +41,7 @@ export default function CustomColumn({ edit, remove, t }: CustomColumn): GridCol
       headerName: t('column.col5'),
       headerAlign: 'center',
       flex: 1,
+      valueGetter: (value, row: UserDetail) => `${row.role.name}`,
     },
     {
       field: 'actions',

@@ -9,15 +9,23 @@ export interface UserListSearchCriteria {
   pageSize: number
 }
 
+type RoleDetail = {
+  id: string
+  name: string
+  label: string
+  permissions: string[]
+  authority: string
+}
+
 export interface UserDetail {
   id: string
-  employeeNumber: string
+  number: string
   username: string
-  name: string
-  lastname: string
-  email: string
-  role: string
-  //something
+  firstName: string
+  lastName: string
+  mail: string
+  role: RoleDetail
+  roleId: string
 }
 
 export default async function getUserList(
@@ -25,7 +33,7 @@ export default async function getUserList(
   { category, keyword, page = 0, pageSize = 10 }: UserListSearchCriteria
 ): Promise<ApiResponse<UserDetail[]>> {
   const response = await httpRequest(() =>
-    axiosInstance.get(`/api/users??${category}.contains=${keyword}&page=${page}&size=${pageSize}`)
+    axiosInstance.get(`/api/users?${category}.contains=${keyword}&page=${page}&size=${pageSize}`)
   )
   if (axios.isAxiosError(response)) {
     return { code: response?.code ?? 500, message: response.message, data: undefined }

@@ -1,0 +1,35 @@
+{
+  "addButton": "Thêm người dùng mới",
+  "saveButton": "Lưu",
+  "inputLabel": "Từ khóa",
+  "title": {
+    "add": "Thêm người dùng mới",
+    "edit": "Chỉnh sửa chi tiết người dùng"
+  },
+  "column": {
+    "col1": "ID nhân viên",
+    "col2": "Tên người dùng",
+    "col3": "Họ và tên",
+    "col4": "Email",
+    "col5": "Vai trò",
+    "action": "Hành động"
+  },
+  "form": {
+    "inputField1": "Số nhân viên",
+    "inputField2": "Tên người dùng",
+    "inputField3": "Mật khẩu",
+    "inputField4": "Tên",
+    "inputField5": "Họ",
+    "inputField6": "Email",
+    "inputField7": "Vai trò"
+  },
+  "notification": {
+    "titleConfirmRemove": "Bạn có chắc chắn muốn xóa người dùng không",
+    "confirmRemoveMessage": "Người dùng đã chọn là",
+    "success": {
+      "add": "Thêm người dùng mới thành công!!",
+      "update": "Cập nhật người dùng thành công!!",
+      "remove": "Xóa người dùng thành công!!"
+    }
+  }
+}

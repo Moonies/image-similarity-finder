@@ -1,18 +1,21 @@
-import { Box, TextField, TextFieldProps, Typography, useTheme } from '@mui/material'
+import { RoleDetail } from '@/api/role/getRoleList'
+import { Box, MenuItem, TextField, TextFieldProps, Typography, useTheme } from '@mui/material'
 import React from 'react'
 
-interface TextBox {
+interface TextBox<T = RoleDetail> {
   text: string
+  list?: T[]
   lasted?: boolean
 }
 
-type TextFieldBoxProps = TextBox & Omit<TextFieldProps, keyof TextBox>
+type TextFieldBoxProps<T = RoleDetail> = TextBox<T> & Omit<TextFieldProps, keyof TextBox>
 
 const TextFieldBox: React.FC<TextFieldBoxProps> = ({
   text = '',
   size = 'small',
   color: colorProps,
   lasted = false,
+  list,
   ...props
 }) => {
   const theme = useTheme()
@@ -22,7 +25,17 @@ const TextFieldBox: React.FC<TextFieldBoxProps> = ({
       <Typography sx={{ width: '40%' }} color={color}>
         {text}
       </Typography>
-      <TextField {...props} variant='outlined' size='small' fullWidth />
+      {list ? (
+        <TextField id='outlined-select-currency' {...props} size='small' fullWidth>
+          {list.map(option => (
+            <MenuItem key={option.id} value={option.id}>
+              {option.name}
+            </MenuItem>
+          ))}
+        </TextField>
+      ) : (
+        <TextField {...props} variant='outlined' size='small' fullWidth />
+      )}
     </Box>
   )
 }

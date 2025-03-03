@@ -2,22 +2,22 @@ import { HttpRequest } from '@/hooks/useHttp'
 import { ApiResponse, axiosInstance } from '@/api'
 import axios from 'axios'
 
-export type UpdateUserDetail = {
-  id: string
-  employeeNumber: string
+export type AddNewUser = {
+  number: string
   username: string
-  firstName: string
-  lastNeme: string
-  email: string
+  password: string
+  firstname: string
+  lastname: string
+  mail: string
   roleId: string
 }
 
-export default async function updateUserDetail(
+export default async function addNewUser(
   httpRequest: HttpRequest,
-  data: UpdateUserDetail
+  data: AddNewUser
 ): Promise<ApiResponse<null>> {
   const response = await httpRequest(() =>
-    axiosInstance.patch(`/api/users/${data.id}`, {
+    axiosInstance.post(`/api/users`, {
       ...data,
     })
   )

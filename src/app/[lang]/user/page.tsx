@@ -11,13 +11,18 @@ import CustomColumn from './components/CustomColumn'
 import { useTranslation } from 'react-i18next'
 import UserForm from './components/UserForm'
 import { UserDetail } from '@/api/user/getUserList'
+import { AddNewUser } from '@/api/user/addNewUser'
+import { UpdateUserDetail } from '@/api/user/updateUserDetail'
+import { useNotification } from '@/hooks/useNotification'
+import { useConfirmModal } from '@/hooks/useConfirm'
 
 export default function UserPage() {
   const { t } = useTranslation('user-page')
   const [openUserForm, setOpenUserForm] = useState(false)
   const [userFormMode, setUserFormMode] = useState<'add' | 'edit'>()
   const [selectedUserDetail, setSelectedUserDetail] = useState<Partial<UserDetail>>({})
-
+  const { notificationSnackbar } = useNotification()
+  const { openConfirmModal } = useConfirmModal()
   const userDataGridRef = useGridApiRef()
   const {
     handleChange,
@@ -27,6 +32,9 @@ export default function UserPage() {
     searchCriteria,
     paginationModel,
     handleSearch,
+    addNewUser,
+    updateUserDetail,
+    removeUser,
   } = useUser()
 
   const handleEditClick = useCallback(
@@ -41,14 +49,58 @@ export default function UserPage() {
     [userList]
   )
 
-  const handleDeleteClick = useCallback((id: GridRowId) => () => {}, [])
+  const handleDeleteClick = useCallback(
+    (id: GridRowId) => async () => {
+      const selectedData = userList.find(user => user.id === id)
+      if (selectedData) {
+        const confirmed = await openConfirmModal({
+          title: t('notification.titleConfirmRemove'),
+          message: ` ${t('notification.confirmRemoveMessage')} ${selectedData.username}`,
+        })
+        if (confirmed) {
+          const result = await removeUser(selectedData?.id)
+          if (result) {
+            notificationSnackbar.success(t('notification.success.remove'))
+            handleSearch()
+          }
+        }
+      }
+    },
+    [handleSearch, notificationSnackbar, openConfirmModal, removeUser, t, userList]
+  )
 
   const handleAddClick = useCallback(() => {
     setUserFormMode('add')
     setOpenUserForm(true)
+    setSelectedUserDetail({})
   }, [])
 
-  const handleSubmit = useCallback(() => () => {}, [])
+  const handleSubmit = useCallback(
+    async (formData: UserDetail | AddNewUser) => {
+      console.log(formData)
+      if ('id' in formData) {
+        const newFormData: UpdateUserDetail = Object.fromEntries(
+          Object.entries(formData).filter(([key]) => key !== 'role')
+        ) as UpdateUserDetail
+        const result = await updateUserDetail(newFormData)
+        if (result) {
+          notificationSnackbar.success(t('notification.success.update'))
+          setOpenUserForm(false)
+          setSelectedUserDetail({})
+          handleSearch()
+        }
+      } else {
+        const result = await addNewUser(formData)
+        if (result) {
+          notificationSnackbar.success(t('notification.success.add'))
+          setOpenUserForm(false)
+          setSelectedUserDetail({})
+          handleSearch()
+        }
+      }
+    },
+    [addNewUser, handleSearch, notificationSnackbar, t, updateUserDetail]
+  )
 
   const columns = useMemo(
     () =>
@@ -109,7 +161,10 @@ export default function UserPage() {
         <UserForm
           open={openUserForm}
           initialData={selectedUserDetail}
-          onClose={() => setOpenUserForm(false)}
+          onClose={() => {
+            setSelectedUserDetail({})
+            setOpenUserForm(false)
+          }}
           onSubmit={handleSubmit}
           mode={userFormMode}
         />
