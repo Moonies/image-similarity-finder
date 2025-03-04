@@ -44,7 +44,7 @@ export default function UserForm({
   }
 
   const getRoleList = useCallback(async () => {
-    const result = await api.role.RoleList()
+    const result = await api.role.getRoleList()
     if (result.code === 200 && result.data) {
       setRoleList(result.data)
     }

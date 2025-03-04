@@ -6,7 +6,7 @@ export interface ChatApi {
   getMessage: (message: string) => Promise<ApiResponse<DrawingMessage>>
 }
 
-export default function search(httpRequest: HttpRequest): ChatApi {
+export default function chat(httpRequest: HttpRequest): ChatApi {
   return {
     getMessage: message => getMessage(httpRequest, message),
   }

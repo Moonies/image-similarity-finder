@@ -56,6 +56,18 @@ const themeOption: ThemeOptions = {
         },
       },
     },
+    MuiCheckbox: {
+      styleOverrides: {
+        root: props => ({
+          '&.Mui-checked': {
+            color:
+              props.theme.palette.mode === 'dark'
+                ? '#5cff70' //#5cff70
+                : props.theme.palette.primary.main,
+          },
+        }),
+      },
+    },
     // Add more component overrides
   },
   typography: {

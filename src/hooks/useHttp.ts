@@ -7,6 +7,7 @@ import { default as drawingApi, DrawingApi } from '@/api/drawing'
 import { default as eraserApi, EraserApi } from '@/api/eraser'
 import { default as chatApi, ChatApi } from '@/api/chat'
 import { default as roleApi, RoleApi } from '@/api/role'
+import { default as permissionApi, PermissionApi } from '@/api/permission'
 import { getCurrentToken, getCurrentUser, setCredentials } from '@/store/slices/authSlice'
 import { useAppDispatch } from './useRedux'
 import { useTranslation } from 'react-i18next'
@@ -23,6 +24,7 @@ type ApiType = {
   eraser: EraserApi
   chat: ChatApi
   role: RoleApi
+  permission: PermissionApi
 }
 
 export default function useHttp() {
@@ -55,15 +57,15 @@ export default function useHttp() {
                   const storedToken = getCurrentToken()
 
                   const result = await apiRef.current?.user.checkAuth(
-                    user,
+                    user?.username ?? '',
                     storedToken?.refreshToken ?? ''
                   )
 
                   if (result?.code === 200 && result.data) {
-                    // refreshToken(result.data)
+                    // console.log('setToken')
                     dispatch(
                       setCredentials({
-                        user: user,
+                        // user: user,
                         token: result.data,
                       })
                     )
@@ -105,6 +107,7 @@ export default function useHttp() {
         eraser: eraserApi(httpRequest),
         chat: chatApi(httpRequest),
         role: roleApi(httpRequest),
+        permission: permissionApi(httpRequest),
       }
     }
     return apiRef.current
