@@ -15,7 +15,7 @@ import useRole from './hooks/useRole'
 import { useNotification } from '@/hooks/useNotification'
 
 export default function RolePage() {
-  const { t } = useTranslation('user-page')
+  const { t } = useTranslation('role-page')
   const roleDataGridRef = useGridApiRef()
   const [openRoleForm, setOpenRoleForm] = useState(false)
   const { openConfirmModal } = useConfirmModal()
@@ -27,24 +27,24 @@ export default function RolePage() {
     () => (permissionKey: string) => {
       switch (permissionKey) {
         case 'home':
-          return 'Home Page'
+          return t('column.col2')
         case 'search':
-          return 'Upload Page'
+          return t('column.col3')
         case 'database':
-          return 'Check Recoard Page'
+          return t('column.col4')
         case 'eraser':
-          return 'Eraser Page'
+          return t('column.col5')
         case 'chat':
-          return 'Chat With Database Page'
+          return t('column.col6')
         case 'user':
-          return 'User Management Page'
+          return t('column.col7')
         case 'role':
-          return 'Role And Permission Page'
+          return t('column.col8')
         default:
           return `${permissionKey.charAt(0).toUpperCase()}${permissionKey.slice(1)} page`
       }
     },
-    []
+    [t]
   )
 
   const handleDeleteClick = useCallback(
@@ -87,12 +87,12 @@ export default function RolePage() {
     async (formData: AddNewRole) => {
       const response = await addNewRole(formData)
       if (response) {
-        notificationSnackbar.success('Add New Role Success!!')
+        notificationSnackbar.success(t('notification.success.add'))
         setOpenRoleForm(false)
         getRoleList()
       }
     },
-    [addNewRole, getRoleList, notificationSnackbar]
+    [addNewRole, getRoleList, notificationSnackbar, t]
   )
 
   useEffect(() => {
@@ -106,8 +106,7 @@ export default function RolePage() {
         <Box display={'flex'} flexDirection={'row'}>
           <Box display={'flex'} flex={1} alignItems={'center'} justifyContent={'end'}>
             <Button variant='contained' startIcon={<AddIcon />} onClick={handleAddClick}>
-              {/* {t('addButton')} */}
-              Add New Role
+              {t('addNewRoleButton')}
             </Button>
           </Box>
         </Box>

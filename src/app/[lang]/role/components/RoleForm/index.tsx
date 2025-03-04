@@ -25,7 +25,7 @@ interface RoleFormProps {
 }
 
 export default function RoleForm({ onClose, onSubmit, open, permissionList }: RoleFormProps) {
-  const { t } = useTranslation('user-page')
+  const { t } = useTranslation('role-page')
   const [newRole, setNewRole] = useState('')
   const [newPermisson, setNewPermission] = useState<string[]>([])
 
@@ -53,24 +53,24 @@ export default function RoleForm({ onClose, onSubmit, open, permissionList }: Ro
     () => (permissionKey: string) => {
       switch (permissionKey) {
         case 'home':
-          return 'Home Page'
+          return t('form.checkBoxGroup.checkBox1')
         case 'search':
-          return 'Upload Page'
+          return t('form.checkBoxGroup.checkBox2')
         case 'database':
-          return 'Check Recoard Page'
+          return t('form.checkBoxGroup.checkBox3')
         case 'eraser':
-          return 'Eraser Page'
+          return t('form.checkBoxGroup.checkBox4')
         case 'chat':
-          return 'Chat With Database Page'
+          return t('form.checkBoxGroup.checkBox5')
         case 'user':
-          return 'User Management Page'
+          return t('form.checkBoxGroup.checkBox6')
         case 'role':
-          return 'Role And Permission Page'
+          return t('form.checkBoxGroup.checkBox7')
         default:
           return `${permissionKey.charAt(0).toUpperCase()}${permissionKey.slice(1)} page`
       }
     },
-    []
+    [t]
   )
 
   return (
@@ -91,7 +91,7 @@ export default function RoleForm({ onClose, onSubmit, open, permissionList }: Ro
     >
       <Box display={'flex'} flex={1} flexDirection={'column'} gap={2} height={'100%'}>
         <Box display={'flex'} justifyContent={'space-between'} padding={2}>
-          <Typography variant='h4'> Add New Role</Typography>
+          <Typography variant='h4'>{t('form.title')}</Typography>
           <IconButton onClick={onClose}>
             <CloseIcon />
           </IconButton>
@@ -109,7 +109,7 @@ export default function RoleForm({ onClose, onSubmit, open, permissionList }: Ro
             value={newRole}
             onChange={e => setNewRole(e.target.value)}
           />
-          <Divider textAlign='left'>Permission Page</Divider>
+          <Divider textAlign='left'>{t('form.subTitle')}</Divider>
 
           {/* for unmount state */}
           {permissionList && (

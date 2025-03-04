@@ -21,7 +21,7 @@ export default function CustomColumn({
   return [
     {
       field: 'name',
-      headerName: 'Role Name',
+      headerName: t('column.col1'),
       headerAlign: 'center',
     },
     ...permissionList.map(permission => ({

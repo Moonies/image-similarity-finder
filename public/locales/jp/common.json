@@ -10,7 +10,8 @@
     "record": "記録を確認",
     "eraser": "消しゴム",
     "chat": "チャット",
-    "logout": "ログアウト"
+    "logout": "ログアウト",
+    "role": "ロールと権限"
   },
   "uploadDrawingImageModalTitle": "新しい図面をアップロード",
   "submitButton": "提出する",
