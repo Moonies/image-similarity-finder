@@ -11,7 +11,8 @@
     "eraser": "Eraser",
     "chat": "Chat",
     "logout": "Logout",
-    "user": "User Management"
+    "user": "User Management",
+    "role": "Role And Permission"
   },
   "uploadDrawingImageModalTitle": "Upload new Drawing",
   "submitButton": "Submit",

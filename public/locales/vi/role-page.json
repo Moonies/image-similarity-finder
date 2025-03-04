@@ -1,0 +1,41 @@
+{
+  "addNewRoleButton": "Thêm vai trò mới",
+  "saveButton": "Lưu",
+  "title": {
+    "add": "Thêm vai trò mới"
+  },
+  "column": {
+    "col1": "Tên vai trò",
+    "col2": "Trang chủ",
+    "col3": "Tải lên trang",
+    "col4": "Kiểm tra trang ghi chép",
+    "col5": "Trang xóa",
+    "col6": "Trang trò chuyện với cơ sở dữ liệu",
+    "col7": "Trang quản lý người dùng",
+    "col8": "Trang vai trò và quyền",
+    "action": "Hành động"
+  },
+  "form": {
+    "title": "Thêm vai trò mới",
+    "inputField1": "Tên vai trò",
+    "subTitle": "Trang quyền",
+    "checkBoxGroup": {
+      "checkBox1": "Trang chủ",
+      "checkBox2": "Tải lên trang",
+      "checkBox3": "Kiểm tra trang Recoard",
+      "checkBox4": "Trang xóa",
+      "checkBox5": "Trang trò chuyện với cơ sở dữ liệu",
+      "checkBox6": "Trang quản lý người dùng",
+      "checkBox7": "Trang vai trò và quyền"
+    }
+  },
+  "notification": {
+    "titleConfirmRemove": "Bạn có chắc chắn muốn xóa vai trò không",
+    "confirmRemoveMessage": "Vai trò đã chọn là",
+    "success": {
+      "add": "Thêm vai trò mới thành công!!",
+      "update": "Cập nhật vai trò thành công!!",
+      "remove": "Xóa vai trò thành công!!"
+    }
+  }
+}

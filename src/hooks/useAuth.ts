@@ -1,28 +1,21 @@
 'use client'
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux'
-import { setCredentials, logout } from '@/store/slices/authSlice'
+import { setCredentials, logout, setUser } from '@/store/slices/authSlice'
 import { useRouter } from 'next/navigation'
 import { useLoading } from './useLoading'
 import { useNotification } from './useNotification'
 import useHttp from './useHttp'
+import { UserProfile } from '@/api/user/getUserDetail'
+import { TokenData } from '@/api/user/login'
 
-// Authentication service (replace with your actual implementation)
-// import { authService } from '@/services/authService';
-export type TokenData = {
-  token: string
-  refreshToken: string
-  expiration: string
-  refreshExpiration: string
-}
 interface UseAuthHook {
-  // user: User | null
   isAuthenticated: boolean
-  login: (email: string, password: string) => Promise<boolean | undefined>
+  login: (username: string, password: string) => Promise<boolean | undefined>
   logout: () => Promise<void>
-  refreshToken: (newToken: any) => Promise<void> // now use any waiting API
-  getCurrentToken: () => any // wait API
-  getCurrentUser: () => any //wait API
+  refreshToken: (newToken: string) => Promise<void>
+  getCurrentToken: () => TokenData | null | undefined
+  getCurrentUser: () => UserProfile | null | undefined
 }
 
 export function useAuth(): UseAuthHook {
@@ -37,16 +30,21 @@ export function useAuth(): UseAuthHook {
     async (username: string, password: string) => {
       setLoading(true)
       try {
-        // const { user, token, refreshToken } = await authService.login(email, password);
         const result = await api.user.login(username, password)
         if (result.code === 200 && result.data) {
-          // let user = result.data
           dispatch(
             setCredentials({
-              user: username,
               token: result.data,
             })
           )
+          const response = await api.user.getUserDetail(username)
+          if (response.code === 200 && response.data) {
+            dispatch(
+              setUser({
+                user: response.data,
+              })
+            )
+          }
           return true
         } else {
           switch (result.code) {
@@ -137,7 +135,7 @@ export function useAuth(): UseAuthHook {
   const getCurrentToken = useCallback(() => {
     try {
       const storedToken = localStorage.getItem('token')
-      return storedToken ? (JSON.parse(storedToken) as any) : null //set any wait API
+      return storedToken ? (JSON.parse(storedToken) as TokenData) : null //set any wait API
     } catch (error) {
       notificationModal.error(`${error}`)
     }
@@ -146,7 +144,7 @@ export function useAuth(): UseAuthHook {
   const getCurrentUser = useCallback(() => {
     try {
       const storedUser = localStorage.getItem('user')
-      return storedUser ? (JSON.parse(storedUser) as any) : null //set any wait API
+      return storedUser ? (JSON.parse(storedUser) as UserProfile) : null
     } catch (error) {
       notificationModal.error(`${error}`)
     }

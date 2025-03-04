@@ -1,0 +1,41 @@
+{
+  "addNewRoleButton": "新しいロールを追加",
+  "saveButton": "保存",
+  "title": {
+    "add": "新しいロールを追加"
+  },
+  "column": {
+    "col1": "ロール名",
+    "col2": "ホームページ",
+    "col3": "アップロードページ",
+    "col4": "記録の確認ページ",
+    "col5": "消しゴムページ",
+    "col6": "データベースとのチャットページ",
+    "col7": "ユーザー管理ページ",
+    "col8": "ロールと権限ページ",
+    "action": "アクション"
+  },
+  "form": {
+    "title": "新しいロールを追加",
+    "inputField1": "ロール名",
+    "subTitle": "権限ページ",
+    "checkBoxGroup": {
+      "checkBox1": "ホームページ",
+      "checkBox2": "アップロードページ",
+      "checkBox3": "記録の確認ページ",
+      "checkBox4": "消しゴムページ",
+      "checkBox5": "データベースとのチャット ページ",
+      "checkBox6": "ユーザー管理ページ",
+      "checkBox7": "ロールと権限ページ"
+    }
+  },
+  "notification": {
+    "titleConfirmRemove": "ロールを削除してもよろしいですか",
+    "confirmRemoveMessage": "選択されたロールは",
+    "success": {
+      "add": "新しいロールの追加に成功しました!!",
+      "update": "ロールの更新に成功しました!!",
+      "remove": "ロールの削除に成功しました!!"
+    }
+  }
+}

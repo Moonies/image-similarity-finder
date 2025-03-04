@@ -20,7 +20,7 @@ export interface EraserApi {
   updateEraserDrawingImage: (file: File) => Promise<ApiResponse<null>>
 }
 
-export default function search(httpRequest: HttpRequest): EraserApi {
+export default function eraser(httpRequest: HttpRequest): EraserApi {
   return {
     addEraserDrawingImage: (file, predictorId) =>
       addEraserDrawingImage(httpRequest, file, predictorId),

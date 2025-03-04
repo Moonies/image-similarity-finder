@@ -5,6 +5,7 @@ import {
   LightMode as LightModeIcon,
   Language as LanguageIcon,
   ManageAccounts as ManageAccountsIcon,
+  Key as KeyIcon,
 } from '@mui/icons-material'
 import { useTranslation } from 'react-i18next'
 import { useThemeContext } from '@/context/ThemeContext'
@@ -27,6 +28,7 @@ export default function useMenu() {
     { label: t('sideMenu.eraser'), key: 'eraser', icon: EraserIcon, path: '/erase' },
     { label: t('sideMenu.chat'), key: 'chat', icon: ChatIcon, path: '/chat' },
     { label: t('sideMenu.user'), key: 'user', icon: ManageAccountsIcon, path: '/user' },
+    { label: t('sideMenu.role'), key: 'role', icon: KeyIcon, path: '/role' },
 
     { label: '', key: 'language', icon: LanguageIcon, path: '' },
   ]

@@ -1,0 +1,41 @@
+{
+  "addNewRoleButton": "添加新角色",
+  "saveButton": "保存",
+  "title": {
+    "add": "添加新角色"
+  },
+  "column": {
+    "col1": "角色名称",
+    "col2": "主页",
+    "col3": "上传页面",
+    "col4": "查看记录页面",
+    "col5": "擦除页面",
+    "col6": "与数据库聊天页面",
+    "col7": "用户管理页面",
+    "col8": "角色与权限页面",
+    "action": "操作"
+  },
+  "form": {
+    "title": "添加新角色",
+    "inputField1": "角色名称",
+    "subTitle": "权限页面",
+    "checkBoxGroup": {
+      "checkBox1": "主页",
+      "checkBox2": "上传页面",
+      "checkBox3": "查看记录页面",
+      "checkBox4": "擦除页面",
+      "checkBox5": "与数据库聊天页面",
+      "checkBox6": "用户管理页面",
+      "checkBox7": "角色与权限页面"
+    }
+  },
+  "notification": {
+    "titleConfirmRemove": "您确定要删除角色吗",
+    "confirmRemoveMessage": "选定的角色是",
+    "success": {
+      "add": "添加新角色成功！",
+      "update": "更新角色成功！",
+      "remove": "删除角色成功！"
+    }
+  }
+}

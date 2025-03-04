@@ -1,0 +1,41 @@
+{
+  "addNewRoleButton": "Add New Role",
+  "saveButton": "Save",
+  "title": {
+    "add": "Add New Role"
+  },
+  "column": {
+    "col1": "Role Name",
+    "col2": "Home Page",
+    "col3": "Upload Page",
+    "col4": "Check Recoard Page",
+    "col5": "Eraser Page",
+    "col6": "Chat With Database Page",
+    "col7": "User Management Page",
+    "col8": "Role And Permission Page",
+    "action": "Action"
+  },
+  "form": {
+    "title": "Add New Role",
+    "inputField1": "Role Name",
+    "subTitle": "Permission Page",
+    "checkBoxGroup": {
+      "checkBox1": "Home Page",
+      "checkBox2": "Upload Page",
+      "checkBox3": "Check Recoard Page",
+      "checkBox4": "Eraser Page",
+      "checkBox5": "Chat With Database Page",
+      "checkBox6": "User Management Page",
+      "checkBox7": "Role And Permission Page"
+    }
+  },
+  "notification": {
+    "titleConfirmRemove": "Are you sure want to remove role",
+    "confirmRemoveMessage": "Selected role is",
+    "success": {
+      "add": "Add New Role Success!!",
+      "update": "Update Role Success!!",
+      "remove": "Remove Role Success!!"
+    }
+  }
+}
