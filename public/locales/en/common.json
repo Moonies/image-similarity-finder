@@ -22,6 +22,9 @@
   "error": {
     "title": "Something went wrong",
     "submitButton": "Try Again",
-    "message": "An error has occured on {{pageName}} page. Please check and try again."
+    "message": "An error has occured on {{pageName}} page. Please check and try again.",
+    "errorMessageTitle": "Error Message",
+    "contactInfoTitle": "If the problem continues, contact the site owner.",
+    "contactInfoMessage": "Here"
   }
 }

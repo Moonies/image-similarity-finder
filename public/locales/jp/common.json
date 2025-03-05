@@ -21,6 +21,9 @@
   "error": {
     "title": "何か問題が発生しました",
     "submitButton": "やり直す",
-    "message": "{{pageName}}ページにエラーが発生しました。確認してもう一度お試しください。"
+    "message": "{{pageName}}ページにエラーが発生しました。確認してもう一度お試しください。",
+    "errorMessageTitle": "エラーメッセージ",
+    "contactInfoTitle": "問題が解決しない場合は、サイト所有者に連絡してください。",
+    "contactInfoMessage": "こちら"
   }
 }

@@ -21,6 +21,9 @@
   "error": {
     "title": "Đã xảy ra lỗi",
     "submitButton": "Thử lại",
-    "message": "Đã xảy ra lỗi ở trang {{pageName}}. Vui lòng kiểm tra và thử lại."
+    "message": "Đã xảy ra lỗi ở trang {{pageName}}. Vui lòng kiểm tra và thử lại.",
+    "errorMessageTitle": "Mặt sau",
+    "contactInfoTitle": "Nếu sự cố vẫn tiếp diễn, hãy liên hệ với chủ sở hữu trang web.",
+    "contactInfoMessage": "đây"
   }
 }

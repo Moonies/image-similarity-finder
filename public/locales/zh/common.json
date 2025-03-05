@@ -21,6 +21,9 @@
   "error": {
     "title": "出了點問題",
     "submitButton": "再試一次",
-    "message": "（{{pageName}}）頁面發生錯誤。請檢查並重試。"
+    "message": "（{{pageName}}）頁面發生錯誤。請檢查並重試。",
+    "errorMessageTitle": "後退",
+    "contactInfoTitle": "如果問題仍然存在，請聯絡網站所有者。",
+    "contactInfoMessage": "這裡"
   }
 }
