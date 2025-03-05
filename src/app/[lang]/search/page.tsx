@@ -68,8 +68,8 @@ export default function SearchPage() {
                 select
                 value={amountImage}
                 size='small'
-                sx={{ width: 160 }}
-                label={'Amount Similar Image'}
+                sx={{ width: 180 }}
+                label={t('amountLabel')}
                 onChange={e => setAmountImage(parseInt(e.target.value))}
               >
                 {listAmout.map(item => (
