@@ -17,5 +17,10 @@
   "imagePlaceholder": "Không có tập tin được chọn",
   "titleSaveAs": "Lưu dưới dạng",
   "alertNoneText": "Vui lòng nhập tên tệp mới trước khi nhấp vào nút gửi",
-  "inputAddNewDrawingFileName": "Tên tệp bản vẽ"
+  "inputAddNewDrawingFileName": "Tên tệp bản vẽ",
+  "error": {
+    "title": "Đã xảy ra lỗi",
+    "submitButton": "Thử lại",
+    "message": "Đã xảy ra lỗi ở trang {{pageName}}. Vui lòng kiểm tra và thử lại."
+  }
 }

@@ -1,8 +1,9 @@
 'use client'
 
 import { Box, Button, Container, Stack, Typography } from '@mui/material'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { ErrorBoundary } from 'react-error-boundary'
+import { useTranslation } from 'react-i18next'
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied'
 
 const ErrorFallback = ({
@@ -12,18 +13,27 @@ const ErrorFallback = ({
   error: Error
   resetErrorBoundary: any
 }) => {
+  const pathname = usePathname()
+  const { t } = useTranslation('common')
+
+  const getCurrentURLPath = () => {
+    return pathname.split('/')[2]
+  }
+
   return (
     <Box sx={{ mt: 8 }}>
       <Container>
         <Stack spacing={1} direction='row' sx={{ alignItems: 'center', mb: 2 }}>
           <Typography variant='h6' color='error'>
-            Something went wrong.
+            {t('error.title')}
           </Typography>
           <SentimentVeryDissatisfiedIcon color='error' />
         </Stack>
-        <Typography gutterBottom>{error.message}</Typography>
+        <Typography gutterBottom>
+          {t('error.message', { pageName: t(`sideMenu.${getCurrentURLPath()}`) })}
+        </Typography>
         <Button variant='contained' onClick={resetErrorBoundary} sx={{ my: 2 }}>
-          Try Again
+          {t('error.submitButton')}
         </Button>
       </Container>
     </Box>
