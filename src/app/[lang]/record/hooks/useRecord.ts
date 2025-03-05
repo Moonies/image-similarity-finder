@@ -17,6 +17,7 @@ import {
 } from '@mui/x-data-grid'
 import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface CategorySaleSearch {
   value: string
@@ -54,6 +55,7 @@ export default function useRecord() {
   const { setLoading } = useLoading()
   const { notificationSnackbar } = useNotification()
   const { openConfirmModal } = useConfirmModal()
+  const { t } = useTranslation('record-page')
 
   const getDrawingList = useMemo(
     () => async () => {
@@ -82,6 +84,16 @@ export default function useRecord() {
     () => async (drawingId: string) => {
       const result = await api.drawing.removeDrawing(drawingId)
       return result
+    },
+    [api.drawing]
+  )
+
+  const addNewDrawing = useMemo(
+    () => async (newDrawingFile: File | FileList) => {
+      const result = await api.drawing.addNewDrawingImage(newDrawingFile)
+      if (result.code === 200) {
+        return result
+      }
     },
     [api.drawing]
   )
@@ -155,15 +167,15 @@ export default function useRecord() {
       const selectedData = drawingList.find(item => item.id === drawingId)
 
       const confirmed = await openConfirmModal({
-        title: 'confirm',
-        message: `Are you sure to remove drawing number is${selectedData?.drawingNumber}`,
+        title: t('notification.titleConfirmRemove'),
+        message: `${t('notification.confirmRemoveMessage')} ${selectedData?.drawingNumber}`,
       })
       if (confirmed) {
         setLoading(true)
         try {
           const result = await removeDrawing(drawingId as string)
           if (result.code === 200) {
-            notificationSnackbar.success('remove success')
+            notificationSnackbar.success(t('notification.success.remove'))
             await getDrawingList()
           }
         } catch (error) {
@@ -173,7 +185,15 @@ export default function useRecord() {
         }
       }
     },
-    [drawingList, openConfirmModal, setLoading, removeDrawing, notificationSnackbar, getDrawingList]
+    [
+      drawingList,
+      openConfirmModal,
+      t,
+      setLoading,
+      removeDrawing,
+      notificationSnackbar,
+      getDrawingList,
+    ]
   )
 
   const handleCancelClick = useCallback(
@@ -235,6 +255,16 @@ export default function useRecord() {
     }
   }
 
+  const handleAddNewDrawing = useCallback(
+    async (filesSelect: File | FileList) => {
+      const response = await addNewDrawing(filesSelect)
+      if (response && response.code === 200) {
+        return true
+      }
+    },
+    [addNewDrawing]
+  )
+
   return {
     drawingList,
     handleRowEditStop,
@@ -255,5 +285,6 @@ export default function useRecord() {
     totalRows,
     paginationModel,
     handleCache,
+    handleAddNewDrawing,
   }
 }

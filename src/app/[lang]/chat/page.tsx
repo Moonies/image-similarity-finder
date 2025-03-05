@@ -107,7 +107,6 @@ export default function ChatPage() {
                       apiref={messageDataGridRef}
                       onSelected={selectedRow => console.log(selectedRow)}
                       hideFooter={true}
-                      getRowId={row => row.drawing_number}
                       sx={{ height: '300px', width: '500px' }}
                     />
                   </Box>
