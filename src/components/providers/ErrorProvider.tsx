@@ -2,17 +2,11 @@
 
 import { Box, Button, Container, Stack, Typography } from '@mui/material'
 import { usePathname, useRouter } from 'next/navigation'
-import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
 import { useTranslation } from 'react-i18next'
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied'
 
-const ErrorFallback = ({
-  error,
-  resetErrorBoundary,
-}: {
-  error: Error
-  resetErrorBoundary: any
-}) => {
+const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
   const pathname = usePathname()
   const { t } = useTranslation('common')
 
