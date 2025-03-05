@@ -2,5 +2,6 @@
   "title": "上传图像",
   "imagePlaceholder": "未选择文件",
   "submitButton": "上传",
-  "alertUploadFile": "单击按钮之前请选择文件。"
+  "alertUploadFile": "单击按钮之前请选择文件。",
+  "amountLabel": "相似图像数量"
 }

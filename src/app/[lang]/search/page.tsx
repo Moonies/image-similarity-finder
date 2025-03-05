@@ -1,7 +1,7 @@
 'use client'
 
 import InputUploadFile from '@/components/InputUploadFile'
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button, MenuItem, TextField, Typography } from '@mui/material'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import useSearch from './hooks/useSearch'
@@ -11,9 +11,11 @@ import PageTransition from '@/components/PageTransition'
 export default function SearchPage() {
   const { t } = useTranslation('search-page')
   const [uploadFile, setUploadFile] = useState<File>()
+  const [amountImage, setAmountImage] = useState(3)
   const { handleUpload } = useSearch()
   const { notificationModal } = useNotification()
   const buttonUploadRef = useRef<HTMLInputElement>(null)
+  const listAmout = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] //maximum is 10
 
   useEffect(() => {
     buttonUploadRef.current?.click()
@@ -31,11 +33,11 @@ export default function SearchPage() {
 
   const handleSubmit = useCallback(() => {
     if (uploadFile) {
-      handleUpload(uploadFile)
+      handleUpload(uploadFile, amountImage)
     } else {
       notificationModal.warning(t('alertUploadFile'))
     }
-  }, [handleUpload, notificationModal, t, uploadFile])
+  }, [amountImage, handleUpload, notificationModal, t, uploadFile])
 
   return (
     <PageTransition>
@@ -60,10 +62,28 @@ export default function SearchPage() {
             <InputUploadFile onChoose={files => handleChooseFile(files)} ref={buttonUploadRef} />
             <Typography>{uploadFile ? uploadFile.name : t('imagePlaceholder')}</Typography>
           </Box>
-          <Box display={'flex'} flexDirection={'row'}>
-            <Button variant='contained' onClick={handleSubmit}>
-              {t('submitButton')}
-            </Button>
+          <Box display={'flex'} flexDirection={'row'} gap={2}>
+            <Box>
+              <TextField
+                select
+                value={amountImage}
+                size='small'
+                sx={{ width: 160 }}
+                label={'Amount Similar Image'}
+                onChange={e => setAmountImage(parseInt(e.target.value))}
+              >
+                {listAmout.map(item => (
+                  <MenuItem key={item} value={item}>
+                    {item}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Box>
+            <Box justifyContent={'center'} alignContent={'center'}>
+              <Button variant='contained' onClick={handleSubmit}>
+                {t('submitButton')}
+              </Button>
+            </Box>
           </Box>
         </Box>
       </Box>

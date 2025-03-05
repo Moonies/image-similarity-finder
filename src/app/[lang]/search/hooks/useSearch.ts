@@ -17,8 +17,8 @@ export default function useSearch() {
   const { setLoading } = useLoading()
 
   const searchDrawing = useMemo(
-    () => async (fileSelected: File) => {
-      const result = await api.drawing.searchDrawing(fileSelected)
+    () => async (fileSelected: File, amount?: number) => {
+      const result = await api.drawing.searchDrawing(fileSelected, amount)
       if (result.code === 200 && result.data) {
         return result.data
       }
@@ -28,9 +28,9 @@ export default function useSearch() {
   )
 
   const handleUpload = useCallback(
-    async (fileSelected: File) => {
+    async (fileSelected: File, amount?: number) => {
       setLoading(true)
-      const response = await searchDrawing(fileSelected)
+      const response = await searchDrawing(fileSelected, amount)
       if (response) {
         const rawDataImageList = await handleZipInput(response)
         setPageData('zipFile', rawDataImageList)
