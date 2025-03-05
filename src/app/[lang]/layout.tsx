@@ -5,6 +5,7 @@ import { LoadingProvider } from '@/components/providers/LoadingProvider'
 import { ReduxProvider } from '@/components/providers/ReduxProvider'
 import { AuthProvider } from '@/components/providers/AuthProvider'
 import { ConfirmModalProvider } from '@/components/providers/ConfirmProvider'
+import ErrorProvider from '@/components/providers/ErrorProvider'
 import { Notification } from '@/components/Notification'
 import { ThemeContextProvider } from '@/context/ThemeContext'
 import { CacheProvider } from '@/context/CacheContext'
@@ -22,23 +23,25 @@ export default async function MainAppLayout({
 }) {
   const { lang } = await params
   return (
-    <ReduxProvider>
-      <LanguageProvider locale={lang}>
-        <ThemeContextProvider>
-          <ThemeRegistry>
-            <ConfirmModalProvider>
-              <LoadingProvider>
-                <AuthProvider>
-                  <CacheProvider>
-                    <MainLayout>{children}</MainLayout>
-                  </CacheProvider>
-                  <Notification />
-                </AuthProvider>
-              </LoadingProvider>
-            </ConfirmModalProvider>
-          </ThemeRegistry>
-        </ThemeContextProvider>
-      </LanguageProvider>
-    </ReduxProvider>
+    <ErrorProvider>
+      <ReduxProvider>
+        <LanguageProvider locale={lang}>
+          <ThemeContextProvider>
+            <ThemeRegistry>
+              <ConfirmModalProvider>
+                <LoadingProvider>
+                  <AuthProvider>
+                    <CacheProvider>
+                      <MainLayout>{children}</MainLayout>
+                    </CacheProvider>
+                    <Notification />
+                  </AuthProvider>
+                </LoadingProvider>
+              </ConfirmModalProvider>
+            </ThemeRegistry>
+          </ThemeContextProvider>
+        </LanguageProvider>
+      </ReduxProvider>
+    </ErrorProvider>
   )
 }
