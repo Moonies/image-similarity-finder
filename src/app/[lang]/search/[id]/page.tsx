@@ -111,7 +111,7 @@ export default function SearchDetail() {
 
   return (
     <PageTransition>
-      <Box display={'flex'} flexDirection={'column'} flex={1}>
+      <Box display={'flex'} flexDirection={'column'} flex={1} overflow={'auto'}>
         <Box
           display={'flex'}
           flexDirection={'column'}

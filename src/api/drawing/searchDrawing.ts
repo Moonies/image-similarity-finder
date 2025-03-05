@@ -4,13 +4,14 @@ import axios from 'axios'
 
 export default async function searchDrawing(
   httpRequest: HttpRequest,
-  searchImage: File
+  searchImage: File,
+  amount = 3
 ): Promise<ApiResponse<Blob | undefined>> {
   const formData = new FormData()
   formData.append('file', searchImage)
 
   const response = await httpRequest(() =>
-    axiosInstance.post('/api/drawings/search', formData, {
+    axiosInstance.post(`/api/drawings/search?${amount}`, formData, {
       responseType: 'blob',
       headers: {
         'Access-Control-Allow-Origin': '*',
