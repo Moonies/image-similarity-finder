@@ -46,7 +46,7 @@ export interface DrawingApi {
     drawingId: string,
     disableDisplayError?: boolean
   ) => Promise<ApiResponse<null>>
-  addNewDrawingImage: (file: File) => Promise<ApiResponse<null>>
+  addNewDrawingImage: (file: File | FileList) => Promise<ApiResponse<null>>
 }
 
 export default function search(httpRequest: HttpRequest): DrawingApi {

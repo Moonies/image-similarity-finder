@@ -25,5 +25,14 @@
     "col21": "Selling Price",
     "col22": "Defect Details",
     "action": "Actions"
+  },
+  "addDrawingButton": "Add New Drawing",
+  "notification": {
+    "titleConfirmRemove": "Are you sure want to remove Drawing",
+    "confirmRemoveMessage": "Selected Drawing is",
+    "success": {
+      "add": "Add New Drawing Success!!",
+      "remove": "Remove Drawing Success!!"
+    }
   }
 }
