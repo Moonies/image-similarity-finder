@@ -18,7 +18,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
         sx={{
           backgroundColor: theme => theme.palette.background.default,
           width: '100%',
-          // overflow: 'hidden',
+          overflowX: 'hidden',
         }}
       >
         <AnimatePresence mode='wait'>{children}</AnimatePresence>

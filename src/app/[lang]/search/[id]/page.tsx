@@ -185,7 +185,12 @@ export default function SearchDetail() {
             flexDirection={'row'}
             gap={2}
             padding={2}
-            justifyContent={'space-around'}
+            justifyContent={imageUrls.length <= 2 ? 'space-around' : 'flex-start'}
+            sx={{
+              width: '100%', // Ensure it spans the full width of the container
+              whiteSpace: imageUrls.length > 2 ? 'nowrap' : 'normal', // Prevent cards from wrapping to the next row
+            }}
+            overflow={imageUrls.length > 2 ? 'auto' : 'visible'}
           >
             {imageUrls &&
               imageUrls.length > 0 &&

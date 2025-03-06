@@ -9,9 +9,10 @@ export default async function searchDrawing(
 ): Promise<ApiResponse<Blob | undefined>> {
   const formData = new FormData()
   formData.append('file', searchImage)
+  formData.append('count', amount.toString())
 
   const response = await httpRequest(() =>
-    axiosInstance.post(`/api/drawings/search?${amount}`, formData, {
+    axiosInstance.post('/api/drawings/search', formData, {
       responseType: 'blob',
       headers: {
         'Access-Control-Allow-Origin': '*',

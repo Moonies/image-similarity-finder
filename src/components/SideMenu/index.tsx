@@ -95,7 +95,10 @@ export default function SideMenu() {
         {storedUser && (
           <Box display={'flex'} flex={1} flexDirection={'column'}>
             {menuItems.map((item, index) => {
-              if (item.key !== 'language' && storedUser?.role.permissions.includes(item.key)) {
+              if (
+                (item.key !== 'language' && storedUser?.role.permissions.includes(item.key)) ||
+                item.key === 'mode'
+              ) {
                 //&& storedUser?.role.permissions.includes(item.key) remove from if for test role & permission
                 return (
                   <ListItemButton

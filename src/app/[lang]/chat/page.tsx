@@ -45,6 +45,7 @@ export default function ChatPage() {
         borderRadius={2}
         sx={{
           border: '1px solid',
+          overflowY: 'auto',
         }}
       >
         {/* Chat Header */}
@@ -107,6 +108,13 @@ export default function ChatPage() {
                       apiref={messageDataGridRef}
                       onSelected={selectedRow => console.log(selectedRow)}
                       hideFooter={true}
+                      initialState={{
+                        columns: {
+                          columnVisibilityModel: {
+                            id: false,
+                          },
+                        },
+                      }}
                       sx={{ height: '300px', width: '500px' }}
                     />
                   </Box>
