@@ -2,6 +2,8 @@ import { UpdateDrawingImageDetail } from '@/api/drawing/updateDrawingDetail'
 import useHttp from '@/hooks/useHttp'
 import { useLoading } from '@/hooks/useLoading'
 import { useNotification } from '@/hooks/useNotification'
+import { ZipContent } from '@/hooks/useZipExtractor'
+import { convertTifToBlob } from '@/utils/fileConvert'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -58,5 +60,23 @@ export default function useSearchDetail() {
     [updateDrawingDetail, withLoading]
   )
 
-  return { handleGetDetailImage, handleUpdateDrawingDetail }
+  const getContentUrl = useCallback(
+    async (type: ZipContent['type'], content: string | Blob | ArrayBuffer) => {
+      switch (type) {
+        case 'image':
+          return URL.createObjectURL(content as Blob)
+        case 'tif':
+          const pngBlob = await convertTifToBlob(content as Blob)
+          if (!pngBlob) return ''
+          return URL.createObjectURL(pngBlob)
+
+        //another case
+        default:
+          return ''
+      }
+    },
+    []
+  )
+
+  return { handleGetDetailImage, handleUpdateDrawingDetail, getContentUrl }
 }

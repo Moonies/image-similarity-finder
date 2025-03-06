@@ -5,7 +5,7 @@ import { configure } from '@zip.js/zip.js'
 export interface ZipContent {
   name: string
   content: string | Blob | ArrayBuffer
-  type: 'text' | 'image' | 'pdf' | 'json' | 'binary'
+  type: 'text' | 'image' | 'pdf' | 'json' | 'binary' | 'tif'
   size: number
   path: string[]
 }
@@ -25,10 +25,11 @@ export const useZipExtractor = () => {
 
   const getFileType = (filename: string): ZipContent['type'] => {
     const ext = filename.toLowerCase().split('.').pop()
-
+    console.log(ext)
     if (/^(jpg|jpeg|png|gif|webp|svg)$/.test(ext!)) return 'image'
     if (ext === 'pdf') return 'pdf'
     if (ext === 'json') return 'json'
+    if (ext === 'tif' || ext === 'tiff') return 'tif'
     if (/^(txt|md|csv|html|xml|js|ts|css)$/.test(ext!)) return 'text'
     return 'binary'
   }
@@ -76,6 +77,9 @@ export const useZipExtractor = () => {
             new BlobWriter(type === 'image' ? 'image/*' : 'application/pdf')
           )
           break
+
+        case 'tif':
+          content = 'tif'
 
         default:
           content = await entry.getData(new BlobWriter())

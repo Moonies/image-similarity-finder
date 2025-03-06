@@ -39,9 +39,16 @@ export default function useHttp() {
     async (apiFunction: () => Promise<AxiosResponse>, disableDisplayError = false) => {
       try {
         const response: AxiosResponse = await apiFunction()
+        console.log(response)
+        if (
+          !response.headers // No response body or headers
+        ) {
+          throw new Error('Invalid response: No data or headers returned.')
+        }
         return response
       } catch (error: any) {
         if (axios.isAxiosError(error) && error.response) {
+          console.log(error)
           if (disableDisplayError) return error
           if (error.response) {
             setLoading(false)
@@ -89,6 +96,12 @@ export default function useHttp() {
                 break
             }
           }
+          return error
+        } else {
+          notificationSnackbar.error(
+            `${t('error')}: ${error?.code}
+          \n ${error.message}`
+          )
           return error
         }
       }
