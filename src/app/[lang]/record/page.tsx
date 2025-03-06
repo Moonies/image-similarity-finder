@@ -54,8 +54,6 @@ export default function RecordPage() {
 
   const handleChooseFile = useCallback(
     async (chooseFile: FileList | File | null) => {
-      const file = chooseFile
-      console.log(file)
       if (chooseFile) {
         const response = await withLoading(handleAddNewDrawing(chooseFile))
         if (response) {

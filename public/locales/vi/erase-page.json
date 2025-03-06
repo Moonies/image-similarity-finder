@@ -19,5 +19,6 @@
   "resetMessage": "Bạn có chắc chắn muốn đặt lại ứng dụng không? Tất cả các hành động sẽ bị mất",
   "alertNonUpload": "Ứng dụng đã ở trạng thái ban đầu",
   "alertAddNewDrawing": "Số bản vẽ hiện tại không tồn tại. Bạn có cần thêm bản vẽ mới không?",
-  "addNewDrawingMessageSuccess": "thêm bản vẽ mới thành công!!"
+  "addNewDrawingMessageSuccess": "thêm bản vẽ mới thành công!!",
+  "downloadButton": "tải về"
 }

@@ -19,5 +19,6 @@
   "resetMessage": "Are you sure you want to reset the application? All actions will be lost.",
   "alertNonUpload": "Application is already in the initial state.",
   "alertAddNewDrawing": "Current Drawing Number is not Existed. Do You Need To Add New Drawing?",
-  "addNewDrawingMessageSuccess": "add new drawing is success!!"
+  "addNewDrawingMessageSuccess": "add new drawing is success!!",
+  "downloadButton": "Download"
 }
