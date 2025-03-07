@@ -23,13 +23,20 @@
     "inputField6": "Email",
     "inputField7": "Vai trò"
   },
+  "modal": {
+    "title": "Đặt lại mật khẩu",
+    "inputField1": "Mật khẩu mới",
+    "inputField2": "Đặt lại mã mật khẩu",
+    "helperInput": "Mã đặt lại mật khẩu sẽ được gửi qua email bạn chọn"
+  },
   "notification": {
     "titleConfirmRemove": "Bạn có chắc chắn muốn xóa người dùng không",
     "confirmRemoveMessage": "Người dùng đã chọn là",
     "success": {
       "add": "Thêm người dùng mới thành công!!",
       "update": "Cập nhật người dùng thành công!!",
-      "remove": "Xóa người dùng thành công!!"
+      "remove": "Xóa người dùng thành công!!",
+      "reset": "Đặt lại mật khẩu thành công!!"
     }
   }
 }

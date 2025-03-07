@@ -1,15 +1,20 @@
 import React from 'react'
-import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  LockReset as LockResetIcon,
+} from '@mui/icons-material'
 import { GridActionsCellItem, GridColDef, GridRowId } from '@mui/x-data-grid'
 import { TFunction } from 'i18next'
 import { UserDetail } from '@/api/user/getUserList'
 
 interface CustomColumn {
+  reset(id: GridRowId): () => void
   edit(id: GridRowId): () => void
   remove(id: GridRowId): () => void
   t: TFunction
 }
-export default function CustomColumn({ edit, remove, t }: CustomColumn): GridColDef[] {
+export default function CustomColumn({ reset, edit, remove, t }: CustomColumn): GridColDef[] {
   return [
     {
       field: 'number',
@@ -47,10 +52,19 @@ export default function CustomColumn({ edit, remove, t }: CustomColumn): GridCol
       field: 'actions',
       type: 'actions',
       headerName: t('column.action'),
-      width: 100,
+      // width: 100,
+      flex: 1,
       cellClassName: 'actions',
       getActions: ({ id }: any) => {
         return [
+          <GridActionsCellItem
+            key={id}
+            icon={<LockResetIcon />}
+            label='Reset Password'
+            className='textPrimary'
+            onClick={reset(id)}
+            sx={{ backgroundColor: theme => theme.palette.info.light }}
+          />,
           <GridActionsCellItem
             key={id}
             icon={<EditIcon />}
