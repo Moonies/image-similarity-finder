@@ -19,5 +19,6 @@
   "resetMessage": "アプリケーションをリセットしてもよろしいですか? すべてのアクションが失われます",
   "alertNonUpload": "アプリケーションはすでに初期状態です",
   "alertAddNewDrawing": "現在の図面番号が存在しません。新しい図面を追加する必要がありますか?",
-  "addNewDrawingMessageSuccess": "新しい図面の追加が成功しました!!"
+  "addNewDrawingMessageSuccess": "新しい図面の追加が成功しました!!",
+  "downloadButton": "ダウンロード"
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useGridApiRef } from '@mui/x-data-grid'
 import { Search as SearchIcon } from '@mui/icons-material'
 import { Autocomplete, Box, Button, Divider, TextField } from '@mui/material'
@@ -9,19 +9,22 @@ import useRecord from './hooks/useRecord'
 import CustomColumn from './components/CustomColumn'
 import { useTranslation } from 'react-i18next'
 import PageTransition from '@/components/PageTransition'
+import InputUploadFile from '@/components/InputUploadFile'
+import { useNotification } from '@/hooks/useNotification'
+import { useLoading } from '@/hooks/useLoading'
 
 export default function RecordPage() {
   const { t } = useTranslation('record-page')
   const recordDataGridRef = useGridApiRef()
-
+  const buttonUploadRef = useRef<HTMLInputElement>(null)
+  const { notificationSnackbar } = useNotification()
+  const { withLoading } = useLoading()
   const {
     drawingList,
-    handleRowEditStop,
     handleEditClick,
     handleSaveClick,
     handleDeleteClick,
     handleCancelClick,
-    processRowUpdate,
     handleRowModesModelChange,
     rowModesModel,
     prepareCategorySearch,
@@ -33,6 +36,7 @@ export default function RecordPage() {
     totalRows,
     paginationModel,
     handleCache,
+    handleAddNewDrawing,
   } = useRecord()
 
   const columns = useMemo(
@@ -46,6 +50,22 @@ export default function RecordPage() {
         t: t,
       }),
     [handleCancelClick, handleEditClick, handleSaveClick, handleDeleteClick, rowModesModel, t]
+  )
+
+  const handleChooseFile = useCallback(
+    async (chooseFile: FileList | File | null) => {
+      if (chooseFile) {
+        const response = await withLoading(handleAddNewDrawing(chooseFile))
+        if (response) {
+          notificationSnackbar.success(t('notification.success.add'))
+        }
+        //for reset and upload same file
+        if (buttonUploadRef.current) {
+          buttonUploadRef.current.value = ''
+        }
+      }
+    },
+    [handleAddNewDrawing, notificationSnackbar, t, withLoading]
   )
 
   useEffect(() => {
@@ -80,21 +100,26 @@ export default function RecordPage() {
               <SearchIcon />
             </Button>
           </Box>
+          <Box justifyContent={'center'} alignContent={'center'} marginLeft={'auto'}>
+            <InputUploadFile
+              onChoose={files => handleChooseFile(files)}
+              ref={buttonUploadRef}
+              multiple
+              text={t('addDrawingButton')}
+            />
+          </Box>
         </Box>
         <Divider sx={{ borderWidth: 1, borderColor: theme => theme.palette.primary.light }} />
         <Box marginTop={2} flex={1}>
           <DataTable
             data={drawingList}
             columns={columns}
-            editMode='row'
             totalRows={totalRows}
             apiref={recordDataGridRef}
             paginationModel={paginationModel}
-            onSelected={selectedRow => console.log(selectedRow)}
+            onSelected={selectedRow => {}}
             onRowModesModelChange={handleRowModesModelChange}
             onPaginationModelChange={handlePaginationModelChange}
-            onRowEditStop={handleRowEditStop}
-            processRowUpdate={processRowUpdate}
             rowModesModel={rowModesModel}
             paginationMode='server'
             sx={{ height: '100%', width: '100%' }}

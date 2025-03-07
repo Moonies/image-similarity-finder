@@ -14,7 +14,8 @@ import { useNotification } from '@/hooks/useNotification'
 import { useConfirmModal } from '@/hooks/useConfirm'
 import AddNewDrawingModal from '@/components/modals/AddNewDrawingModal'
 import PageTransition from '@/components/PageTransition'
-
+import { convertTifToBlob } from '@/utils/fileConvert'
+import printStyles from './style'
 export interface Point {
   point: [number, number]
   label: number
@@ -83,9 +84,14 @@ export default function ErasePage() {
     const result = await processEraserDrawing()
     if (!result) return
     const file = new File([result], fileName, { type: result.type })
-    // console.log(file)
     setCurrentProcessedFile(file)
-    setErasedDrawing(URL.createObjectURL(result))
+    if (result.type === 'image/tiff' || result.type === 'image/tif') {
+      const tifBlob = await convertTifToBlob(result)
+      if (!tifBlob) return notificationSnackbar.error('convert tif file failed')
+      setErasedDrawing(URL.createObjectURL(tifBlob))
+    } else {
+      setErasedDrawing(URL.createObjectURL(result))
+    }
   }
 
   const handleUndo = async () => {
@@ -191,6 +197,20 @@ export default function ErasePage() {
     [addNewDrawing, currentProceesedFile, notificationSnackbar, t]
   )
 
+  const handlePrint = useCallback(() => {
+    window.print()
+  }, [])
+
+  const handleDownload = useCallback(() => {
+    if (!currentProceesedFile) return
+    const url = URL.createObjectURL(currentProceesedFile)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = currentProceesedFile.name // Use the file's original name
+    link.click()
+    URL.revokeObjectURL(url)
+  }, [currentProceesedFile])
+
   useEffect(() => {
     redrawCanvas()
   }, [boxes, redrawCanvas])
@@ -205,9 +225,6 @@ export default function ErasePage() {
     <PageTransition>
       <Box display={'flex'} flexDirection={'column'} padding={1} flex={1}>
         <Box display={'flex'} flexDirection={'row'} gap={2}>
-          {/* <Box display={'flex'} flexDirection={'row'} gap={2}>
-            <InputUploadFile onChoose={files => handleChooseFile(files)} ref={buttonUploadRef} />
-          </Box> */}
           <Box
             display={'flex'}
             flexDirection={'row'}
@@ -242,8 +259,11 @@ export default function ErasePage() {
               </Button>
             </Box>
             <Box display={'flex'} gap={2}>
-              <Button variant='contained' disabled={!erasedDrawing}>
+              <Button variant='contained' disabled={!erasedDrawing} onClick={handlePrint}>
                 {t('printButton')}
+              </Button>
+              <Button variant='contained' disabled={!erasedDrawing} onClick={handleDownload}>
+                {t('downloadButton')}
               </Button>
               <Button variant='contained' onClick={handleSave} disabled={!erasedDrawing}>
                 {t('saveButton')}
@@ -290,6 +310,7 @@ export default function ErasePage() {
                 <Typography variant='h3'>{t('resultTitle')}</Typography>
               </Box>
               <NextImage
+                id='print-area'
                 loader={({ src }) => src}
                 src={erasedDrawing}
                 alt='Preview'
@@ -313,6 +334,7 @@ export default function ErasePage() {
           )}
         </Box>
       </Box>
+      <style>{printStyles}</style>
     </PageTransition>
   )
 }

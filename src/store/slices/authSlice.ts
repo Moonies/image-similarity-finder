@@ -1,15 +1,10 @@
+import { UserProfile } from '@/api/user/getUserDetail'
+import { TokenData } from '@/api/user/login'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-
-type TokenData = {
-  expiration: string
-  refreshExpiration: string
-  refreshToken: string
-  token: string
-}
 
 interface AuthState {
   isAuthenticated: boolean
-  user: string | null
+  user: UserProfile | null
   token: TokenData | null
 }
 
@@ -23,15 +18,20 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setCredentials: (state, action: PayloadAction<{ user: string; token: TokenData }>) => {
+    setCredentials: (state, action: PayloadAction<{ token: TokenData }>) => {
       state.isAuthenticated = true
-      state.user = action.payload.user
       state.token = action.payload.token
 
       // Save to localStorage
       if (typeof window !== 'undefined') {
-        console.log('set token')
         localStorage.setItem('token', JSON.stringify(action.payload.token))
+      }
+    },
+    setUser: (state, action: PayloadAction<{ user: UserProfile }>) => {
+      state.user = action.payload.user
+
+      // Save to localStorage
+      if (typeof window !== 'undefined') {
         localStorage.setItem('user', JSON.stringify(action.payload.user))
       }
     },
@@ -61,10 +61,10 @@ export const getCurrentToken = (): TokenData | null => {
   return storedToken ? (JSON.parse(storedToken) as TokenData) : null
 }
 
-export const getCurrentUser = (): string => {
+export const getCurrentUser = (): UserProfile | null => {
   const storedUser = localStorage.getItem('user')
-  return storedUser ? (JSON.parse(storedUser) as string) : ''
+  return storedUser ? (JSON.parse(storedUser) as UserProfile) : null
 }
 
-export const { setCredentials, clearCredentials, logout } = authSlice.actions
+export const { setCredentials, clearCredentials, logout, setUser } = authSlice.actions
 export default authSlice.reducer

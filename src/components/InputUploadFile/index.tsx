@@ -2,7 +2,7 @@
 
 import { Button, styled } from '@mui/material'
 import React, { RefObject } from 'react'
-import { CloudUpload as CloudUploadIcon } from '@mui/icons-material'
+import { CloudUpload as CloudUploadIcon, LibraryAdd as LibraryAddIcon } from '@mui/icons-material'
 import { useTranslation } from 'react-i18next'
 
 const VisuallyHiddenInput = styled('input')({
@@ -20,9 +20,16 @@ const VisuallyHiddenInput = styled('input')({
 type InputUploadFileProps = {
   onChoose: (file: FileList | null) => void
   ref: RefObject<HTMLInputElement>
+  multiple?: boolean
+  text?: string
 }
 
-export default function InputUploadFile({ onChoose, ref }: InputUploadFileProps) {
+export default function InputUploadFile({
+  onChoose,
+  ref,
+  multiple = false,
+  text,
+}: InputUploadFileProps) {
   const { t } = useTranslation('common')
 
   return (
@@ -31,11 +38,12 @@ export default function InputUploadFile({ onChoose, ref }: InputUploadFileProps)
       role={undefined}
       variant='contained'
       tabIndex={-1}
-      startIcon={<CloudUploadIcon />}
+      startIcon={multiple ? <LibraryAddIcon /> : <CloudUploadIcon />}
     >
-      {t('inputUploadFile')}
+      {text ? text : t('inputUploadFile')}
       <VisuallyHiddenInput
         type='file'
+        multiple={multiple}
         onChange={event => onChoose(event.target.files)}
         ref={ref}
         accept='image/*'

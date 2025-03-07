@@ -23,6 +23,12 @@
     "inputField6": "メール",
     "inputField7": "役割"
   },
+  "modal": {
+    "title": "パスワードのリセット",
+    "inputField1": "新しいパスワード",
+    "inputField2": "パスワードリセットコード",
+    "helperInput": "パスワードリセットコードは選択したメールから送信されます"
+  },
   "notification": {
     "titleConfirmRemove": "ユーザーを削除してもよろしいですか",
     "confirmRemoveMessage": "選択されたユーザーは",

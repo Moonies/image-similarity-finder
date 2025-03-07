@@ -2,5 +2,6 @@
   "title": "画像をアップロード",
   "imagePlaceholder": "ファイルが選択されていません",
   "submitButton": "アップロード",
-  "alertUploadFile": "ボタンをクリックする前にファイルを選択してください。"
+  "alertUploadFile": "ボタンをクリックする前にファイルを選択してください。",
+  "amountLabel": "類似画像の量"
 }

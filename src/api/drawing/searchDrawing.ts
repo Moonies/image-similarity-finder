@@ -4,10 +4,12 @@ import axios from 'axios'
 
 export default async function searchDrawing(
   httpRequest: HttpRequest,
-  searchImage: File
+  searchImage: File,
+  amount = 3
 ): Promise<ApiResponse<Blob | undefined>> {
   const formData = new FormData()
   formData.append('file', searchImage)
+  formData.append('count', amount.toString())
 
   const response = await httpRequest(() =>
     axiosInstance.post('/api/drawings/search', formData, {

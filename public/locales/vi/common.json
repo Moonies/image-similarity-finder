@@ -10,7 +10,8 @@
     "record": "Kiểm tra bản ghi",
     "eraser": "Tẩy",
     "chat": "Trò chuyện",
-    "logout": "Đăng xuất"
+    "logout": "Đăng xuất",
+    "role": "Trang vai trò và"
   },
   "uploadDrawingImageModalTitle": "Tải lên bản vẽ mới",
   "submitButton": "Nộp",

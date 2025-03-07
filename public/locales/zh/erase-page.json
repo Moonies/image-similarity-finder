@@ -19,5 +19,6 @@
   "resetMessage": "您确定要重置应用程序吗？所有操作都将丢失。",
   "alertNonUpload": "应用程序已经处于初始状态",
   "alertAddNewDrawing": "当前图纸编号不存在。是否需要添加新图纸？",
-  "addNewDrawingMessageSuccess": "添加新图纸成功！！"
+  "addNewDrawingMessageSuccess": "添加新图纸成功！！",
+  "downloadButton": "下载"
 }

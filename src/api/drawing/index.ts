@@ -35,7 +35,7 @@ export type DrawingImageDetail = {
   defectDetails: string
 }
 export interface DrawingApi {
-  searchDrawing: (file: File) => Promise<ApiResponse<Blob | undefined>>
+  searchDrawing: (file: File, amount?: number) => Promise<ApiResponse<Blob | undefined>>
   getDrawingDetail: (drawingNumber: string) => Promise<ApiResponse<DrawingImageDetail>>
   updateDrawingDetail: (params: UpdateDrawingImageDetail) => Promise<ApiResponse<null>>
   getDrawingList: (params: DrawingListSearchCriteria) => Promise<ApiResponse<DrawingImageDetail[]>>
@@ -46,12 +46,12 @@ export interface DrawingApi {
     drawingId: string,
     disableDisplayError?: boolean
   ) => Promise<ApiResponse<null>>
-  addNewDrawingImage: (file: File) => Promise<ApiResponse<null>>
+  addNewDrawingImage: (file: File | FileList) => Promise<ApiResponse<null>>
 }
 
 export default function search(httpRequest: HttpRequest): DrawingApi {
   return {
-    searchDrawing: file => searchDrawing(httpRequest, file),
+    searchDrawing: (file, amount) => searchDrawing(httpRequest, file, amount),
     getDrawingDetail: drawingNumber => getDrawingDetail(httpRequest, drawingNumber),
     updateDrawingDetail: params => updateDrawingDetail(httpRequest, params),
     getDrawingList: params => getDrawingList(httpRequest, params),

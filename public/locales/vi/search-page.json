@@ -2,5 +2,6 @@
   "title": "Tải lên hình ảnh",
   "imagePlaceholder": "Không có tập tin được chọn",
   "submitButton": "Tải lên",
-  "alertUploadFile": "Vui lòng chọn tệp trước khi nhấp vào nút."
+  "alertUploadFile": "Vui lòng chọn tệp trước khi nhấp vào nút.",
+  "amountLabel": "Số lượng Hình ảnh tương tự"
 }

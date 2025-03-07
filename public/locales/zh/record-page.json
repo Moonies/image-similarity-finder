@@ -25,5 +25,14 @@
     "col21": "售价",
     "col22": "缺陷详情",
     "action": "操作"
+  },
+  "addDrawingButton": "添加新绘图",
+  "notification": {
+    "titleConfirmRemove": "您确定要移除绘图吗",
+    "confirmRemoveMessage": "选定的绘图是",
+    "success": {
+      "add": "添加新绘图成功！",
+      "remove": "移除绘图成功！"
+    }
   }
 }

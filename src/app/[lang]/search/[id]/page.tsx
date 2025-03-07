@@ -36,7 +36,7 @@ export default function SearchDetail() {
   const [imageUrls, setImageUrls] = useState<ImageUrl[]>([])
   const [metaData, setMetaData] = useState<MetaData>()
   const [isNewDrawing, setIsnewDrawing] = useState(false)
-  const { handleGetDetailImage, handleUpdateDrawingDetail } = useSearchDetail()
+  const { handleGetDetailImage, handleUpdateDrawingDetail, getContentUrl } = useSearchDetail()
   const [informationMode, setInformationMode] = useState<informationMode>('view')
   const { setLoading } = useLoading()
 
@@ -65,18 +65,23 @@ export default function SearchDetail() {
     [handleUpdateDrawingDetail]
   )
 
-  useEffect(() => {
+  const processImage = useCallback(async () => {
     if (!cachedData?.length) return
-    const newUrls = cachedData
-      .filter((_, index) => index !== cachedData.length - 1)
-      .map((image, index, array) => {
-        // if (index === array.length - 1) return
-        return {
-          id: index,
-          url: image.type === 'image' ? URL.createObjectURL(image.content as Blob) : '',
-          name: image.name.replace('files/', ''),
-        }
-      })
+
+    const newUrls = await Promise.all(
+      cachedData
+        .filter((_, index) => index !== cachedData.length - 1)
+        .map(async (image, index, array) => {
+          // if (index === array.length - 1) return
+          const response: string = await getContentUrl(image.type, image.content)
+          return {
+            id: index,
+            // url: image.type === 'image' ? URL.createObjectURL(image.content as Blob) : '',
+            url: response,
+            name: image.name.replace('files/', ''),
+          }
+        })
+    )
     setImageUrls(newUrls)
     const metaData = cachedData[cachedData.length - 1].content as any
     const transformedContent: MetaData = Object.entries(metaData).reduce((acc, [key, value]) => {
@@ -87,17 +92,15 @@ export default function SearchDetail() {
         [newKey]: value,
       }
     }, {})
+
     setIsnewDrawing(metaData.newDrawing)
     setMetaData(transformedContent)
     setLoading(false)
-    // Cleanup
-    return () => {
-      newUrls.forEach(image => {
-        if (image.url) {
-          URL.revokeObjectURL(image.url)
-        }
-      })
-    }
+  }, [cachedData, getContentUrl, setLoading])
+
+  useEffect(() => {
+    processImage()
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cachedData])
 
@@ -111,7 +114,7 @@ export default function SearchDetail() {
 
   return (
     <PageTransition>
-      <Box display={'flex'} flexDirection={'column'} flex={1}>
+      <Box display={'flex'} flexDirection={'column'} flex={1} overflow={'auto'}>
         <Box
           display={'flex'}
           flexDirection={'column'}
@@ -185,7 +188,12 @@ export default function SearchDetail() {
             flexDirection={'row'}
             gap={2}
             padding={2}
-            justifyContent={'space-around'}
+            justifyContent={imageUrls.length <= 2 ? 'space-around' : 'flex-start'}
+            sx={{
+              width: '100%', // Ensure it spans the full width of the container
+              whiteSpace: imageUrls.length > 2 ? 'nowrap' : 'normal', // Prevent cards from wrapping to the next row
+            }}
+            overflow={imageUrls.length > 2 ? 'auto' : 'visible'}
           >
             {imageUrls &&
               imageUrls.length > 0 &&

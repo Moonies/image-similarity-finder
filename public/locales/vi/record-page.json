@@ -25,5 +25,14 @@
     "col21": "Giá bán",
     "col22": "Chi tiết lỗi",
     "action": "Actions"
+  },
+  "addDrawingButton": "Thêm Bản Vẽ Mới",
+  "notification": {
+    "titleConfirmRemove": "Bạn có chắc chắn muốn xóa Bản Vẽ không",
+    "confirmRemoveMessage": "Bản Vẽ Đã Chọn là",
+    "success": {
+      "add": "Thêm Bản Vẽ Mới Thành Công!!",
+      "remove": "Xóa Bản Vẽ Thành Công!!"
+    }
   }
 }

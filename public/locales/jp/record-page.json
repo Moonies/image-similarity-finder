@@ -25,5 +25,14 @@
     "col21": "販売価格",
     "col22": "欠陥の詳細",
     "action": "アクション"
+  },
+  "addDrawingButton": "新しい図面を追加",
+  "notification": {
+    "titleConfirmRemove": "図面を削除してもよろしいですか",
+    "confirmRemoveMessage": "選択した図面は",
+    "success": {
+      "add": "新しい図面の追加に成功しました!!",
+      "remove": "図面の削除に成功しました!!"
+    }
   }
 }

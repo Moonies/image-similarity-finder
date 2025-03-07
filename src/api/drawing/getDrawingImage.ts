@@ -1,5 +1,6 @@
 import { ApiResponse, axiosInstance } from '@/api'
 import { HttpRequest } from '@/hooks/useHttp'
+import { convertTifToBlob } from '@/utils/fileConvert'
 import axios from 'axios'
 
 export default async function getDrawingImage(
@@ -18,9 +19,25 @@ export default async function getDrawingImage(
   if (axios.isAxiosError(response)) {
     return { code: response?.code ?? 500, message: response.message, data: undefined }
   }
-  return {
-    code: 200,
-    message: 'success',
-    data: URL.createObjectURL(response?.data),
+  if (response?.data.type === 'image/tiff' || response?.data.type === 'image/tif') {
+    const tifBlob = await convertTifToBlob(response?.data)
+    if (tifBlob) {
+      return {
+        code: 200,
+        message: 'success',
+        data: URL.createObjectURL(tifBlob),
+      }
+    }
+    return {
+      code: 500,
+      message: 'convert failed',
+      data: undefined,
+    }
+  } else {
+    return {
+      code: 200,
+      message: 'success',
+      data: URL.createObjectURL(response?.data),
+    }
   }
 }
