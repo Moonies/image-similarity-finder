@@ -1,6 +1,7 @@
 import { AddNewUser } from '@/api/user/addNewUser'
 import { UserDetail, UserListSearchCriteria } from '@/api/user/getUserList'
 import { UpdateUserDetail } from '@/api/user/updateUserDetail'
+import { UpdateUserPasswordDetail } from '@/api/user/updateUserPassword'
 import useHttp from '@/hooks/useHttp'
 import { GridPaginationModel } from '@mui/x-data-grid'
 import { useCallback, useMemo, useState } from 'react'
@@ -78,6 +79,26 @@ export default function useUser() {
     [api.user]
   )
 
+  const getOtpResetPassword = useMemo(
+    () => async (mail: string) => {
+      const result = await api.user.getOtpResetPassword(mail)
+      if (result.code === 200) {
+        return true
+      }
+    },
+    [api.user]
+  )
+
+  const updateUserPassword = useMemo(
+    () => async (formData: UpdateUserPasswordDetail) => {
+      const result = await api.user.updateUserPassword(formData)
+      if (result.code === 200) {
+        return true
+      }
+    },
+    [api.user]
+  )
+
   const handlePaginationModelChange = async (newModel: GridPaginationModel) => {
     if (newModel.pageSize !== paginationModel.pageSize) {
       // If page size has changed, reset to the first page
@@ -115,5 +136,7 @@ export default function useUser() {
     addNewUser,
     updateUserDetail,
     removeUser,
+    getOtpResetPassword,
+    updateUserPassword,
   }
 }

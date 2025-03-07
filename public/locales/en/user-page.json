@@ -23,13 +23,20 @@
     "inputField6": "Email",
     "inputField7": "Role"
   },
+  "modal": {
+    "title": "Reset Password",
+    "inputField1": "New Password",
+    "inputField2": "Reset Password Code",
+    "helperInput": "Reset Password Code will be received from the email you selected"
+  },
   "notification": {
     "titleConfirmRemove": "Are you sure want to remove user",
     "confirmRemoveMessage": "Selected user is",
     "success": {
       "add": "Add New User Success!!",
       "update": "Update User Success!!",
-      "remove": "Remove User Success!!"
+      "remove": "Remove User Success!!",
+      "reset": "Reset Password Success!!"
     }
   }
 }

@@ -23,13 +23,20 @@
     "inputField6": "电子邮件",
     "inputField7": "角色"
   },
+  "modal": {
+    "title": "重置密码",
+    "inputField1": "新密码",
+    "inputField2": "重置密码代码",
+    "helperInput": "密码重置代码将发送至您选择的电子邮箱"
+  },
   "notification": {
     "titleConfirmRemove": "您确定要删除用户吗",
     "confirmRemoveMessage": "选定的用户是",
     "success": {
       "add": "添加新用户成功！！",
       "update": "更新用户成功！！",
-      "remove": "删除用户成功！！"
+      "remove": "删除用户成功！！",
+      "reset": "重置密码成功！！"
     }
   }
 }

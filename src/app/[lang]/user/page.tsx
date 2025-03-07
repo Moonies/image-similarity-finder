@@ -15,14 +15,18 @@ import { AddNewUser } from '@/api/user/addNewUser'
 import { UpdateUserDetail } from '@/api/user/updateUserDetail'
 import { useNotification } from '@/hooks/useNotification'
 import { useConfirmModal } from '@/hooks/useConfirm'
+import ResetPasswordModal from '@/components/modals/ResetPasswordModal'
+import { useLoading } from '@/hooks/useLoading'
 
 export default function UserPage() {
   const { t } = useTranslation('user-page')
   const [openUserForm, setOpenUserForm] = useState(false)
+  const [openResetPasswordModal, setOpenResetPasswordModal] = useState(false)
   const [userFormMode, setUserFormMode] = useState<'add' | 'edit'>()
   const [selectedUserDetail, setSelectedUserDetail] = useState<Partial<UserDetail>>({})
   const { notificationSnackbar } = useNotification()
   const { openConfirmModal } = useConfirmModal()
+  const { setLoading } = useLoading()
   const userDataGridRef = useGridApiRef()
   const {
     handleChange,
@@ -35,6 +39,8 @@ export default function UserPage() {
     addNewUser,
     updateUserDetail,
     removeUser,
+    getOtpResetPassword,
+    updateUserPassword,
   } = useUser()
 
   const handleEditClick = useCallback(
@@ -67,6 +73,24 @@ export default function UserPage() {
       }
     },
     [handleSearch, notificationSnackbar, openConfirmModal, removeUser, t, userList]
+  )
+
+  const handleResetPasswordClick = useCallback(
+    (id: GridRowId) => async () => {
+      setLoading(true)
+      const selectedData = userList.find(user => user.id === id)
+      if (selectedData) {
+        setSelectedUserDetail(selectedData)
+        const response = await getOtpResetPassword(selectedData.mail)
+        if (response) {
+          setLoading(false)
+          setOpenResetPasswordModal(true)
+        }
+      } else {
+        //please select user before click bah blah
+      }
+    },
+    [getOtpResetPassword, setLoading, userList]
   )
 
   const handleAddClick = useCallback(() => {
@@ -102,14 +126,32 @@ export default function UserPage() {
     [addNewUser, handleSearch, notificationSnackbar, t, updateUserDetail]
   )
 
+  const handleResetPassword = useCallback(
+    async (newPassword: string, rePasswordCode: string) => {
+      const response = await updateUserPassword({
+        newPassword,
+        resetPassword: rePasswordCode,
+        username: selectedUserDetail.username ?? '',
+      })
+
+      if (response) {
+        setOpenResetPasswordModal(false)
+        setSelectedUserDetail({})
+        notificationSnackbar.success('Update Password Success!!')
+      }
+    },
+    [notificationSnackbar, selectedUserDetail.username, updateUserPassword]
+  )
+
   const columns = useMemo(
     () =>
       CustomColumn({
+        reset: handleResetPasswordClick,
         edit: handleEditClick,
         remove: handleDeleteClick,
         t: t,
       }),
-    [handleDeleteClick, handleEditClick, t]
+    [handleDeleteClick, handleEditClick, handleResetPasswordClick, t]
   )
 
   useEffect(() => {}, [])
@@ -168,6 +210,13 @@ export default function UserPage() {
           onSubmit={handleSubmit}
           mode={userFormMode}
         />
+        {openResetPasswordModal && (
+          <ResetPasswordModal
+            onClose={() => setOpenResetPasswordModal(false)}
+            onSubmit={handleResetPassword}
+            open={openResetPasswordModal}
+          />
+        )}
       </Box>
     </PageTransition>
   )
