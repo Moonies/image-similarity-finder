@@ -19,13 +19,5 @@
   "imagePlaceholder": "No File Chosen",
   "titleSaveAs": "Save As",
   "alertNoneText": "Please Input New File Name before click submit button",
-  "inputAddNewDrawingFileName": "Drawing File Name",
-  "error": {
-    "title": "Something went wrong",
-    "submitButton": "Try Again",
-    "message": "An error has occured on {{pageName}} page. Please check and try again.",
-    "errorMessageTitle": "Error Message",
-    "contactInfoTitle": "If the problem continues, contact the site owner.",
-    "contactInfoMessage": "Here"
-  }
+  "inputAddNewDrawingFileName": "Drawing File Name"
 }

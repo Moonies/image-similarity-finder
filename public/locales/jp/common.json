@@ -18,13 +18,5 @@
   "imagePlaceholder": "ファイルが選択されていません",
   "titleSaveAs": "名前を付けて保存",
   "alertNoneText": "送信ボタンをクリックする前に新しいファイル名を入力してください",
-  "inputAddNewDrawingFileName": "図面ファイル名",
-  "error": {
-    "title": "何か問題が発生しました",
-    "submitButton": "やり直す",
-    "message": "{{pageName}}ページにエラーが発生しました。確認してもう一度お試しください。",
-    "errorMessageTitle": "エラーメッセージ",
-    "contactInfoTitle": "問題が解決しない場合は、サイト所有者に連絡してください。",
-    "contactInfoMessage": "こちら"
-  }
+  "inputAddNewDrawingFileName": "図面ファイル名"
 }

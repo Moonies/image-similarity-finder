@@ -18,13 +18,5 @@
   "imagePlaceholder": "未选择文件",
   "titleSaveAs": "另存为",
   "alertNoneText": "请在点击提交按钮前输入新文件名",
-  "inputAddNewDrawingFileName": "绘图文件名",
-  "error": {
-    "title": "出了點問題",
-    "submitButton": "再試一次",
-    "message": "（{{pageName}}）頁面發生錯誤。請檢查並重試。",
-    "errorMessageTitle": "後退",
-    "contactInfoTitle": "如果問題仍然存在，請聯絡網站所有者。",
-    "contactInfoMessage": "這裡"
-  }
+  "inputAddNewDrawingFileName": "绘图文件名"
 }
