@@ -10,10 +10,8 @@ import {
   GridPaginationModel,
   GridRowEditStopReasons,
   GridRowId,
-  GridRowModel,
   GridRowModes,
   GridRowModesModel,
-  GridRowsProp,
 } from '@mui/x-data-grid'
 import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useMemo, useState } from 'react'
@@ -35,7 +33,7 @@ interface CachedData {
 
 export default function useRecord() {
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({})
-  const [drawingList, setDrawingList] = useState<GridRowsProp>([])
+  const [drawingList, setDrawingList] = useState<DrawingImageDetail[]>([])
   const [categorySearch, setCategorySearch] = useState<CategorySaleSearch[]>([])
   const [searchCriteria, setSearchCriteria] = useState<SearchCriteria>({
     category: '',
@@ -93,6 +91,16 @@ export default function useRecord() {
       const result = await api.drawing.addNewDrawingImage(newDrawingFile)
       if (result.code === 200) {
         return result
+      }
+    },
+    [api.drawing]
+  )
+
+  const getDrawingImage = useMemo(
+    () => async (drawingId: string) => {
+      const result = await api.drawing.getDrawingImage(drawingId)
+      if (result.code === 200 && result.data) {
+        return result.data
       }
     },
     [api.drawing]
@@ -196,21 +204,6 @@ export default function useRecord() {
     ]
   )
 
-  const handleCancelClick = useCallback(
-    (id: GridRowId) => () => {
-      setRowModesModel({
-        ...rowModesModel,
-        [id]: { mode: GridRowModes.View, ignoreModifications: true },
-      })
-
-      const editedRow = drawingList.find(row => row.id === id)
-      if (editedRow!.isNew) {
-        setDrawingList(drawingList.filter(row => row.id !== id))
-      }
-    },
-    [drawingList, rowModesModel]
-  )
-
   const handleCache = useCallback(() => {
     const cachedDrawingList = getPageData('searchResults')
     const cachedSearchCriteria = getPageData('searchCriteria')
@@ -227,11 +220,39 @@ export default function useRecord() {
     }
   }, [getPageData])
 
-  const processRowUpdate = (newRow: GridRowModel) => {
-    const updatedRow = { ...newRow, isNew: false }
-    setDrawingList(drawingList.map(row => (row.id === newRow.id ? updatedRow : row)))
-    return updatedRow
-  }
+  const handleDownloadClick = useCallback(
+    (id: GridRowId) => async () => {
+      setLoading(true)
+      const result = await getDrawingImage(id as string)
+      const selectedData = drawingList.find(item => item.id === id)
+
+      if (result && selectedData) {
+        const link = document.createElement('a')
+        link.href = result
+        link.download = selectedData.drawingNumber // Use the file's original name
+        link.click()
+        URL.revokeObjectURL(result)
+        setLoading(false)
+      }
+    },
+    [drawingList, getDrawingImage, setLoading]
+  )
+
+  const handlePrint = useCallback(
+    async (id: GridRowId) => {
+      const result = await getDrawingImage(id as string)
+      if (result) {
+        return result
+      }
+    },
+    [getDrawingImage]
+  )
+
+  // const processRowUpdate = (newRow: GridRowModel) => {
+  //   const updatedRow = { ...newRow, isNew: false }
+  //   setDrawingList(drawingList.map(row => (row.id === newRow.id ? updatedRow : row)))
+  //   return updatedRow
+  // }
 
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
     setRowModesModel(newRowModesModel)
@@ -271,8 +292,6 @@ export default function useRecord() {
     handleEditClick,
     handleSaveClick,
     handleDeleteClick,
-    handleCancelClick,
-    processRowUpdate,
     handleRowModesModelChange,
     rowModesModel,
     prepareCategorySearch,
@@ -286,5 +305,8 @@ export default function useRecord() {
     paginationModel,
     handleCache,
     handleAddNewDrawing,
+    getDrawingImage,
+    handleDownloadClick,
+    handlePrint,
   }
 }

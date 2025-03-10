@@ -1,31 +1,24 @@
-import React from 'react'
 import {
-  Close as CloseIcon,
   Edit as EditIcon,
-  Save as SaveIcon,
   Delete as DeleteIcon,
+  Download as DownloadIcon,
+  Print as PrintIcon,
 } from '@mui/icons-material'
-import {
-  GridActionsCellItem,
-  GridColDef,
-  GridRowId,
-  GridRowModes,
-  GridRowModesModel,
-} from '@mui/x-data-grid'
+import { GridActionsCellItem, GridColDef, GridRowId, GridRowModesModel } from '@mui/x-data-grid'
 import { TFunction } from 'i18next'
 
 interface CustomColumn {
   edit(id: GridRowId): () => void
-  save(id: GridRowId): () => void
+  download(id: GridRowId): () => void
   remove(id: GridRowId): () => void
-  cancle(id: GridRowId): () => void
+  print(id: GridRowId): () => void
   rowModesModel: GridRowModesModel
   t: TFunction
 }
 export default function CustomColumn({
-  cancle,
+  print,
   edit,
-  save,
+  download,
   remove,
   rowModesModel,
   t,
@@ -35,33 +28,35 @@ export default function CustomColumn({
       field: 'drawingNumber',
       headerName: t('column.col1'),
       headerAlign: 'center',
-      flex: 1,
+      minWidth: 120,
+      // flex: 1,
     },
     {
       field: 'name',
       headerName: t('column.col2'),
       headerAlign: 'center',
-      flex: 1,
+      minWidth: 120,
+      // flex: 1,
     },
     {
       field: 'materialCost',
       headerName: t('column.col3'),
       headerAlign: 'center',
-      flex: 1,
-      editable: true,
+      // flex: 1,
+      // editable: true,
     },
     {
       field: 'materialSup',
       headerName: t('column.col4'),
       headerAlign: 'center',
-      flex: 1,
+      // flex: 1,
     },
     {
       field: 'latheCost',
       headerName: t('column.col5'),
       type: 'number',
       headerAlign: 'center',
-      flex: 1,
+      // flex: 1,
       // valueGetter: (value, row) => {
       //   return row.quantity * row.price
       // },
@@ -70,19 +65,19 @@ export default function CustomColumn({
       field: 'latheSup',
       headerName: t('column.col6'),
       headerAlign: 'center',
-      flex: 1,
+      // flex: 1,
     },
     {
       field: 'millingCost',
       headerName: t('column.col7'),
       headerAlign: 'center',
-      editable: true,
+      // editable: true,
     },
     {
       field: 'millingSup',
       headerName: t('column.col8'),
       headerAlign: 'center',
-      editable: true,
+      // editable: true,
     },
     {
       field: 'heartTreatmentCost',
@@ -158,34 +153,27 @@ export default function CustomColumn({
       field: 'actions',
       type: 'actions',
       headerName: t('column.action'),
-      width: 100,
-      cellClassName: 'actions',
+      minWidth: 200,
+      flex: 1,
+      // cellClassName: 'actions',
       getActions: ({ id }: any) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit
-
-        if (isInEditMode) {
-          return [
-            <GridActionsCellItem
-              key={id}
-              icon={<SaveIcon />}
-              label='Save'
-              sx={{
-                color: 'primary.main',
-              }}
-              onClick={save(id)}
-            />,
-            <GridActionsCellItem
-              key={id}
-              icon={<CloseIcon />}
-              label='Cancel'
-              className='textPrimary'
-              onClick={cancle(id)}
-              color='inherit'
-            />,
-          ]
-        }
-
         return [
+          <GridActionsCellItem
+            key={id}
+            icon={<PrintIcon />}
+            label='Edit'
+            className='textPrimary'
+            onClick={print(id)}
+            sx={{ backgroundColor: theme => theme.palette.info.light }}
+          />,
+          <GridActionsCellItem
+            key={id}
+            icon={<DownloadIcon />}
+            label='Download'
+            className='textPrimary'
+            onClick={download(id)}
+            sx={{ backgroundColor: theme => theme.palette.info.light }}
+          />,
           <GridActionsCellItem
             key={id}
             icon={<EditIcon />}
