@@ -12,6 +12,7 @@ import Image from 'next/image'
 import { DrawingImageDetail } from '@/api/drawing'
 import { useLoading } from '@/hooks/useLoading'
 import PageTransition from '@/components/PageTransition'
+import usePrint from '@/hooks/usePrint'
 
 type ImageUrl = {
   id: number
@@ -39,6 +40,7 @@ export default function SearchDetail() {
   const { handleGetDetailImage, handleUpdateDrawingDetail, getContentUrl } = useSearchDetail()
   const [informationMode, setInformationMode] = useState<informationMode>('view')
   const { setLoading } = useLoading()
+  const { printFile } = usePrint()
 
   const handleOpenMoreInfo = useCallback(
     async (drawingNumber: string, mode: informationMode) => {
@@ -53,16 +55,25 @@ export default function SearchDetail() {
   )
 
   const handleSubmit = useCallback(
-    async (formData: UpdateDrawingImageDetail) => {
-      if (formData) {
-        const result = await handleUpdateDrawingDetail(formData)
-        if (result) {
-          setIsnewDrawing(false)
-          setOpenInformation(false)
-        }
+    async (formData?: UpdateDrawingImageDetail) => {
+      console.log(selectedImage)
+      switch (informationMode) {
+        case 'add':
+          if (formData) {
+            const result = await handleUpdateDrawingDetail(formData)
+            if (result) {
+              setIsnewDrawing(false)
+              setOpenInformation(false)
+            }
+          }
+          break
+        case 'view':
+        default:
+          printFile(selectedImage)
+          break
       }
     },
-    [handleUpdateDrawingDetail]
+    [handleUpdateDrawingDetail, informationMode, printFile, selectedImage]
   )
 
   const processImage = useCallback(async () => {
@@ -206,6 +217,7 @@ export default function SearchDetail() {
                       // width={475}
                       image={item.url}
                       onClick={e => {
+                        setInformationMode('view')
                         setSelectedImage(item.url)
                         setModalOpen(true)
                       }}
@@ -216,7 +228,10 @@ export default function SearchDetail() {
                     <CardActions sx={{ justifyContent: 'space-between' }}>
                       <Button
                         size='small'
-                        onClick={() => handleOpenMoreInfo(item.name, 'view')}
+                        onClick={() => {
+                          setSelectedImage(item.url)
+                          handleOpenMoreInfo(item.name, 'view')
+                        }}
                         variant='contained'
                       >
                         {t('infoButton')}

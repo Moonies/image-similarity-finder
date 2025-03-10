@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { useGridApiRef } from '@mui/x-data-grid'
+import { GridRowId, useGridApiRef } from '@mui/x-data-grid'
 import { Search as SearchIcon } from '@mui/icons-material'
 import { Autocomplete, Box, Button, Divider, TextField } from '@mui/material'
 import DataTable from '@/components/DataTable'
@@ -12,19 +12,18 @@ import PageTransition from '@/components/PageTransition'
 import InputUploadFile from '@/components/InputUploadFile'
 import { useNotification } from '@/hooks/useNotification'
 import { useLoading } from '@/hooks/useLoading'
+import usePrint from '@/hooks/usePrint'
 
 export default function RecordPage() {
   const { t } = useTranslation('record-page')
   const recordDataGridRef = useGridApiRef()
   const buttonUploadRef = useRef<HTMLInputElement>(null)
   const { notificationSnackbar } = useNotification()
-  const { withLoading } = useLoading()
+  const { withLoading, setLoading } = useLoading()
   const {
     drawingList,
     handleEditClick,
-    handleSaveClick,
     handleDeleteClick,
-    handleCancelClick,
     handleRowModesModelChange,
     rowModesModel,
     prepareCategorySearch,
@@ -37,19 +36,35 @@ export default function RecordPage() {
     paginationModel,
     handleCache,
     handleAddNewDrawing,
+    handleDownloadClick,
+    handlePrint,
   } = useRecord()
+
+  const { printFile } = usePrint()
+
+  const handlePrintClick = useCallback(
+    (id: GridRowId) => async () => {
+      setLoading(true)
+      const response = await handlePrint(id as string)
+      if (response) {
+        setLoading(false)
+        printFile(response)
+      }
+    },
+    [handlePrint, printFile, setLoading]
+  )
 
   const columns = useMemo(
     () =>
       CustomColumn({
-        cancle: handleCancelClick,
+        print: handlePrintClick,
         edit: handleEditClick,
-        save: handleSaveClick,
+        download: handleDownloadClick,
         remove: handleDeleteClick,
         rowModesModel,
         t: t,
       }),
-    [handleCancelClick, handleEditClick, handleSaveClick, handleDeleteClick, rowModesModel, t]
+    [handlePrintClick, handleEditClick, handleDownloadClick, handleDeleteClick, rowModesModel, t]
   )
 
   const handleChooseFile = useCallback(
