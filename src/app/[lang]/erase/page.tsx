@@ -15,7 +15,7 @@ import { useConfirmModal } from '@/hooks/useConfirm'
 import AddNewDrawingModal from '@/components/modals/AddNewDrawingModal'
 import PageTransition from '@/components/PageTransition'
 import { convertTifToBlob } from '@/utils/fileConvert'
-import printStyles from './style'
+import usePrint from '@/hooks/usePrint'
 export interface Point {
   point: [number, number]
   label: number
@@ -49,6 +49,7 @@ export default function ErasePage() {
   const { openConfirmModal } = useConfirmModal()
 
   const dispatch = useAppDispatch()
+  const { printFile } = usePrint()
 
   const {
     boxSelectionMode,
@@ -198,8 +199,10 @@ export default function ErasePage() {
   )
 
   const handlePrint = useCallback(() => {
-    window.print()
-  }, [])
+    if (erasedDrawing) {
+      printFile(erasedDrawing)
+    }
+  }, [erasedDrawing, printFile])
 
   const handleDownload = useCallback(() => {
     if (!currentProceesedFile) return
@@ -310,7 +313,6 @@ export default function ErasePage() {
                 <Typography variant='h3'>{t('resultTitle')}</Typography>
               </Box>
               <NextImage
-                id='print-area'
                 loader={({ src }) => src}
                 src={erasedDrawing}
                 alt='Preview'
@@ -334,7 +336,6 @@ export default function ErasePage() {
           )}
         </Box>
       </Box>
-      <style>{printStyles}</style>
     </PageTransition>
   )
 }

@@ -12,7 +12,7 @@ interface InformationFormProps {
   open: boolean
   initialData: Partial<DrawingImageDetail>
   onClose: () => void
-  onSubmit: (formData: UpdateDrawingImageDetail) => void
+  onSubmit: (formData?: UpdateDrawingImageDetail) => void
   mode?: 'add' | 'view'
 }
 
@@ -36,6 +36,7 @@ export default function InformationForm({
       onSubmit(recordData as UpdateDrawingImageDetail)
     } else {
       //print on view mode
+      onSubmit()
     }
   }
 

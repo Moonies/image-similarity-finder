@@ -25,5 +25,6 @@ export default async function getDrawingList(
     code: 200,
     message: 'success',
     data: response?.data.content,
+    page: response?.data.page,
   }
 }
