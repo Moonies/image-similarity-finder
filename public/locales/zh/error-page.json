@@ -1,0 +1,16 @@
+{
+  "pageName": {
+    "home": "主页",
+    "search": "搜索",
+    "record": "检查记录",
+    "erase": "橡皮擦",
+    "chat": "打印",
+    "user": "使用者管理"
+  },
+  "title": "出了點問題",
+  "submitButton": "再試一次",
+  "message": "（{{pageName}}）頁面發生錯誤。請檢查並重試。",
+  "errorMessageTitle": "後退",
+  "contactInfoTitle": "如果問題仍然存在，請聯絡網站所有者。",
+  "contactInfoMessage": "這裡"
+}
