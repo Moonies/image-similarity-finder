@@ -1,4 +1,29 @@
 {
   "title": "Chat With Database",
-  "inputPlaceholder": "Type a message..."
+  "inputPlaceholder": "Type a message...",
+  "promptTitle": "Prompt Suggestions",
+  "closeButton": "Close",
+  "showButton": "Show Examples",
+  "prompts": {
+    "card1": {
+      "title": "Retrieve Drawing by ID",
+      "message": "Find and display information about the drawing with the specified ID."
+    },
+    "card2": {
+      "title": "Fetch Recent Drawings",
+      "message": "Get me a list of the most recent drawings added to the database."
+    },
+    "card3": {
+      "title": "Get Drawing Cost",
+      "message": "Fetch the general cost of the drawing '<NAME OF THE DRAWING>' from the database."
+    },
+    "card4": {
+      "title": "List Drawings",
+      "message": "Show all available drawings in the database."
+    },
+    "card5": {
+      "title": "Recent Additions",
+      "message": "Retrieve the latest drawings added to the system."
+    }
+  }
 }

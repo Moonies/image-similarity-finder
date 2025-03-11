@@ -1,4 +1,7 @@
 {
   "title": "データベースとチャット",
-  "inputPlaceholder": "メッセージを入力してください..."
+  "inputPlaceholder": "メッセージを入力してください...",
+  "promptTitle": "プロンプトの提案",
+  "closeButton": "閉じる",
+  "showButton": "例を示す"
 }

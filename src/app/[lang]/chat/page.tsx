@@ -1,19 +1,37 @@
 'use client'
 
-import { Avatar, Box, IconButton, Skeleton, TextField, Typography } from '@mui/material'
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  IconButton,
+  Skeleton,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material'
 import { Send as SendIcon } from '@mui/icons-material'
-
 import React, { useEffect, useRef, useState } from 'react'
 import useChat from './hooks/useChat'
 import DataTable from '@/components/DataTable'
 import { useGridApiRef } from '@mui/x-data-grid'
 import PageTransition from '@/components/PageTransition'
 import { useTranslation } from 'react-i18next'
+import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined'
+import PersonIcon from '@mui/icons-material/Person'
+import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined'
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
+import PromptSuggestionCard from './components/PromptSuggestionCard'
+import { useThemeContext } from '@/context/ThemeContext'
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 
 export default function ChatPage() {
   const { t } = useTranslation('chat-page')
+  const { mode } = useThemeContext()
 
   const [input, setInput] = useState('')
+  const [isVisible, setIsVisible] = useState(true)
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const { handleSendMessage, loadingBot, messages } = useChat()
   const messageDataGridRef = useGridApiRef()
@@ -32,6 +50,10 @@ export default function ChatPage() {
     }
   }
 
+  const handleChange = () => {
+    setIsVisible(prev => !prev)
+  }
+
   useEffect(() => {
     scrollToBottom() // Scroll to the bottom whenever messages change
   }, [messages])
@@ -42,9 +64,7 @@ export default function ChatPage() {
         display={'flex'}
         flexDirection={'column'}
         flex={1}
-        borderRadius={2}
         sx={{
-          border: '1px solid',
           overflowY: 'auto',
         }}
       >
@@ -62,9 +82,65 @@ export default function ChatPage() {
           padding={2}
           sx={{
             overflowY: 'auto',
-            backgroundColor: theme => theme.palette.background.paper,
+            backgroundColor: theme => theme.palette.background.default,
           }}
         >
+          {/* Prompt Suggestions */}
+          <Box>
+            <Container>
+              <Stack spacing={1} direction='row' sx={{ alignItems: 'center', mt: 4 }}>
+                <QuestionAnswerOutlinedIcon />
+                <Typography variant='subtitle1'>{t('promptTitle')}</Typography>
+                <Button
+                  variant='text'
+                  sx={{
+                    color: theme =>
+                      mode === 'light' && !isVisible
+                        ? theme.palette.primary.main
+                        : theme.palette.text.primary,
+                    mt: 1,
+                    px: 2,
+                  }}
+                  startIcon={isVisible ? <CloseOutlinedIcon /> : <HelpOutlineOutlinedIcon />}
+                  onClick={handleChange}
+                >
+                  {isVisible ? t('closeButton') : t('showButton')}
+                </Button>
+              </Stack>
+              <Box sx={{ display: isVisible ? 'flex' : 'none', flexWrap: 'wrap' }}>
+                <PromptSuggestionCard
+                  isVisible={isVisible}
+                  timeout={0}
+                  title={t('prompts.card1.title')}
+                  message={t('prompts.card1.message')}
+                />
+                <PromptSuggestionCard
+                  isVisible={isVisible}
+                  timeout={1000}
+                  title={t('prompts.card2.title')}
+                  message={t('prompts.card2.message')}
+                />
+                <PromptSuggestionCard
+                  isVisible={isVisible}
+                  timeout={1500}
+                  title={t('prompts.card3.title')}
+                  message={t('prompts.card3.message')}
+                />
+                <PromptSuggestionCard
+                  isVisible={isVisible}
+                  timeout={2000}
+                  title={t('prompts.card4.title')}
+                  message={t('prompts.card4.message')}
+                />
+                <PromptSuggestionCard
+                  isVisible={isVisible}
+                  timeout={2500}
+                  title={t('prompts.card5.title')}
+                  message={t('prompts.card5.message')}
+                />
+              </Box>
+            </Container>
+          </Box>
           {messages.map(message => (
             <Box
               key={message.id}
@@ -77,24 +153,29 @@ export default function ChatPage() {
             >
               <Avatar
                 sx={{
-                  bgcolor: message.sender === 'user' ? 'primary.main' : 'secondary.main',
+                  bgcolor:
+                    mode === 'dark'
+                      ? 'white'
+                      : message.sender === 'user'
+                      ? 'primary.main'
+                      : 'black',
                 }}
               >
-                {message.sender === 'user' ? 'U' : 'B'}
+                {message.sender === 'user' ? <PersonIcon /> : <SmartToyOutlinedIcon />}
               </Avatar>
               <Box
                 sx={{
                   maxWidth: '50%',
-                  padding: '8px 12px',
+                  padding: '8px 16px',
                   borderRadius: '16px',
                   backgroundColor: theme =>
-                    message.sender === 'user'
-                      ? theme.palette.primary.light
-                      : theme.palette.secondary.light,
+                    mode === 'light' && message.sender === 'user'
+                      ? theme.palette.primary.main
+                      : theme.palette.background.paper,
                   color: theme =>
-                    message.sender === 'user'
-                      ? theme.palette.text.primary
-                      : theme.palette.text.secondary,
+                    mode === 'light' && message.sender === 'user'
+                      ? theme.palette.background.default
+                      : theme.palette.text.primary,
                 }}
               >
                 <Typography variant='body1' sx={{ wordBreak: 'break-word' }}>
@@ -131,9 +212,9 @@ export default function ChatPage() {
               <Skeleton variant='circular' width={40} height={40} />
               <Skeleton
                 variant='rectangular'
-                width='40%'
+                width='20%'
                 height={40}
-                sx={{ borderRadius: '16px' }}
+                sx={{ borderRadius: '16px', p: 2 }}
               />
             </Box>
           )}
@@ -158,7 +239,10 @@ export default function ChatPage() {
             onKeyDown={handleKeyDown}
             disabled={loadingBot}
           />
-          <IconButton color='primary' onClick={() => handleSendMessage(input)}>
+          <IconButton
+            sx={{ color: mode === 'dark' ? 'white' : 'primary.main' }}
+            onClick={() => handleSendMessage(input)}
+          >
             <SendIcon />
           </IconButton>
         </Box>

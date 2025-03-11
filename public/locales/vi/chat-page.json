@@ -1,4 +1,7 @@
 {
   "title": "Trò chuyện với cơ sở dữ liệu",
-  "inputPlaceholder": "Nhập tin nhắn..."
+  "inputPlaceholder": "Nhập tin nhắn...",
+  "promptTitle": "Đề xuất nhanh chóng",
+  "closeButton": "đóng cửa",
+  "showButton": "hiển thị ví dụ"
 }
