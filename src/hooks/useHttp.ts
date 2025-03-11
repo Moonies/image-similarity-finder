@@ -76,7 +76,10 @@ export default function useHttp() {
                         token: result.data,
                       })
                     )
+
                     notificationModal.info(t('token.reTask'))
+
+                    return httpRequest(apiFunction, disableDisplayError)
                   } else {
                     notificationSnackbar.error('Authentication failed: ' + error?.message)
                     localStorage.removeItem('token')

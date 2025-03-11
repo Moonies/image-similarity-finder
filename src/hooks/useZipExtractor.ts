@@ -25,7 +25,6 @@ export const useZipExtractor = () => {
 
   const getFileType = (filename: string): ZipContent['type'] => {
     const ext = filename.toLowerCase().split('.').pop()
-    console.log(ext)
     if (/^(jpg|jpeg|png|gif|webp|svg)$/.test(ext!)) return 'image'
     if (ext === 'pdf') return 'pdf'
     if (ext === 'json') return 'json'
