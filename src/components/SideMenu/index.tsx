@@ -24,9 +24,9 @@ export default function SideMenu() {
   const router = useRouter()
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
-  const { toggleTheme } = useThemeContext()
+  const { toggleTheme, setLocale } = useThemeContext()
   const { i18n } = useTranslation()
-  const [languageSwitcher, SetLanguageSwitcher] = useState(i18n.language)
+  const [languageSwitcher, setLanguageSwitcher] = useState(i18n.language)
   const { menuItems, logoutMenu } = useMenu()
   const dispatch = useAppDispatch()
   const { user } = useAppSelector(state => state.auth)
@@ -64,10 +64,11 @@ export default function SideMenu() {
   }
 
   const handleLanguageClick = async (event: SelectChangeEvent<unknown>) => {
-    SetLanguageSwitcher(event.target.value as string)
+    setLanguageSwitcher(event.target.value as string)
     await i18n.changeLanguage(event.target.value as string)
     dispatch(setLanguage({ acceptLanguage: i18n.language }))
     updatePathname(i18n.language)
+    setLocale(i18n.language)
   }
 
   const handleLogoutClick = useCallback(() => {
@@ -80,7 +81,7 @@ export default function SideMenu() {
   useEffect(() => {
     const [lang, _currentPath] = pathname.replace(/^\//, '').split('/')
     if (languageSwitcher !== lang) {
-      SetLanguageSwitcher(lang)
+      setLanguageSwitcher(lang)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

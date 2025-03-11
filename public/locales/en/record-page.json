@@ -26,6 +26,11 @@
     "col22": "Defect Details",
     "action": "Actions"
   },
+  "toolbar": {
+    "column": "column",
+    "filter": "filter",
+    "density": "density"
+  },
   "addDrawingButton": "Add New Drawing",
   "notification": {
     "titleConfirmRemove": "Are you sure want to remove Drawing",

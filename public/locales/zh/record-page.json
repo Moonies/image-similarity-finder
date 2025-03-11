@@ -26,6 +26,11 @@
     "col22": "缺陷详情",
     "action": "操作"
   },
+  "toolbar": {
+    "column": "列",
+    "filter": "过滤器",
+    "density": "密度"
+  },
   "addDrawingButton": "添加新绘图",
   "notification": {
     "titleConfirmRemove": "您确定要移除绘图吗",

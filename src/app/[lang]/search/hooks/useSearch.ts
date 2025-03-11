@@ -6,6 +6,8 @@ import { useCallback, useMemo } from 'react'
 import { useCache } from '@/context/CacheContext'
 import { useLoading } from '@/hooks/useLoading'
 import UTIF from 'utif'
+import { useAppDispatch } from '@/hooks/useRedux'
+import { setAmountSearch } from '@/store/slices/userSettingSlice'
 
 export default function useSearch() {
   const params = useParams()
@@ -15,6 +17,7 @@ export default function useSearch() {
   const { setPageData } = useCache()
   const { handleZipInput } = useZipExtractor()
   const { setLoading } = useLoading()
+  const dispatch = useAppDispatch()
 
   const searchDrawing = useMemo(
     () => async (fileSelected: File, amount?: number) => {
@@ -78,5 +81,12 @@ export default function useSearch() {
     [handleZipInput, lang, router, searchDrawing, setLoading, setPageData]
   )
 
-  return { handleUpload }
+  const handleAmountSearch = useCallback(
+    (newAmount: number) => {
+      dispatch(setAmountSearch(newAmount))
+    },
+    [dispatch]
+  )
+
+  return { handleUpload, handleAmountSearch }
 }

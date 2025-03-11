@@ -13,6 +13,9 @@ import InputUploadFile from '@/components/InputUploadFile'
 import { useNotification } from '@/hooks/useNotification'
 import { useLoading } from '@/hooks/useLoading'
 import usePrint from '@/hooks/usePrint'
+import CustomToolbar from './components/CustomToolbar'
+import { muiDataGridLocales } from '@/theme/theme'
+import { useThemeContext } from '@/context/ThemeContext'
 
 export default function RecordPage() {
   const { t } = useTranslation('record-page')
@@ -20,6 +23,8 @@ export default function RecordPage() {
   const buttonUploadRef = useRef<HTMLInputElement>(null)
   const { notificationSnackbar } = useNotification()
   const { withLoading, setLoading } = useLoading()
+  const { locale } = useThemeContext()
+
   const {
     drawingList,
     handleEditClick,
@@ -38,6 +43,9 @@ export default function RecordPage() {
     handleAddNewDrawing,
     handleDownloadClick,
     handlePrint,
+    prepareColumVisibility,
+    columnVisibilityModel,
+    handleColumnVisibility,
   } = useRecord()
 
   const { printFile } = usePrint()
@@ -90,7 +98,8 @@ export default function RecordPage() {
 
   useEffect(() => {
     prepareCategorySearch(columns)
-  }, [columns, prepareCategorySearch])
+    prepareColumVisibility(columns)
+  }, [columns, prepareCategorySearch, prepareColumVisibility])
 
   return (
     <PageTransition>
@@ -98,10 +107,13 @@ export default function RecordPage() {
         <Box flexDirection={'row'} display={'flex'} gap={2} padding={2}>
           <Autocomplete
             disablePortal
-            options={categorySearch?.map(item => item.label)}
-            onChange={(event, newValue) => handleChange('category', newValue)}
-            value={searchCriteria.category}
+            options={categorySearch}
+            getOptionLabel={option => option.label}
+            onChange={(event, newValue) => handleChange('category', newValue?.value ?? '')}
+            // onChange={(event, newValue) => console.log('category', event)}
+            value={categorySearch.find(option => option.value === searchCriteria.category) || null}
             sx={{ width: 300 }}
+            isOptionEqualToValue={(option, value) => option.value === value.value}
             renderInput={params => <TextField {...params} label={t('category')} />}
           />
           <TextField
@@ -136,7 +148,13 @@ export default function RecordPage() {
             onRowModesModelChange={handleRowModesModelChange}
             onPaginationModelChange={handlePaginationModelChange}
             rowModesModel={rowModesModel}
+            columnVisibilityModel={columnVisibilityModel}
+            onColumnVisibilityModelChange={handleColumnVisibility}
             paginationMode='server'
+            localeText={muiDataGridLocales[locale].components.MuiDataGrid.defaultProps.localeText}
+            slots={{
+              toolbar: CustomToolbar,
+            }}
             sx={{ height: '100%', width: '100%' }}
           />
         </Box>
