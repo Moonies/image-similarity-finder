@@ -69,7 +69,27 @@ export default function ChatPage() {
         }}
       >
         {/* Chat Header */}
-        <Box padding={2} textAlign={'center'}>
+        <Box
+          padding={2}
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Button
+            variant='text'
+            sx={{
+              color: theme =>
+                mode === 'light' && !isVisible
+                  ? theme.palette.primary.main
+                  : theme.palette.text.primary,
+            }}
+            onClick={handleChange}
+          >
+            {isVisible ? <CloseOutlinedIcon /> : <HelpOutlineOutlinedIcon />}
+          </Button>
           <Typography variant='h6'>{t('title')}</Typography>
         </Box>
         {/* Chat Messages */}
@@ -88,26 +108,15 @@ export default function ChatPage() {
           {/* Prompt Suggestions */}
           <Box>
             <Container>
-              <Stack spacing={1} direction='row' sx={{ alignItems: 'center', mt: 4 }}>
-                <QuestionAnswerOutlinedIcon />
-                <Typography variant='subtitle1'>{t('promptTitle')}</Typography>
-                <Button
-                  variant='text'
-                  sx={{
-                    color: theme =>
-                      mode === 'light' && !isVisible
-                        ? theme.palette.primary.main
-                        : theme.palette.text.primary,
-                    mt: 1,
-                    px: 2,
-                  }}
-                  startIcon={isVisible ? <CloseOutlinedIcon /> : <HelpOutlineOutlinedIcon />}
-                  onClick={handleChange}
-                >
-                  {isVisible ? t('closeButton') : t('showButton')}
-                </Button>
-              </Stack>
               <Box sx={{ display: isVisible ? 'flex' : 'none', flexWrap: 'wrap' }}>
+                <Stack
+                  spacing={1}
+                  direction='row'
+                  sx={{ alignItems: 'center', mt: 4, width: '100%' }}
+                >
+                  <QuestionAnswerOutlinedIcon />
+                  <Typography variant='subtitle1'>{t('promptTitle')}</Typography>
+                </Stack>
                 <PromptSuggestionCard
                   isVisible={isVisible}
                   timeout={0}

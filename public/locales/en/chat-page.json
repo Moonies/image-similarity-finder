@@ -2,8 +2,6 @@
   "title": "Chat With Database",
   "inputPlaceholder": "Type a message...",
   "promptTitle": "Prompt Suggestions",
-  "closeButton": "Close",
-  "showButton": "Show Examples",
   "prompts": {
     "card1": {
       "title": "Retrieve Drawing by ID",
