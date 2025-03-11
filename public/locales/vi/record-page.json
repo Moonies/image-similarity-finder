@@ -26,6 +26,11 @@
     "col22": "Chi tiết lỗi",
     "action": "Actions"
   },
+  "toolbar": {
+    "column": "cột",
+    "filter": "bộ lọc",
+    "density": "mật độ"
+  },
   "addDrawingButton": "Thêm Bản Vẽ Mới",
   "notification": {
     "titleConfirmRemove": "Bạn có chắc chắn muốn xóa Bản Vẽ không",

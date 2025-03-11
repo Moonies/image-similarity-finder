@@ -4,8 +4,10 @@ import { useConfirmModal } from '@/hooks/useConfirm'
 import useHttp from '@/hooks/useHttp'
 import { useLoading } from '@/hooks/useLoading'
 import { useNotification } from '@/hooks/useNotification'
+import { useAppDispatch } from '@/hooks/useRedux'
 import {
   GridColDef,
+  GridColumnVisibilityModel,
   GridEventListener,
   GridPaginationModel,
   GridRowEditStopReasons,
@@ -16,6 +18,7 @@ import {
 import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { setColumnVisibility, getCurrentColumnVisibility } from '@/store/slices/userSettingSlice'
 
 interface CategorySaleSearch {
   value: string
@@ -53,6 +56,8 @@ export default function useRecord() {
   const { setLoading } = useLoading()
   const { notificationSnackbar } = useNotification()
   const { openConfirmModal } = useConfirmModal()
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>({})
+  const dispatch = useAppDispatch()
   const { t } = useTranslation('record-page')
 
   const getDrawingList = useMemo(
@@ -107,8 +112,9 @@ export default function useRecord() {
   )
 
   const handleSearch = useCallback(async () => {
+    setLoading(true)
     getDrawingList()
-  }, [getDrawingList])
+  }, [getDrawingList, setLoading])
 
   const prepareCategorySearch = useCallback((columns: GridColDef[]) => {
     const result: CategorySaleSearch[] = []
@@ -120,6 +126,28 @@ export default function useRecord() {
     })
     setCategorySearch(result)
   }, [])
+
+  const prepareColumVisibility = useCallback((columns: GridColDef[]) => {
+    const currentColumn = getCurrentColumnVisibility()
+    if (currentColumn) {
+      setColumnVisibilityModel(currentColumn)
+    } else {
+      const transformedObject = columns.reduce((acc, item) => {
+        acc[item.field] = true
+
+        return acc
+      }, {} as Record<string, boolean>)
+      setColumnVisibilityModel(transformedObject)
+    }
+  }, [])
+
+  const handleColumnVisibility = useCallback(
+    (newColumnsModels: GridColumnVisibilityModel) => {
+      setColumnVisibilityModel(newColumnsModels)
+      dispatch(setColumnVisibility(newColumnsModels))
+    },
+    [dispatch]
+  )
 
   const handleChange = useCallback((name: string, value: string | null) => {
     setSearchCriteria(prev => ({ ...prev, [name]: value }))
@@ -308,5 +336,8 @@ export default function useRecord() {
     getDrawingImage,
     handleDownloadClick,
     handlePrint,
+    prepareColumVisibility,
+    columnVisibilityModel,
+    handleColumnVisibility,
   }
 }

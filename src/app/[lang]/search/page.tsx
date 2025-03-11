@@ -12,7 +12,7 @@ export default function SearchPage() {
   const { t } = useTranslation('search-page')
   const [uploadFile, setUploadFile] = useState<File>()
   const [amountImage, setAmountImage] = useState(3)
-  const { handleUpload } = useSearch()
+  const { handleUpload, handleAmountSearch } = useSearch()
   const { notificationModal } = useNotification()
   const buttonUploadRef = useRef<HTMLInputElement>(null)
   const listAmout = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] //maximum is 10
@@ -70,7 +70,10 @@ export default function SearchPage() {
                 size='small'
                 sx={{ width: 180 }}
                 label={t('amountLabel')}
-                onChange={e => setAmountImage(parseInt(e.target.value))}
+                onChange={e => {
+                  setAmountImage(parseInt(e.target.value))
+                  handleAmountSearch(parseInt(e.target.value))
+                }}
               >
                 {listAmout.map(item => (
                   <MenuItem key={item} value={item}>

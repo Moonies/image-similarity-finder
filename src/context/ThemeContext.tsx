@@ -1,12 +1,17 @@
 'use client'
 import React, { createContext, useState, useContext, useEffect } from 'react'
-import { ThemeMode, getTheme } from '@/theme/theme'
+import { ThemeMode, getTheme, muiLocales } from '@/theme/theme'
+import { useTranslation } from 'react-i18next'
+import { usePathname } from 'next/navigation'
 
+type Locale = 'en' | 'jp' | 'zh' | 'vi'
 interface ThemeContextType {
   mode: ThemeMode
   theme: ReturnType<typeof getTheme>
   toggleTheme: () => void
   setMode: (mode: ThemeMode) => void
+  locale: Locale
+  setLocale: (locale: string) => void
 }
 
 const ThemeContext = createContext<ThemeContextType>({
@@ -14,14 +19,19 @@ const ThemeContext = createContext<ThemeContextType>({
   theme: getTheme('light'),
   toggleTheme: () => {},
   setMode: () => {},
+  locale: 'en',
+  setLocale: () => {},
 })
 
 export const useThemeContext = () => useContext(ThemeContext)
 
 export const ThemeContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [mode, setMode] = useState<ThemeMode>('light')
+  const { i18n } = useTranslation()
+  const pathname = usePathname()
 
-  const theme = getTheme(mode)
+  const [locale, setLocale] = useState<Locale>((i18n.language as Locale) ?? 'en')
+  const theme = getTheme(mode, muiLocales[locale])
 
   const toggleTheme = () => {
     const newMode = mode === 'light' ? 'dark' : 'light'
@@ -34,6 +44,10 @@ export const ThemeContextProvider: React.FC<{ children: React.ReactNode }> = ({ 
     localStorage.setItem('theme', newMode)
   }
 
+  const changeLocale = (newLocale: string) => {
+    setLocale(newLocale as Locale)
+  }
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('theme') as ThemeMode
@@ -41,6 +55,11 @@ export const ThemeContextProvider: React.FC<{ children: React.ReactNode }> = ({ 
         setMode(savedTheme)
       }
     }
+    const [lang, _currentPath] = pathname.replace(/^\//, '').split('/')
+    if (locale !== lang) {
+      setLocale(lang as Locale)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -50,6 +69,8 @@ export const ThemeContextProvider: React.FC<{ children: React.ReactNode }> = ({ 
         theme,
         toggleTheme,
         setMode: setThemeMode,
+        locale,
+        setLocale: changeLocale,
       }}
     >
       {children}

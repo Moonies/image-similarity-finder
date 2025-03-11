@@ -26,6 +26,11 @@
     "col22": "欠陥の詳細",
     "action": "アクション"
   },
+  "toolbar": {
+    "column": "列",
+    "filter": "フィルター",
+    "density": "密度"
+  },
   "addDrawingButton": "新しい図面を追加",
   "notification": {
     "titleConfirmRemove": "図面を削除してもよろしいですか",
