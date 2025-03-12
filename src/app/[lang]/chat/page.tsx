@@ -13,7 +13,7 @@ import {
 } from '@mui/material'
 import { Send as SendIcon } from '@mui/icons-material'
 import React, { useEffect, useRef, useState } from 'react'
-import useChat from './hooks/useChat'
+import useChat, { Message } from './hooks/useChat'
 import DataTable from '@/components/DataTable'
 import { useGridApiRef } from '@mui/x-data-grid'
 import PageTransition from '@/components/PageTransition'
@@ -25,6 +25,7 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 import PromptSuggestionCard from './components/PromptSuggestionCard'
 import { useThemeContext } from '@/context/ThemeContext'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
+import { useAppSelector } from '@/hooks/useRedux'
 
 export default function ChatPage() {
   const { t } = useTranslation('chat-page')
@@ -35,6 +36,8 @@ export default function ChatPage() {
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const { handleSendMessage, loadingBot, messages } = useChat()
   const messageDataGridRef = useGridApiRef()
+
+  const { chatHistory } = useAppSelector(state => state.chat)
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -150,9 +153,9 @@ export default function ChatPage() {
               </Box>
             </Container>
           </Box>
-          {messages.map(message => (
+          {chatHistory.map((message: Message, index: number) => (
             <Box
-              key={message.id}
+              key={index}
               sx={{
                 display: 'flex',
                 alignItems: 'flex-end',
