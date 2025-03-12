@@ -61,26 +61,26 @@ export default function useRecord() {
   const { t } = useTranslation('record-page')
 
   const getDrawingList = useMemo(
-    () => async () => {
-      const { page, pageSize } = paginationModel
-      const currentSearchCriteria = searchCriteria
-      const searchCriteriaParams = {
-        ...currentSearchCriteria,
-        page,
-        pageSize,
-      }
-      const result = await api.drawing.getDrawingList(searchCriteriaParams)
-      if (result.code === 200 && result.data) {
-        setDrawingList(result.data)
-        setTotalRows(result.page?.totalElements ?? 0)
-        setCachedData(prevCache => ({
-          ...prevCache,
-          [`${page}-${pageSize}`]: result.data ? result.data : [],
-        }))
-        setLoading(false)
-      }
-    },
-    [paginationModel, searchCriteria, setLoading, api]
+    () =>
+      async ({ page, pageSize }: GridPaginationModel) => {
+        const currentSearchCriteria = searchCriteria
+        const searchCriteriaParams = {
+          ...currentSearchCriteria,
+          page,
+          pageSize,
+        }
+        const result = await api.drawing.getDrawingList(searchCriteriaParams)
+        if (result.code === 200 && result.data) {
+          setDrawingList(result.data)
+          setTotalRows(result.page?.totalElements ?? 0)
+          setCachedData(prevCache => ({
+            ...prevCache,
+            [`${page}-${pageSize}`]: result.data ? result.data : [],
+          }))
+          setLoading(false)
+        }
+      },
+    [searchCriteria, setLoading, api]
   )
 
   const removeDrawing = useMemo(
@@ -113,8 +113,8 @@ export default function useRecord() {
 
   const handleSearch = useCallback(async () => {
     setLoading(true)
-    getDrawingList()
-  }, [getDrawingList, setLoading])
+    getDrawingList(paginationModel)
+  }, [getDrawingList, paginationModel, setLoading])
 
   const prepareCategorySearch = useCallback((columns: GridColDef[]) => {
     const result: CategorySaleSearch[] = []
@@ -212,7 +212,7 @@ export default function useRecord() {
           const result = await removeDrawing(drawingId as string)
           if (result.code === 200) {
             notificationSnackbar.success(t('notification.success.remove'))
-            await getDrawingList()
+            await getDrawingList(paginationModel)
           }
         } catch (error) {
           notificationSnackbar.error(JSON.stringify(error))
@@ -229,6 +229,7 @@ export default function useRecord() {
       removeDrawing,
       notificationSnackbar,
       getDrawingList,
+      paginationModel,
     ]
   )
 
@@ -300,7 +301,7 @@ export default function useRecord() {
       setDrawingList(cachedData[cacheKey])
       return
     } else if (drawingList.length !== 0) {
-      getDrawingList()
+      getDrawingList(newModel)
     }
   }
 

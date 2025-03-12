@@ -14,7 +14,7 @@ import { useNotification } from '@/hooks/useNotification'
 import { useConfirmModal } from '@/hooks/useConfirm'
 import AddNewDrawingModal from '@/components/modals/AddNewDrawingModal'
 import PageTransition from '@/components/PageTransition'
-import { convertTifToBlob } from '@/utils/fileConvert'
+import { convertPdfToBlob, convertTifToBlob } from '@/utils/fileConvert'
 import usePrint from '@/hooks/usePrint'
 export interface Point {
   point: [number, number]
@@ -90,6 +90,10 @@ export default function ErasePage() {
       const tifBlob = await convertTifToBlob(result)
       if (!tifBlob) return notificationSnackbar.error('convert tif file failed')
       setErasedDrawing(URL.createObjectURL(tifBlob))
+    } else if (result.type === 'application/pdf') {
+      const pdfBlob = await convertPdfToBlob(result)
+      if (!pdfBlob) return notificationSnackbar.error('convert pdf file failed')
+      setErasedDrawing(pdfBlob)
     } else {
       setErasedDrawing(URL.createObjectURL(result))
     }

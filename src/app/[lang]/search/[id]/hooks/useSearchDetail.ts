@@ -2,15 +2,31 @@ import { UpdateDrawingImageDetail } from '@/api/drawing/updateDrawingDetail'
 import useHttp from '@/hooks/useHttp'
 import { useLoading } from '@/hooks/useLoading'
 import { useNotification } from '@/hooks/useNotification'
-import { ZipContent } from '@/hooks/useZipExtractor'
-import { convertTifToBlob } from '@/utils/fileConvert'
-import { useCallback, useMemo } from 'react'
+import { useZipExtractor, ZipContent } from '@/hooks/useZipExtractor'
+import { convertPdfToBlob, convertTifToBlob } from '@/utils/fileConvert'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+
+type ImageUrl = {
+  id: number
+  url: string
+  name: string
+}
+type MetaData = {
+  [key: string]: number
+} & {
+  newDrawing?: boolean
+}
 
 export default function useSearchDetail() {
   const { api } = useHttp()
-  const { withLoading } = useLoading()
+  const { withLoading, setLoading } = useLoading()
   const { notificationSnackbar } = useNotification()
+  const { handleZipInput } = useZipExtractor()
+  const [imageUrls, setImageUrls] = useState<ImageUrl[]>([])
+  const [metaData, setMetaData] = useState<MetaData>()
+  const [isNewDrawing, setIsnewDrawing] = useState(false)
+
   const { t } = useTranslation('notification')
 
   const getDrawingDetail = useMemo(
@@ -60,6 +76,17 @@ export default function useSearchDetail() {
     [updateDrawingDetail, withLoading]
   )
 
+  const searchDrawing = useMemo(
+    () => async (fileSelected: File, amount?: number) => {
+      const result = await api.drawing.searchDrawing(fileSelected, amount)
+      if (result.code === 200 && result.data) {
+        return result.data
+      }
+      return null
+    },
+    [api.drawing]
+  )
+
   const getContentUrl = useCallback(
     async (type: ZipContent['type'], content: string | Blob | ArrayBuffer) => {
       switch (type) {
@@ -69,6 +96,10 @@ export default function useSearchDetail() {
           const pngBlob = await convertTifToBlob(content as Blob)
           if (!pngBlob) return ''
           return URL.createObjectURL(pngBlob)
+        case 'pdf':
+          const pngPdf = await convertPdfToBlob(content as Blob)
+          if (!pngPdf) return ''
+          return pngPdf
 
         //another case
         default:
@@ -78,5 +109,62 @@ export default function useSearchDetail() {
     []
   )
 
-  return { handleGetDetailImage, handleUpdateDrawingDetail, getContentUrl }
+  const processImage = useCallback(
+    async (zipData: ZipContent[]) => {
+      const newUrls = await Promise.all(
+        zipData
+          .filter((_, index) => index !== zipData.length - 1)
+          .map(async (image, index, array) => {
+            // if (index === array.length - 1) return
+            const response: string = await getContentUrl(image.type, image.content)
+            return {
+              id: index,
+              // url: image.type === 'image' ? URL.createObjectURL(image.content as Blob) : '',
+              url: response,
+              name: image.name.replace('files/', ''),
+            }
+          })
+      )
+      setImageUrls(newUrls)
+      const metaData = zipData[zipData.length - 1].content as any
+      const transformedContent: MetaData = Object.entries(metaData).reduce((acc, [key, value]) => {
+        // Remove 'files/' from the key
+        const newKey = key.replace('files/', '')
+        return {
+          ...acc,
+          [newKey]: value,
+        }
+      }, {})
+
+      setIsnewDrawing(metaData.newDrawing)
+      setMetaData(transformedContent)
+      setLoading(false)
+    },
+    [getContentUrl, setLoading]
+  )
+
+  const handleAmountSearch = useCallback(
+    async (fileSelected: File, amount?: number) => {
+      setLoading(true)
+      const response = await searchDrawing(fileSelected, amount)
+      if (response) {
+        const rawDataImageList = await handleZipInput(response)
+        console.log(rawDataImageList)
+        processImage(rawDataImageList)
+      }
+    },
+    [handleZipInput, processImage, searchDrawing, setLoading]
+  )
+
+  return {
+    handleGetDetailImage,
+    handleUpdateDrawingDetail,
+    getContentUrl,
+    imageUrls,
+    metaData,
+    isNewDrawing,
+    setIsnewDrawing,
+    processImage,
+    handleAmountSearch,
+  }
 }

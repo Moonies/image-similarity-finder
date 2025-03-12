@@ -1,6 +1,16 @@
 'use client'
 
-import { Box, Button, Card, CardActions, CardMedia, Divider, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardMedia,
+  Divider,
+  MenuItem,
+  TextField,
+  Typography,
+} from '@mui/material'
 import { useCallback, useEffect, useState } from 'react'
 import ImageViewerModal from '@/components/modals/ImageViewerModal'
 import InformationForm from './components/InformationForm'
@@ -10,20 +20,9 @@ import useSearchDetail from './hooks/useSearchDetail'
 import { UpdateDrawingImageDetail } from '@/api/drawing/updateDrawingDetail'
 import Image from 'next/image'
 import { DrawingImageDetail } from '@/api/drawing'
-import { useLoading } from '@/hooks/useLoading'
 import PageTransition from '@/components/PageTransition'
 import usePrint from '@/hooks/usePrint'
 
-type ImageUrl = {
-  id: number
-  url: string
-  name: string
-}
-type MetaData = {
-  [key: string]: number
-} & {
-  newDrawing?: boolean
-}
 type informationMode = 'add' | 'view'
 export default function SearchDetail() {
   const { t } = useTranslation('search-id')
@@ -34,13 +33,22 @@ export default function SearchDetail() {
   const [selectedImage, setSelectedImage] = useState('')
   const [openInformation, setOpenInformation] = useState(false)
   const [selectedImageDetail, setSelectedImageDetail] = useState<Partial<DrawingImageDetail>>({})
-  const [imageUrls, setImageUrls] = useState<ImageUrl[]>([])
-  const [metaData, setMetaData] = useState<MetaData>()
-  const [isNewDrawing, setIsnewDrawing] = useState(false)
-  const { handleGetDetailImage, handleUpdateDrawingDetail, getContentUrl } = useSearchDetail()
+
+  const {
+    handleGetDetailImage,
+    handleUpdateDrawingDetail,
+    imageUrls,
+    metaData,
+    isNewDrawing,
+    setIsnewDrawing,
+    processImage,
+    handleAmountSearch,
+  } = useSearchDetail()
   const [informationMode, setInformationMode] = useState<informationMode>('view')
-  const { setLoading } = useLoading()
   const { printFile } = usePrint()
+  const [amountImage, setAmountImage] = useState(3)
+
+  const listAmout = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
   const handleOpenMoreInfo = useCallback(
     async (drawingNumber: string, mode: informationMode) => {
@@ -73,44 +81,45 @@ export default function SearchDetail() {
           break
       }
     },
-    [handleUpdateDrawingDetail, informationMode, printFile, selectedImage]
+    [handleUpdateDrawingDetail, informationMode, printFile, selectedImage, setIsnewDrawing]
   )
 
-  const processImage = useCallback(async () => {
-    if (!cachedData?.length) return
+  // const processImage = useCallback(async () => {
+  //   if (!cachedData?.length) return
 
-    const newUrls = await Promise.all(
-      cachedData
-        .filter((_, index) => index !== cachedData.length - 1)
-        .map(async (image, index, array) => {
-          // if (index === array.length - 1) return
-          const response: string = await getContentUrl(image.type, image.content)
-          return {
-            id: index,
-            // url: image.type === 'image' ? URL.createObjectURL(image.content as Blob) : '',
-            url: response,
-            name: image.name.replace('files/', ''),
-          }
-        })
-    )
-    setImageUrls(newUrls)
-    const metaData = cachedData[cachedData.length - 1].content as any
-    const transformedContent: MetaData = Object.entries(metaData).reduce((acc, [key, value]) => {
-      // Remove 'files/' from the key
-      const newKey = key.replace('files/', '')
-      return {
-        ...acc,
-        [newKey]: value,
-      }
-    }, {})
+  //   const newUrls = await Promise.all(
+  //     cachedData
+  //       .filter((_, index) => index !== cachedData.length - 1)
+  //       .map(async (image, index, array) => {
+  //         // if (index === array.length - 1) return
+  //         const response: string = await getContentUrl(image.type, image.content)
+  //         return {
+  //           id: index,
+  //           // url: image.type === 'image' ? URL.createObjectURL(image.content as Blob) : '',
+  //           url: response,
+  //           name: image.name.replace('files/', ''),
+  //         }
+  //       })
+  //   )
+  //   setImageUrls(newUrls)
+  //   const metaData = cachedData[cachedData.length - 1].content as any
+  //   const transformedContent: MetaData = Object.entries(metaData).reduce((acc, [key, value]) => {
+  //     // Remove 'files/' from the key
+  //     const newKey = key.replace('files/', '')
+  //     return {
+  //       ...acc,
+  //       [newKey]: value,
+  //     }
+  //   }, {})
 
-    setIsnewDrawing(metaData.newDrawing)
-    setMetaData(transformedContent)
-    setLoading(false)
-  }, [cachedData, getContentUrl, setLoading])
+  //   setIsnewDrawing(metaData.newDrawing)
+  //   setMetaData(transformedContent)
+  //   setLoading(false)
+  // }, [cachedData, getContentUrl, setLoading])
 
   useEffect(() => {
-    processImage()
+    if (!cachedData?.length) return
+    processImage(cachedData)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cachedData])
@@ -187,11 +196,29 @@ export default function SearchDetail() {
             display={'flex'}
             flexDirection={'row'}
             padding={2}
+            gap={2}
             // sx={{ backgroundColor: theme => theme.palette.primary.light }}
           >
             <Typography variant='h4' sx={{ color: theme => theme.palette.info.light }}>
               {t('similarTitle')}
             </Typography>
+            <TextField
+              select
+              value={amountImage}
+              size='small'
+              sx={{ width: 180 }}
+              label={t('amountLabel')}
+              onChange={e => {
+                setAmountImage(parseInt(e.target.value))
+                handleAmountSearch(uploadCachedData?.uploadedFile, parseInt(e.target.value))
+              }}
+            >
+              {listAmout.map(item => (
+                <MenuItem key={item} value={item}>
+                  {item}
+                </MenuItem>
+              ))}
+            </TextField>
           </Box>
           <Divider sx={{ marginX: 2, borderWidth: 1 }} />
           <Box
