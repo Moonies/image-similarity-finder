@@ -10,10 +10,6 @@ import { Notification } from '@/components/Notification'
 import { ThemeContextProvider } from '@/context/ThemeContext'
 import { CacheProvider } from '@/context/CacheContext'
 
-export async function generateStaticParams() {
-  return [{ lang: 'en' }, { lang: 'jp' }]
-}
-
 export default async function MainAppLayout({
   children,
   params,
