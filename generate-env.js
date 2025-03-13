@@ -15,7 +15,8 @@ function getLocalIP() {
 }
 
 // Fetch the local IP
-const localIP = getLocalIP()
+// const localIP = getLocalIP()
+const localIP = process.env.HOST_IP || '127.0.0.1'
 
 // Set a default port or allow it to be set dynamically
 const port = 8081 // Default to 3000 if no PORT is provided
