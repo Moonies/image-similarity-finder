@@ -9,13 +9,6 @@ import eraseReducer from './slices/eraseSlice'
 import httpReducer from './slices/httpSlice'
 import chatReducer from './slices/chatSlice'
 
-const rootPersistConfig = {
-  key: 'root',
-  version: 1,
-  storage,
-  whitelist: ['chat'],
-}
-
 const chatPersistConfig = {
   key: 'chat',
   storage,
@@ -33,10 +26,8 @@ const rootReducer = combineReducers({
   // ... other reducers
 })
 
-const persistedReducer = persistReducer(rootPersistConfig, rootReducer)
-
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: rootReducer,
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: false,
