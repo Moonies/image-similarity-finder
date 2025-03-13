@@ -1,8 +1,7 @@
 import { Message } from '@/app/[lang]/chat/hooks/useChat'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-
 interface ChatState {
-  chatHistory: Array<Message>
+  chatHistory: Message[]
 }
 
 const initialState: ChatState = {
@@ -14,11 +13,13 @@ const chatSlice = createSlice({
   initialState,
   reducers: {
     addMessage: (state, action: PayloadAction<any>) => {
-      const previousChat = [...state.chatHistory]
-      state.chatHistory = previousChat.concat(action.payload)
+      state.chatHistory = state.chatHistory.concat(action.payload)
+    },
+    clearMessage: state => {
+      state.chatHistory = []
     },
   },
 })
 
-export const { addMessage } = chatSlice.actions
+export const { addMessage, clearMessage } = chatSlice.actions
 export default chatSlice.reducer
