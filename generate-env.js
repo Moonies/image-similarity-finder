@@ -21,7 +21,7 @@ const localIP = getLocalIP()
 const port = 8081 // Default to 3000 if no PORT is provided
 
 // Define the content of the .env.production file
-const envContent = `LOCAL_IP=${localIP}\nPORT=${port}\n`
+const envContent = `NEXT_PUBLIC_API_URL=http://${localIP}:${port}`
 
 // Write the content to .env.production
 fs.writeFileSync('.env.production', envContent, 'utf8')
