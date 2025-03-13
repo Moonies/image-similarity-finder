@@ -5,7 +5,10 @@ import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useMemo } from 'react'
 import { useCache } from '@/context/CacheContext'
 import { useLoading } from '@/hooks/useLoading'
-import UTIF from 'utif'
+import { useAppDispatch } from '@/hooks/useRedux'
+import { setAmountSearch } from '@/store/slices/userSettingSlice'
+import { convertPdfToBlob, convertTifToBlob } from '@/utils/fileConvert'
+import { useNotification } from '@/hooks/useNotification'
 
 export default function useSearch() {
   const params = useParams()
@@ -15,6 +18,8 @@ export default function useSearch() {
   const { setPageData } = useCache()
   const { handleZipInput } = useZipExtractor()
   const { setLoading } = useLoading()
+  const { notificationSnackbar } = useNotification()
+  const dispatch = useAppDispatch()
 
   const searchDrawing = useMemo(
     () => async (fileSelected: File, amount?: number) => {
@@ -38,36 +43,27 @@ export default function useSearch() {
         const id = encodeURIComponent(JSON.stringify(rawDataImageList))
 
         if (fileSelected.type === 'image/tiff' || fileSelected.type === 'image/tif') {
-          const buffer = await fileSelected.arrayBuffer()
-          const ifds = UTIF.decode(buffer)
-          UTIF.decodeImage(buffer, ifds[0])
-          const rgba = UTIF.toRGBA8(ifds[0])
-
-          const canvas = document.createElement('canvas')
-          canvas.width = ifds[0].width
-          canvas.height = ifds[0].height
-
-          const ctx = canvas.getContext('2d')
-          if (ctx) {
-            const imgData = ctx.createImageData(canvas.width, canvas.height)
-            imgData.data.set(rgba)
-            ctx.putImageData(imgData, 0, 0)
-
-            const pngBlob = await new Promise<Blob>(resolve => {
-              canvas.toBlob(blob => {
-                if (blob) resolve(blob)
-              }, 'image/png')
-            })
-
-            const uploadedFile = URL.createObjectURL(pngBlob)
-            setPageData('rawData', {
-              uploadedImage: uploadedFile,
-              uploadedFileName: fileSelected.name,
-            })
-          }
+          const tifBlob = await convertTifToBlob(fileSelected)
+          if (!tifBlob) return notificationSnackbar.error('convert tif file failed')
+          const uploadedFile = URL.createObjectURL(tifBlob)
+          setPageData('rawData', {
+            uploadedFile: fileSelected,
+            uploadedImage: uploadedFile,
+            uploadedFileName: fileSelected.name,
+          })
+        } else if (fileSelected.type === 'application/pdf') {
+          const pdfBlob = await convertPdfToBlob(fileSelected)
+          if (!pdfBlob) return notificationSnackbar.error('convert pdf file failed')
+          const uploadedFile = pdfBlob
+          setPageData('rawData', {
+            uploadedFile: fileSelected,
+            uploadedImage: uploadedFile,
+            uploadedFileName: fileSelected.name,
+          })
         } else {
           const uploadedFile = URL.createObjectURL(fileSelected)
           setPageData('rawData', {
+            uploadedFile: fileSelected,
             uploadedImage: uploadedFile,
             uploadedFileName: fileSelected.name,
           })
@@ -75,8 +71,15 @@ export default function useSearch() {
         router.push(`/${lang}/search/${id}`)
       }
     },
-    [handleZipInput, lang, router, searchDrawing, setLoading, setPageData]
+    [handleZipInput, lang, notificationSnackbar, router, searchDrawing, setLoading, setPageData]
   )
 
-  return { handleUpload }
+  const handleAmountSearch = useCallback(
+    (newAmount: number) => {
+      dispatch(setAmountSearch(newAmount))
+    },
+    [dispatch]
+  )
+
+  return { handleUpload, handleAmountSearch }
 }

@@ -14,7 +14,7 @@ import { useNotification } from '@/hooks/useNotification'
 import { useConfirmModal } from '@/hooks/useConfirm'
 import AddNewDrawingModal from '@/components/modals/AddNewDrawingModal'
 import PageTransition from '@/components/PageTransition'
-import { convertTifToBlob } from '@/utils/fileConvert'
+import { convertPdfToBlob, convertTifToBlob } from '@/utils/fileConvert'
 import usePrint from '@/hooks/usePrint'
 export interface Point {
   point: [number, number]
@@ -82,6 +82,7 @@ export default function ErasePage() {
   } = useEraser()
 
   const handleProcessImage = async () => {
+    setLoading(true)
     const result = await processEraserDrawing()
     if (!result) return
     const file = new File([result], fileName, { type: result.type })
@@ -90,9 +91,14 @@ export default function ErasePage() {
       const tifBlob = await convertTifToBlob(result)
       if (!tifBlob) return notificationSnackbar.error('convert tif file failed')
       setErasedDrawing(URL.createObjectURL(tifBlob))
+    } else if (result.type === 'application/pdf') {
+      const pdfBlob = await convertPdfToBlob(result)
+      if (!pdfBlob) return notificationSnackbar.error('convert pdf file failed')
+      setErasedDrawing(pdfBlob)
     } else {
       setErasedDrawing(URL.createObjectURL(result))
     }
+    setLoading(false)
   }
 
   const handleUndo = async () => {
@@ -221,8 +227,14 @@ export default function ErasePage() {
   useEffect(() => {
     dispatch(clearPredictorId())
     dispatch(clearFileDetail())
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    //for re-render and set disable contextMenu
+    document.addEventListener('contextmenu', e => e.preventDefault())
+  }, [actions])
 
   return (
     <PageTransition>
@@ -281,7 +293,13 @@ export default function ErasePage() {
             </Box>
           </Box>
         </Box>
-        <Box overflow={'auto'} padding={2}>
+        <Box
+          overflow={'auto'}
+          padding={2}
+          display={'flex'}
+          flexDirection={'column'}
+          alignItems={'center'}
+        >
           {canvasDimension.width > 0 && canvasDimension.height > 0 && (
             <Box
               display={'flex'}
@@ -291,11 +309,19 @@ export default function ErasePage() {
               height={`${canvasDimension.height}px`}
             >
               <canvas
+                id='canvas-area'
                 ref={canvasRef}
-                onMouseDown={handleMouseDown}
+                onMouseDown={e => {
+                  if (e.button === 2) {
+                    handleMouseDown(e)
+                    e.preventDefault()
+                  } else {
+                    handleMouseDown(e)
+                  }
+                }}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
-                style={{ cursor: 'crosshair' }}
+                style={{ cursor: 'crosshair', display: 'block' }}
                 height={canvasDimension.height}
                 width={canvasDimension.width}
               />
@@ -307,11 +333,14 @@ export default function ErasePage() {
               />
             </Box>
           )}
-          {erasedDrawing && (
-            <Box display={'flex'} flexDirection={'column'} flex={1} marginTop={4}>
-              <Box display={'flex'} flex={1}>
-                <Typography variant='h3'>{t('resultTitle')}</Typography>
-              </Box>
+        </Box>
+        {/* <Box display={'flex'}> */}
+        {erasedDrawing && (
+          <Box display={'flex'} flexDirection={'column'} flex={1} marginTop={4} gap={2}>
+            <Box display={'flex'} flex={1} paddingLeft={8}>
+              <Typography variant='h3'>{t('resultTitle')}</Typography>
+            </Box>
+            <Box display={'flex'} flex={1} justifyContent={'center'}>
               <NextImage
                 loader={({ src }) => src}
                 src={erasedDrawing}
@@ -326,15 +355,16 @@ export default function ErasePage() {
                 }}
               />
             </Box>
-          )}
-          {openModalAddNewDrawing && (
-            <AddNewDrawingModal
-              onClose={() => setOpenModalAddNewDrawing(false)}
-              open={openModalAddNewDrawing}
-              onSubmit={handleSaveAs}
-            />
-          )}
-        </Box>
+          </Box>
+        )}
+        {/* </Box> */}
+        {openModalAddNewDrawing && (
+          <AddNewDrawingModal
+            onClose={() => setOpenModalAddNewDrawing(false)}
+            open={openModalAddNewDrawing}
+            onSubmit={handleSaveAs}
+          />
+        )}
       </Box>
     </PageTransition>
   )

@@ -11,6 +11,7 @@
     "eraser": "消しゴム",
     "chat": "チャット",
     "logout": "ログアウト",
+    "user": "ユーザー管理",
     "role": "ロールと権限"
   },
   "uploadDrawingImageModalTitle": "新しい図面をアップロード",

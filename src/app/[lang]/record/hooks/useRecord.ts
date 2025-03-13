@@ -4,8 +4,10 @@ import { useConfirmModal } from '@/hooks/useConfirm'
 import useHttp from '@/hooks/useHttp'
 import { useLoading } from '@/hooks/useLoading'
 import { useNotification } from '@/hooks/useNotification'
+import { useAppDispatch } from '@/hooks/useRedux'
 import {
   GridColDef,
+  GridColumnVisibilityModel,
   GridEventListener,
   GridPaginationModel,
   GridRowEditStopReasons,
@@ -16,6 +18,7 @@ import {
 import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { setColumnVisibility, getCurrentColumnVisibility } from '@/store/slices/userSettingSlice'
 
 interface CategorySaleSearch {
   value: string
@@ -53,29 +56,31 @@ export default function useRecord() {
   const { setLoading } = useLoading()
   const { notificationSnackbar } = useNotification()
   const { openConfirmModal } = useConfirmModal()
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>({})
+  const dispatch = useAppDispatch()
   const { t } = useTranslation('record-page')
 
   const getDrawingList = useMemo(
-    () => async () => {
-      const { page, pageSize } = paginationModel
-      const currentSearchCriteria = searchCriteria
-      const searchCriteriaParams = {
-        ...currentSearchCriteria,
-        page,
-        pageSize,
-      }
-      const result = await api.drawing.getDrawingList(searchCriteriaParams)
-      if (result.code === 200 && result.data) {
-        setDrawingList(result.data)
-        setTotalRows(result.page?.totalElements ?? 0)
-        setCachedData(prevCache => ({
-          ...prevCache,
-          [`${page}-${pageSize}`]: result.data ? result.data : [],
-        }))
-        setLoading(false)
-      }
-    },
-    [paginationModel, searchCriteria, setLoading, api]
+    () =>
+      async ({ page, pageSize }: GridPaginationModel) => {
+        const currentSearchCriteria = searchCriteria
+        const searchCriteriaParams = {
+          ...currentSearchCriteria,
+          page,
+          pageSize,
+        }
+        const result = await api.drawing.getDrawingList(searchCriteriaParams)
+        if (result.code === 200 && result.data) {
+          setDrawingList(result.data)
+          setTotalRows(result.page?.totalElements ?? 0)
+          setCachedData(prevCache => ({
+            ...prevCache,
+            [`${page}-${pageSize}`]: result.data ? result.data : [],
+          }))
+          setLoading(false)
+        }
+      },
+    [searchCriteria, setLoading, api]
   )
 
   const removeDrawing = useMemo(
@@ -107,8 +112,9 @@ export default function useRecord() {
   )
 
   const handleSearch = useCallback(async () => {
-    getDrawingList()
-  }, [getDrawingList])
+    setLoading(true)
+    getDrawingList(paginationModel)
+  }, [getDrawingList, paginationModel, setLoading])
 
   const prepareCategorySearch = useCallback((columns: GridColDef[]) => {
     const result: CategorySaleSearch[] = []
@@ -120,6 +126,28 @@ export default function useRecord() {
     })
     setCategorySearch(result)
   }, [])
+
+  const prepareColumVisibility = useCallback((columns: GridColDef[]) => {
+    const currentColumn = getCurrentColumnVisibility()
+    if (currentColumn) {
+      setColumnVisibilityModel(currentColumn)
+    } else {
+      const transformedObject = columns.reduce((acc, item) => {
+        acc[item.field] = true
+
+        return acc
+      }, {} as Record<string, boolean>)
+      setColumnVisibilityModel(transformedObject)
+    }
+  }, [])
+
+  const handleColumnVisibility = useCallback(
+    (newColumnsModels: GridColumnVisibilityModel) => {
+      setColumnVisibilityModel(newColumnsModels)
+      dispatch(setColumnVisibility(newColumnsModels))
+    },
+    [dispatch]
+  )
 
   const handleChange = useCallback((name: string, value: string | null) => {
     setSearchCriteria(prev => ({ ...prev, [name]: value }))
@@ -184,7 +212,7 @@ export default function useRecord() {
           const result = await removeDrawing(drawingId as string)
           if (result.code === 200) {
             notificationSnackbar.success(t('notification.success.remove'))
-            await getDrawingList()
+            await getDrawingList(paginationModel)
           }
         } catch (error) {
           notificationSnackbar.error(JSON.stringify(error))
@@ -201,6 +229,7 @@ export default function useRecord() {
       removeDrawing,
       notificationSnackbar,
       getDrawingList,
+      paginationModel,
     ]
   )
 
@@ -272,7 +301,7 @@ export default function useRecord() {
       setDrawingList(cachedData[cacheKey])
       return
     } else if (drawingList.length !== 0) {
-      getDrawingList()
+      getDrawingList(newModel)
     }
   }
 
@@ -308,5 +337,8 @@ export default function useRecord() {
     getDrawingImage,
     handleDownloadClick,
     handlePrint,
+    prepareColumVisibility,
+    columnVisibilityModel,
+    handleColumnVisibility,
   }
 }

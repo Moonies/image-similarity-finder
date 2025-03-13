@@ -11,6 +11,7 @@
     "eraser": "橡皮擦",
     "chat": "打印",
     "logout": "注销",
+    "user": "用户管理",
     "role": "角色和权限"
   },
   "uploadDrawingImageModalTitle": "上传新绘图",

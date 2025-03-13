@@ -31,7 +31,7 @@ export default function useHttp() {
   const { notificationSnackbar, notificationModal } = useNotification()
   const { openConfirmModal } = useConfirmModal()
   const apiRef = useRef<ApiType | null>(null)
-  const { setLoading } = useLoading()
+  const { setLoading, withLoading } = useLoading()
   const dispatch = useAppDispatch()
   const { t } = useTranslation('notification')
 
@@ -76,7 +76,10 @@ export default function useHttp() {
                         token: result.data,
                       })
                     )
+
                     notificationModal.info(t('token.reTask'))
+
+                    return withLoading(httpRequest(apiFunction, disableDisplayError))
                   } else {
                     notificationSnackbar.error('Authentication failed: ' + error?.message)
                     localStorage.removeItem('token')
@@ -106,7 +109,15 @@ export default function useHttp() {
         }
       }
     },
-    [setLoading, openConfirmModal, notificationSnackbar, dispatch, notificationModal, t]
+    [
+      setLoading,
+      openConfirmModal,
+      notificationSnackbar,
+      t,
+      dispatch,
+      notificationModal,
+      withLoading,
+    ]
   )
 
   // Create api and store in ref

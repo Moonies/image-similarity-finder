@@ -3,6 +3,7 @@ import { Box, Point } from '../page'
 import useEraser from './useErase'
 import { useLoading } from '@/hooks/useLoading'
 import { PredictData } from '@/api/eraser/addPredictDrawing'
+import { useNotification } from '@/hooks/useNotification'
 
 export const useCanvas = (
   canvasRef: React.RefObject<HTMLCanvasElement>,
@@ -25,6 +26,7 @@ export const useCanvas = (
   const [drawnCoordinates, setDrawnCoordinates] = useState<{ x: number; y: number }[]>([])
   const { convertDrawnCoordinatesToOriginal, updateEraseDrawing, addPredictDrawing } = useEraser()
   const { setLoading } = useLoading()
+  const { notificationModal } = useNotification()
 
   // Get mouse position relative to the canvas
   const getMousePosition = (event: React.MouseEvent<HTMLCanvasElement>) => {
@@ -155,7 +157,7 @@ export const useCanvas = (
   // Handle mouse down
   const handleMouseDown = async (event: React.MouseEvent<HTMLCanvasElement>) => {
     if (!originalImage || !canvasRef.current) {
-      alert('Please upload an image first.')
+      notificationModal.warning('Please upload an image first.')
       return
     }
     const { x, y } = getMousePosition(event)

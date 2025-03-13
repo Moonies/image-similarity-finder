@@ -1,4 +1,11 @@
 import { createTheme, PaletteOptions, Theme, ThemeOptions } from '@mui/material/styles'
+import { jaJP, enUS, zhCN, viVN } from '@mui/material/locale'
+import {
+  jaJP as DataGridJP,
+  enUS as DataGridEN,
+  zhCN as DataGridZH,
+  viVN as DataGridVI,
+} from '@mui/x-data-grid/locales'
 
 type ThemeMode = 'light' | 'dark'
 
@@ -6,10 +13,11 @@ const themeOption: ThemeOptions = {
   components: {
     MuiButton: {
       styleOverrides: {
-        root: {
+        root: props => ({
           textTransform: 'none',
           minWidth: 80,
-        },
+          color: props.theme.palette.mode === 'dark' ? props.theme.palette.text.primary : '#ffffff',
+        }),
       },
     },
     MuiIconButton: {
@@ -63,6 +71,12 @@ const themeOption: ThemeOptions = {
             color:
               props.theme.palette.mode === 'dark'
                 ? '#5cff70' //#5cff70
+                : props.theme.palette.primary.main,
+          },
+          '&.MuiCheckbox-indeterminate': {
+            color:
+              props.theme.palette.mode === 'dark'
+                ? props.theme.palette.text.primary
                 : props.theme.palette.primary.main,
           },
         }),
@@ -152,13 +166,30 @@ const darkTheme: PaletteOptions = {
   divider: 'rgba(255, 255, 255, 0.12)',
 }
 
-export const getTheme = (mode: ThemeMode): Theme =>
-  createTheme({
-    palette: {
-      mode,
-      ...(mode === 'light' ? lightTheme : darkTheme),
+export const muiLocales = {
+  en: enUS,
+  jp: jaJP,
+  zh: zhCN,
+  vi: viVN,
+}
+
+export const muiDataGridLocales = {
+  en: DataGridEN,
+  jp: DataGridJP,
+  zh: DataGridZH,
+  vi: DataGridVI,
+}
+
+export const getTheme = (mode: ThemeMode, locale: typeof enUS = enUS): Theme =>
+  createTheme(
+    {
+      palette: {
+        mode,
+        ...(mode === 'light' ? lightTheme : darkTheme),
+      },
+      ...themeOption,
     },
-    ...themeOption,
-  })
+    locale
+  )
 
 export type { ThemeMode }
