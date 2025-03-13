@@ -22,7 +22,7 @@ const port = 8081 // Default to 3000 if no PORT is provided
 
 // Define the content of the .env.production file
 // const envContent = `NEXT_PUBLIC_API_URL=http://${localIP}:${port}`
-const envContent = `NEXT_PUBLIC_API_URL=http://host.docker.internal:8081`
+const envContent = `NEXT_PUBLIC_API_URL=http://app:8081`
 
 // Write the content to .env.production
 fs.writeFileSync('.env.production', envContent, 'utf8')
