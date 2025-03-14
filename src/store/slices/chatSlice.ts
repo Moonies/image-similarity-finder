@@ -15,10 +15,15 @@ const chatSlice = createSlice({
   name: 'chat',
   initialState,
   reducers: {
-    addMessage: (state, action: PayloadAction<any>) => {
-      state.chatHistory.push(action.payload)
+    addMessage: (state, action: PayloadAction<{ message: Message }>) => {
+      const messages = [...state.chatHistory, action.payload.message]
+
       if (typeof window !== 'undefined') {
-        localStorage.setItem('chat', JSON.stringify(state.chatHistory))
+        localStorage.setItem('chat', JSON.stringify(messages))
+      }
+
+      return {
+        chatHistory: messages,
       }
     },
     clearMessage: state => {

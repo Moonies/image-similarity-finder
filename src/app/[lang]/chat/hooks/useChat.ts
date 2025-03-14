@@ -46,7 +46,7 @@ export default function useChat() {
         }
 
         setMessages(prevMessage => [...prevMessage, newMessage])
-        dispatch(addMessage(newMessage))
+        dispatch(addMessage({ message: newMessage }))
       } else {
         // Generate columns dynamically
         const columns = reciveMessage.column.map(col => {
@@ -78,7 +78,7 @@ export default function useChat() {
         }
 
         setMessages(prevMessage => [...prevMessage, newMessage])
-        dispatch(addMessage(newMessage))
+        dispatch(addMessage({ message: newMessage }))
       }
 
       setLoadingBot(false)
@@ -100,7 +100,7 @@ export default function useChat() {
         }),
       }
       setMessages([...messages, newMessage])
-      dispatch(addMessage(newMessage))
+      dispatch(addMessage({ message: newMessage }))
       setLoadingBot(true)
 
       const reciveMessage = await getMessage(input)

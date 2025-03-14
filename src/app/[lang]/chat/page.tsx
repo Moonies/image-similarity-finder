@@ -104,12 +104,10 @@ export default function ChatPage() {
           {chatHistory.map((message: Message, index: number) => (
             <Box
               key={index}
-              sx={{
-                display: 'flex',
-                alignItems: 'flex-end',
-                flexDirection: message.sender === 'user' ? 'row-reverse' : 'row',
-                gap: '8px',
-              }}
+              display={'flex'}
+              alignItems={'flex-end'}
+              flexDirection={message.sender === 'user' ? 'row-reverse' : 'row'}
+              gap={'8px'}
             >
               <Avatar
                 sx={{
@@ -124,10 +122,10 @@ export default function ChatPage() {
                 {message.sender === 'user' ? <PersonIcon /> : <SmartToyOutlinedIcon />}
               </Avatar>
               <Box
+                padding={'8px 16px'}
+                borderRadius={4}
                 sx={{
                   maxWidth: '50%',
-                  padding: '8px 16px',
-                  borderRadius: '16px',
                   backgroundColor: theme =>
                     mode === 'light' && message.sender === 'user'
                       ? theme.palette.primary.main
@@ -160,7 +158,7 @@ export default function ChatPage() {
                     />
                   </Box>
                 )}
-                <Typography variant='caption' sx={{ display: 'block', textAlign: 'right' }}>
+                <Typography variant='caption' textAlign={'right'} display={'block'}>
                   {message.timestamp}
                 </Typography>
               </Box>
@@ -180,13 +178,7 @@ export default function ChatPage() {
           )}
         </Box>
         {/* Input Box */}
-        <Box
-          display={'flex'}
-          padding={1}
-          sx={{
-            borderTop: '1px solid #ddd',
-          }}
-        >
+        <Box display={'flex'} padding={1} borderTop={'1px solid #ddd'}>
           <TextField
             fullWidth
             multiline
