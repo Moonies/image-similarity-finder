@@ -16,10 +16,8 @@ const PromptSuggestionCard = ({ isVisible, timeout, title, message }: PromptMess
     >
       <Box
         sx={{
-          my: 1,
-          mr: 2,
-          px: 4,
-          py: 2,
+          margin: '10px 20px 10px 0',
+          padding: '20px 40px',
           borderRadius: 4,
           backgroundColor: theme => theme.palette.background.paper,
           color: theme => theme.palette.text.primary,

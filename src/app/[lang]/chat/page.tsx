@@ -1,16 +1,6 @@
 'use client'
 
-import {
-  Avatar,
-  Box,
-  Button,
-  Container,
-  IconButton,
-  Skeleton,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material'
+import { Avatar, Box, Button, IconButton, Skeleton, TextField, Typography } from '@mui/material'
 import { Send as SendIcon } from '@mui/icons-material'
 import React, { useEffect, useRef, useState } from 'react'
 import useChat, { Message } from './hooks/useChat'
@@ -20,12 +10,11 @@ import PageTransition from '@/components/PageTransition'
 import { useTranslation } from 'react-i18next'
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined'
 import PersonIcon from '@mui/icons-material/Person'
-import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined'
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
-import PromptSuggestionCard from './components/PromptSuggestionCard'
 import { useThemeContext } from '@/context/ThemeContext'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { useAppSelector } from '@/hooks/useRedux'
+import PromptSuggestions from './components/PromptSuggestions'
 
 export default function ChatPage() {
   const { t } = useTranslation('chat-page')
@@ -58,6 +47,10 @@ export default function ChatPage() {
   }
 
   useEffect(() => {
+    const chatHistory = localStorage.getItem('chat')
+    if (chatHistory) {
+      setIsVisible(false)
+    }
     scrollToBottom() // Scroll to the bottom whenever messages change
   }, [messages])
 
@@ -74,12 +67,10 @@ export default function ChatPage() {
         {/* Chat Header */}
         <Box
           padding={2}
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+          display={'flex'}
+          flexDirection={'row'}
+          alignItems={'center'}
+          justifyContent={'center'}
         >
           <Button
             variant='text'
@@ -109,50 +100,7 @@ export default function ChatPage() {
           }}
         >
           {/* Prompt Suggestions */}
-          <Box>
-            <Container>
-              <Box sx={{ display: isVisible ? 'flex' : 'none', flexWrap: 'wrap' }}>
-                <Stack
-                  spacing={1}
-                  direction='row'
-                  sx={{ alignItems: 'center', mt: 4, width: '100%' }}
-                >
-                  <QuestionAnswerOutlinedIcon />
-                  <Typography variant='subtitle1'>{t('promptTitle')}</Typography>
-                </Stack>
-                <PromptSuggestionCard
-                  isVisible={isVisible}
-                  timeout={0}
-                  title={t('prompts.card1.title')}
-                  message={t('prompts.card1.message')}
-                />
-                <PromptSuggestionCard
-                  isVisible={isVisible}
-                  timeout={1000}
-                  title={t('prompts.card2.title')}
-                  message={t('prompts.card2.message')}
-                />
-                <PromptSuggestionCard
-                  isVisible={isVisible}
-                  timeout={1500}
-                  title={t('prompts.card3.title')}
-                  message={t('prompts.card3.message')}
-                />
-                <PromptSuggestionCard
-                  isVisible={isVisible}
-                  timeout={2000}
-                  title={t('prompts.card4.title')}
-                  message={t('prompts.card4.message')}
-                />
-                <PromptSuggestionCard
-                  isVisible={isVisible}
-                  timeout={2500}
-                  title={t('prompts.card5.title')}
-                  message={t('prompts.card5.message')}
-                />
-              </Box>
-            </Container>
-          </Box>
+          <PromptSuggestions isVisible={isVisible} />
           {chatHistory.map((message: Message, index: number) => (
             <Box
               key={index}
