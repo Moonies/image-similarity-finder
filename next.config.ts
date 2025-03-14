@@ -19,6 +19,7 @@ const nextConfig: NextConfig = {
   },
   env: {
     HOST_IP: process.env.HOST_IP,
+    HOST_URL: `http://${process.env.HOST_IP}:8081`,
   },
 }
 

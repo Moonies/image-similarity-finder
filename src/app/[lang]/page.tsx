@@ -5,7 +5,8 @@ import PageTransition from '@/components/PageTransition'
 
 export default function Home() {
   const { t } = useTranslation('common')
-
+  console.log('HOST_IP:', process.env.HOST_IP)
+  console.log('HOST_URL:', process.env.NEXT_PUBLIC_HOST_URL)
   return (
     <PageTransition>
       <Box p={2}>
