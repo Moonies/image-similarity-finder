@@ -17,6 +17,9 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  env: {
+    HOST_IP: process.env.HOST_IP,
+  },
 }
 
 export default nextConfig
