@@ -28,7 +28,7 @@ type ApiType = {
 }
 
 export default function useHttp() {
-  const { notificationSnackbar, notificationModal } = useNotification()
+  const { notificationSnackbar } = useNotification()
   const { openConfirmModal } = useConfirmModal()
   const apiRef = useRef<ApiType | null>(null)
   const { setLoading, withLoading } = useLoading()
@@ -77,8 +77,6 @@ export default function useHttp() {
                       })
                     )
 
-                    notificationModal.info(t('token.reTask'))
-
                     return withLoading(httpRequest(apiFunction, disableDisplayError))
                   } else {
                     notificationSnackbar.error('Authentication failed: ' + error?.message)
@@ -109,15 +107,7 @@ export default function useHttp() {
         }
       }
     },
-    [
-      setLoading,
-      openConfirmModal,
-      notificationSnackbar,
-      t,
-      dispatch,
-      notificationModal,
-      withLoading,
-    ]
+    [setLoading, openConfirmModal, notificationSnackbar, t, dispatch, withLoading]
   )
 
   // Create api and store in ref

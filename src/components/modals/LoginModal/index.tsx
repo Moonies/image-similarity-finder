@@ -55,9 +55,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onCancle 
     >
       <DialogTitle>Login</DialogTitle>
       <form onSubmit={handleLogin}>
+        <Divider />
         <DialogContent>
-          <Divider />
-          <Box display={'flex'} flex={1} flexDirection={'column'} gap={2} padding={4}>
+          <Box display={'flex'} flex={1} flexDirection={'column'} gap={2}>
             <TextField
               autoFocus
               // margin='dense'
@@ -78,13 +78,23 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onCancle 
             />
           </Box>
         </DialogContent>
+        <Divider />
         <DialogActions>
-          <Button onClick={onCancle} color='secondary' variant='contained'>
-            Cancel
-          </Button>
-          <Button type={'submit'} color='primary' variant='contained'>
-            Login
-          </Button>
+          <Box display={'flex'} flex={1}>
+            <Box>
+              <Button variant='outlined' color='secondary'>
+                forgot password
+              </Button>
+            </Box>
+            <Box display={'flex'} flex={1} justifyContent={'end'} gap={2}>
+              {/* <Button onClick={onCancle} color='secondary' variant='contained'>
+                Cancel
+              </Button> */}
+              <Button type={'submit'} color='primary' variant='contained'>
+                Login
+              </Button>
+            </Box>
+          </Box>
         </DialogActions>
       </form>
     </Dialog>
