@@ -33,9 +33,9 @@ const chatSlice = createSlice({
   },
 })
 
-export const getChatHistory = (): Message | null => {
+export const getChatHistory = (): Message[] | undefined => {
   const storedChat = localStorage.getItem('chat')
-  return storedChat ? (JSON.parse(storedChat) as Message) : null
+  return storedChat ? (JSON.parse(storedChat) as Message[]) : undefined
 }
 
 export const { addMessage, clearMessage } = chatSlice.actions

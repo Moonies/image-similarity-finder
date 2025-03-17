@@ -8,7 +8,7 @@ interface PromptMessage {
   message: string
 }
 
-const PromptSuggestionCard = ({ isVisible, timeout, title, message }: PromptMessage) => {
+const PromptCard = ({ isVisible, timeout, title, message }: PromptMessage) => {
   return (
     <Grow
       in={isVisible}
@@ -38,4 +38,4 @@ const PromptSuggestionCard = ({ isVisible, timeout, title, message }: PromptMess
   )
 }
 
-export default PromptSuggestionCard
+export default PromptCard

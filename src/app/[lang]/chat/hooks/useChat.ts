@@ -111,5 +111,5 @@ export default function useChat() {
     [dispatch, getMessage, handleReciveMessage, messages]
   )
 
-  return { messages, handleReciveMessage, handleSendMessage, loadingBot }
+  return { messages, handleReciveMessage, handleSendMessage, loadingBot, setMessages }
 }

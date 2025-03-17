@@ -13,7 +13,6 @@ import PersonIcon from '@mui/icons-material/Person'
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 import { useThemeContext } from '@/context/ThemeContext'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
-import { useAppSelector } from '@/hooks/useRedux'
 import PromptSuggestionsCard from './components/PromptSuggestionsCard'
 import { getChatHistory } from '@/store/slices/chatSlice'
 
@@ -24,10 +23,8 @@ export default function ChatPage() {
   const [input, setInput] = useState('')
   const [isVisiblePromptCard, setIsVisiblePromptCard] = useState(true)
   const chatContainerRef = useRef<HTMLDivElement>(null)
-  const { handleSendMessage, loadingBot, messages } = useChat()
+  const { handleSendMessage, loadingBot, messages, setMessages } = useChat()
   const messageDataGridRef = useGridApiRef()
-
-  const { chatHistory } = useAppSelector(state => state.chat)
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -43,19 +40,19 @@ export default function ChatPage() {
     }
   }
 
-  const handleChange = () => {
-    setIsVisiblePromptCard(prev => !prev)
-  }
-
   useEffect(() => {
+    if (messages.length !== 0) {
+      setIsVisiblePromptCard(false)
+    }
     scrollToBottom() // Scroll to the bottom whenever messages change
   }, [messages])
 
   useEffect(() => {
     const chatHistory = getChatHistory()
     if (chatHistory) {
-      setIsVisiblePromptCard(false)
+      setMessages(chatHistory)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -84,7 +81,7 @@ export default function ChatPage() {
                   ? theme.palette.primary.main
                   : theme.palette.text.primary,
             }}
-            onClick={handleChange}
+            onClick={() => setIsVisiblePromptCard(prev => !prev)}
           >
             {isVisiblePromptCard ? <CloseOutlinedIcon /> : <HelpOutlineOutlinedIcon />}
           </Button>
@@ -105,7 +102,7 @@ export default function ChatPage() {
         >
           {/* Prompt Suggestions */}
           <PromptSuggestionsCard isVisible={isVisiblePromptCard} />
-          {chatHistory.map((message: Message, index: number) => (
+          {messages.map((message: Message, index: number) => (
             <Box
               key={index}
               display={'flex'}
