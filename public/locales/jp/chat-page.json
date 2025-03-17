@@ -1,4 +1,5 @@
 {
   "title": "データベースとチャット",
-  "inputPlaceholder": "メッセージを入力してください..."
+  "inputPlaceholder": "メッセージを入力してください...",
+  "promptTitle": "プロンプトの提案"
 }

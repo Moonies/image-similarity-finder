@@ -14,28 +14,8 @@ export default async function checkAuth(
   refreshToken: string
 ): Promise<ApiResponse<AuthData>> {
   //refresh token only without Authorization Header
-  const baseURL = process.env.NEXT_PUBLIC_API_URL
-  // const response = await fetch(baseURL + '/api/auth/refresh', {
-  //   method: 'POST',
-  //   headers: {
-  //     Accept: '*/*',
-  //     'Access-Control-Allow-Origin': '*',
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify({ username: username, refreshToken: refreshToken }),
-  // })
-
-  // if (!response.ok) {
-  //   const errorData = await response.json()
-  //   return {
-  //     code: errorData.status,
-  //     message: errorData.message,
-  //     data: undefined,
-  //   }
-  // }
-  // const result = await response.json()
-
-  // return { code: 200, message: 'success', data: result }
+  // const baseURL = process.env.NEXT_PUBLIC_API_URL
+  const baseURL = `http://${window.location.hostname}:8081`
   try {
     const response = await axios.post(`${baseURL}/api/auth/refresh`, {
       username: username,
