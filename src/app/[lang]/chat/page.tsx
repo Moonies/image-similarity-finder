@@ -14,14 +14,14 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 import { useThemeContext } from '@/context/ThemeContext'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { useAppSelector } from '@/hooks/useRedux'
-import PromptSuggestions from './components/PromptSuggestions'
+import PromptSuggestionsCard from './components/PromptSuggestionsCard'
 
 export default function ChatPage() {
   const { t } = useTranslation('chat-page')
   const { mode } = useThemeContext()
 
   const [input, setInput] = useState('')
-  const [isVisible, setIsVisible] = useState(true)
+  const [isVisiblePromptCard, setIsVisiblePromptCard] = useState(true)
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const { handleSendMessage, loadingBot, messages } = useChat()
   const messageDataGridRef = useGridApiRef()
@@ -43,13 +43,13 @@ export default function ChatPage() {
   }
 
   const handleChange = () => {
-    setIsVisible(prev => !prev)
+    setIsVisiblePromptCard(prev => !prev)
   }
 
   useEffect(() => {
     const chatHistory = localStorage.getItem('chat')
     if (chatHistory) {
-      setIsVisible(false)
+      setIsVisiblePromptCard(false)
     }
     scrollToBottom() // Scroll to the bottom whenever messages change
   }, [messages])
@@ -76,13 +76,13 @@ export default function ChatPage() {
             variant='text'
             sx={{
               color: theme =>
-                mode === 'light' && !isVisible
+                mode === 'light' && !isVisiblePromptCard
                   ? theme.palette.primary.main
                   : theme.palette.text.primary,
             }}
             onClick={handleChange}
           >
-            {isVisible ? <CloseOutlinedIcon /> : <HelpOutlineOutlinedIcon />}
+            {isVisiblePromptCard ? <CloseOutlinedIcon /> : <HelpOutlineOutlinedIcon />}
           </Button>
           <Typography variant='h6'>{t('title')}</Typography>
         </Box>
@@ -100,7 +100,7 @@ export default function ChatPage() {
           }}
         >
           {/* Prompt Suggestions */}
-          <PromptSuggestions isVisible={isVisible} />
+          <PromptSuggestionsCard isVisible={isVisiblePromptCard} />
           {chatHistory.map((message: Message, index: number) => (
             <Box
               key={index}

@@ -1,13 +1,13 @@
 import { Box, Container, Stack, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
-import PromptSuggestionCard from './PromptSuggestionCard'
+import PromptCard from './components/PromptCard'
 import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined'
 
 interface PromptDisplay {
   isVisible: boolean
 }
 
-const PromptSuggestions = ({ isVisible }: PromptDisplay) => {
+const PromptSuggestionsCard = ({ isVisible }: PromptDisplay) => {
   const { t } = useTranslation('chat-page')
 
   return (
@@ -24,31 +24,31 @@ const PromptSuggestions = ({ isVisible }: PromptDisplay) => {
             <QuestionAnswerOutlinedIcon />
             <Typography variant='subtitle1'>{t('promptTitle')}</Typography>
           </Stack>
-          <PromptSuggestionCard
+          <PromptCard
             isVisible={isVisible}
             timeout={0}
             title={t('prompts.card1.title')}
             message={t('prompts.card1.message')}
           />
-          <PromptSuggestionCard
+          <PromptCard
             isVisible={isVisible}
             timeout={1000}
             title={t('prompts.card2.title')}
             message={t('prompts.card2.message')}
           />
-          <PromptSuggestionCard
+          <PromptCard
             isVisible={isVisible}
             timeout={1500}
             title={t('prompts.card3.title')}
             message={t('prompts.card3.message')}
           />
-          <PromptSuggestionCard
+          <PromptCard
             isVisible={isVisible}
             timeout={2000}
             title={t('prompts.card4.title')}
             message={t('prompts.card4.message')}
           />
-          <PromptSuggestionCard
+          <PromptCard
             isVisible={isVisible}
             timeout={2500}
             title={t('prompts.card5.title')}
@@ -60,4 +60,4 @@ const PromptSuggestions = ({ isVisible }: PromptDisplay) => {
   )
 }
 
-export default PromptSuggestions
+export default PromptSuggestionsCard
