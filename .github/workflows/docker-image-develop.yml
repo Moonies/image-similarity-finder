@@ -20,7 +20,7 @@ jobs:
       - name: Injection .env
         run: |
           cat > .env.production << EOF
-          NEXT_PUBLIC_API_URL=http://192.168.68.126:8081
+          NEXT_PUBLIC_API_URL=http://192.168.68.161:8081
           SSL_CERTIFICATE=${{ secrets.ISF_CERTIFICATE }}
           CERTIFICATE_KEY=${{ secrets.ISF_SERVER_KEY }}
           EOF
