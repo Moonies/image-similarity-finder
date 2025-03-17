@@ -18,15 +18,12 @@ jobs:
 
       # SSH into your server and deploy
       - name: Deploy to Server
-        with:
-          script: |
-            # Create .env.production file with injected secrets
-            mkdir -p ~/app
-            cat > ~/app/.env.production << EOF
-            NEXT_PUBLIC_API_URL=http://\${window.location.hostname}:8081
-            SSL_CERTIFICATE=${{ secrets.ISF_CERTIFICATE }}
-            CERTIFICATE_KEY=${{ secrets.ISF_SERVER_KEY }}
-            EOF
+        run: |
+          cat > .env.production << EOF
+          NEXT_PUBLIC_API_URL=http://\${window.location.hostname}:8081
+          SSL_CERTIFICATE=${{ secrets.ISF_CERTIFICATE }}
+          CERTIFICATE_KEY=${{ secrets.ISF_SERVER_KEY }}
+          EOF
 
       - name: Execute Common Docker Steps
         uses: Sansen-Shimizu/common-actions/./docker@v1
