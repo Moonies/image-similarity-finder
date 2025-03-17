@@ -19,7 +19,6 @@ jobs:
       # SSH into your server and deploy
       - name: Injection .env
         run: |
-          echo ${{ secrets.ISF_CERTIFICATE }}
           cat > .env.production << EOF
           NEXT_PUBLIC_API_URL=http://192.168.68.161:8081
           SSL_CERTIFICATE=${{ secrets.ISF_CERTIFICATE }}
