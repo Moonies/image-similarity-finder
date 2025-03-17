@@ -15,6 +15,7 @@ import { useThemeContext } from '@/context/ThemeContext'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { useAppSelector } from '@/hooks/useRedux'
 import PromptSuggestionsCard from './components/PromptSuggestionsCard'
+import { getChatHistory } from '@/store/slices/chatSlice'
 
 export default function ChatPage() {
   const { t } = useTranslation('chat-page')
@@ -47,12 +48,15 @@ export default function ChatPage() {
   }
 
   useEffect(() => {
-    const chatHistory = localStorage.getItem('chat')
+    scrollToBottom() // Scroll to the bottom whenever messages change
+  }, [messages])
+
+  useEffect(() => {
+    const chatHistory = getChatHistory()
     if (chatHistory) {
       setIsVisiblePromptCard(false)
     }
-    scrollToBottom() // Scroll to the bottom whenever messages change
-  }, [messages])
+  }, [])
 
   return (
     <PageTransition>

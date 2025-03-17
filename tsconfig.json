@@ -18,7 +18,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@app/*": ["./src/app/[lang]/*"]
     },
     "incremental": true
   },
@@ -27,7 +28,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "next-i18next.config.js"
+    "next-i18next.config.js",
+    "generate-env.js"
   ],
   "exclude": ["node_modules", ".next"]
 }

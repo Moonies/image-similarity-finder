@@ -83,7 +83,7 @@ export default function useChat() {
 
       setLoadingBot(false)
     },
-    [messages]
+    [dispatch, messages.length]
   )
 
   const handleSendMessage = useCallback(
@@ -108,7 +108,7 @@ export default function useChat() {
 
       handleReciveMessage(reciveMessage)
     },
-    [getMessage, handleReciveMessage, messages]
+    [dispatch, getMessage, handleReciveMessage, messages]
   )
 
   return { messages, handleReciveMessage, handleSendMessage, loadingBot }

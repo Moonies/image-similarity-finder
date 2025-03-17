@@ -1,14 +1,12 @@
-import { Message } from '@/app/[lang]/chat/hooks/useChat'
+import { Message } from '@app/chat/hooks/useChat'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface ChatState {
   chatHistory: Message[]
 }
 
-const chatHistory = localStorage.getItem('chat')
-
 const initialState: ChatState = {
-  chatHistory: chatHistory ? JSON.parse(chatHistory) : [],
+  chatHistory: [],
 }
 
 const chatSlice = createSlice({
@@ -34,6 +32,11 @@ const chatSlice = createSlice({
     },
   },
 })
+
+export const getChatHistory = (): Message | null => {
+  const storedChat = localStorage.getItem('chat')
+  return storedChat ? (JSON.parse(storedChat) as Message) : null
+}
 
 export const { addMessage, clearMessage } = chatSlice.actions
 export default chatSlice.reducer
