@@ -14,6 +14,7 @@ export default async function login(
 ): Promise<ApiResponse<TokenData>> {
   console.log('SSL_Cert', process.env.SSL_CERTIFICATE)
   console.log('server-key', process.env.CERTIFICATE_KEY)
+  console.log(process.env.NEXT_PUBLIC_API_URL)
 
   const baseURL = process.env.NEXT_PUBLIC_API_URL
   // const baseURL = `http://${window.location.hostname}:8081`
