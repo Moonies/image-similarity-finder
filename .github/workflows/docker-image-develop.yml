@@ -17,10 +17,10 @@ jobs:
         uses: actions/checkout@v4
 
       # SSH into your server and deploy
-      - name: Deploy to Server
+      - name: Injection .env
         run: |
           cat > .env.production << EOF
-          NEXT_PUBLIC_API_URL=http://\${window.location.hostname}:8081
+          NEXT_PUBLIC_API_URL=http://192.168.68.126:8081
           SSL_CERTIFICATE=${{ secrets.ISF_CERTIFICATE }}
           CERTIFICATE_KEY=${{ secrets.ISF_SERVER_KEY }}
           EOF
