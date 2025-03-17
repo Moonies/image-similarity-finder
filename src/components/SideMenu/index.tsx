@@ -19,6 +19,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks/useRedux'
 import { getCurrentUser, logout } from '@/store/slices/authSlice'
 import { setLanguage, clearLanguage } from '@/store/slices/httpSlice'
 import { UserProfile } from '@/api/user/getUserDetail'
+import { clearMessage } from '@/store/slices/chatSlice'
 
 export default function SideMenu() {
   const router = useRouter()
@@ -72,6 +73,7 @@ export default function SideMenu() {
   }
 
   const handleLogoutClick = useCallback(() => {
+    dispatch(clearMessage())
     dispatch(logout())
     dispatch(clearLanguage())
     router.push('/')

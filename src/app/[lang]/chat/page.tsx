@@ -1,22 +1,32 @@
 'use client'
 
-import { Avatar, Box, IconButton, Skeleton, TextField, Typography } from '@mui/material'
+import { Avatar, Box, Button, IconButton, Skeleton, TextField, Typography } from '@mui/material'
 import { Send as SendIcon } from '@mui/icons-material'
-
 import React, { useEffect, useRef, useState } from 'react'
-import useChat from './hooks/useChat'
+import useChat, { Message } from './hooks/useChat'
 import DataTable from '@/components/DataTable'
 import { useGridApiRef } from '@mui/x-data-grid'
 import PageTransition from '@/components/PageTransition'
 import { useTranslation } from 'react-i18next'
+import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined'
+import PersonIcon from '@mui/icons-material/Person'
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
+import { useThemeContext } from '@/context/ThemeContext'
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
+import { useAppSelector } from '@/hooks/useRedux'
+import PromptSuggestionsCard from './components/PromptSuggestionsCard'
 
 export default function ChatPage() {
   const { t } = useTranslation('chat-page')
+  const { mode } = useThemeContext()
 
   const [input, setInput] = useState('')
+  const [isVisiblePromptCard, setIsVisiblePromptCard] = useState(true)
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const { handleSendMessage, loadingBot, messages } = useChat()
   const messageDataGridRef = useGridApiRef()
+
+  const { chatHistory } = useAppSelector(state => state.chat)
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -32,7 +42,15 @@ export default function ChatPage() {
     }
   }
 
+  const handleChange = () => {
+    setIsVisiblePromptCard(prev => !prev)
+  }
+
   useEffect(() => {
+    const chatHistory = localStorage.getItem('chat')
+    if (chatHistory) {
+      setIsVisiblePromptCard(false)
+    }
     scrollToBottom() // Scroll to the bottom whenever messages change
   }, [messages])
 
@@ -42,14 +60,30 @@ export default function ChatPage() {
         display={'flex'}
         flexDirection={'column'}
         flex={1}
-        borderRadius={2}
         sx={{
-          border: '1px solid',
           overflowY: 'auto',
         }}
       >
         {/* Chat Header */}
-        <Box padding={2} textAlign={'center'}>
+        <Box
+          padding={2}
+          display={'flex'}
+          flexDirection={'row'}
+          alignItems={'center'}
+          justifyContent={'center'}
+        >
+          <Button
+            variant='text'
+            sx={{
+              color: theme =>
+                mode === 'light' && !isVisiblePromptCard
+                  ? theme.palette.primary.main
+                  : theme.palette.text.primary,
+            }}
+            onClick={handleChange}
+          >
+            {isVisiblePromptCard ? <CloseOutlinedIcon /> : <HelpOutlineOutlinedIcon />}
+          </Button>
           <Typography variant='h6'>{t('title')}</Typography>
         </Box>
         {/* Chat Messages */}
@@ -62,39 +96,44 @@ export default function ChatPage() {
           padding={2}
           sx={{
             overflowY: 'auto',
-            backgroundColor: theme => theme.palette.background.paper,
+            backgroundColor: theme => theme.palette.background.default,
           }}
         >
-          {messages.map(message => (
+          {/* Prompt Suggestions */}
+          <PromptSuggestionsCard isVisible={isVisiblePromptCard} />
+          {chatHistory.map((message: Message, index: number) => (
             <Box
-              key={message.id}
-              sx={{
-                display: 'flex',
-                alignItems: 'flex-end',
-                flexDirection: message.sender === 'user' ? 'row-reverse' : 'row',
-                gap: '8px',
-              }}
+              key={index}
+              display={'flex'}
+              alignItems={'flex-end'}
+              flexDirection={message.sender === 'user' ? 'row-reverse' : 'row'}
+              gap={'8px'}
             >
               <Avatar
                 sx={{
-                  bgcolor: message.sender === 'user' ? 'primary.main' : 'secondary.main',
+                  bgcolor:
+                    mode === 'dark'
+                      ? 'white'
+                      : message.sender === 'user'
+                      ? 'primary.main'
+                      : 'black',
                 }}
               >
-                {message.sender === 'user' ? 'U' : 'B'}
+                {message.sender === 'user' ? <PersonIcon /> : <SmartToyOutlinedIcon />}
               </Avatar>
               <Box
+                padding={'8px 16px'}
+                borderRadius={4}
                 sx={{
                   maxWidth: '50%',
-                  padding: '8px 12px',
-                  borderRadius: '16px',
                   backgroundColor: theme =>
-                    message.sender === 'user'
-                      ? theme.palette.primary.light
-                      : theme.palette.secondary.light,
+                    mode === 'light' && message.sender === 'user'
+                      ? theme.palette.primary.main
+                      : theme.palette.background.paper,
                   color: theme =>
-                    message.sender === 'user'
-                      ? theme.palette.text.primary
-                      : theme.palette.text.secondary,
+                    mode === 'light' && message.sender === 'user'
+                      ? theme.palette.background.default
+                      : theme.palette.text.primary,
                 }}
               >
                 <Typography variant='body1' sx={{ wordBreak: 'break-word' }}>
@@ -119,7 +158,7 @@ export default function ChatPage() {
                     />
                   </Box>
                 )}
-                <Typography variant='caption' sx={{ display: 'block', textAlign: 'right' }}>
+                <Typography variant='caption' textAlign={'right'} display={'block'}>
                   {message.timestamp}
                 </Typography>
               </Box>
@@ -131,21 +170,15 @@ export default function ChatPage() {
               <Skeleton variant='circular' width={40} height={40} />
               <Skeleton
                 variant='rectangular'
-                width='40%'
+                width='20%'
                 height={40}
-                sx={{ borderRadius: '16px' }}
+                sx={{ borderRadius: '16px', p: 2 }}
               />
             </Box>
           )}
         </Box>
         {/* Input Box */}
-        <Box
-          display={'flex'}
-          padding={1}
-          sx={{
-            borderTop: '1px solid #ddd',
-          }}
-        >
+        <Box display={'flex'} padding={1} borderTop={'1px solid #ddd'}>
           <TextField
             fullWidth
             multiline
@@ -158,7 +191,10 @@ export default function ChatPage() {
             onKeyDown={handleKeyDown}
             disabled={loadingBot}
           />
-          <IconButton color='primary' onClick={() => handleSendMessage(input)}>
+          <IconButton
+            sx={{ color: mode === 'dark' ? 'white' : 'primary.main' }}
+            onClick={() => handleSendMessage(input)}
+          >
             <SendIcon />
           </IconButton>
         </Box>

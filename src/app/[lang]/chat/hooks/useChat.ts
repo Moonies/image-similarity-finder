@@ -2,8 +2,10 @@ import { useCallback, useMemo, useState } from 'react'
 import useHttp from '@/hooks/useHttp'
 import { DrawingMessage } from '@/api/chat/getMessage'
 import { GridColDef, GridRowsProp } from '@mui/x-data-grid'
+import { useAppDispatch } from '@/hooks/useRedux'
+import { addMessage } from '@/store/slices/chatSlice'
 
-interface Message {
+export interface Message {
   id: number
   text: string
   data?: { column: GridColDef[]; row: GridRowsProp }
@@ -13,6 +15,7 @@ interface Message {
 
 export default function useChat() {
   const { api } = useHttp()
+  const dispatch = useAppDispatch()
   const [messages, setMessages] = useState<Message[]>([])
   const [loadingBot, setLoadingBot] = useState(false)
 
@@ -43,6 +46,7 @@ export default function useChat() {
         }
 
         setMessages(prevMessage => [...prevMessage, newMessage])
+        dispatch(addMessage({ message: newMessage }))
       } else {
         // Generate columns dynamically
         const columns = reciveMessage.column.map(col => {
@@ -74,6 +78,7 @@ export default function useChat() {
         }
 
         setMessages(prevMessage => [...prevMessage, newMessage])
+        dispatch(addMessage({ message: newMessage }))
       }
 
       setLoadingBot(false)
@@ -95,6 +100,7 @@ export default function useChat() {
         }),
       }
       setMessages([...messages, newMessage])
+      dispatch(addMessage({ message: newMessage }))
       setLoadingBot(true)
 
       const reciveMessage = await getMessage(input)
