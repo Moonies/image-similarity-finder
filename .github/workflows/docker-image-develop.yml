@@ -18,7 +18,6 @@ jobs:
 
       # SSH into your server and deploy
       - name: Deploy to Server
-        uses: appleboy/ssh-action@master
         with:
           script: |
             # Create .env.production file with injected secrets
