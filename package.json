@@ -1,6 +1,6 @@
 {
   "name": "image-similarity-finder",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": true,
   "scripts": {
     "dev": "rm -rf .next && next dev",
