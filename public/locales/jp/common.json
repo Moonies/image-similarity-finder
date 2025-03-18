@@ -16,8 +16,15 @@
   },
   "uploadDrawingImageModalTitle": "新しい図面をアップロード",
   "submitButton": "提出する",
+  "cancelButton": "キャンセル",
   "imagePlaceholder": "ファイルが選択されていません",
   "titleSaveAs": "名前を付けて保存",
   "alertNoneText": "送信ボタンをクリックする前に新しいファイル名を入力してください",
-  "inputAddNewDrawingFileName": "図面ファイル名"
+  "inputAddNewDrawingFileName": "図面ファイル名",
+  "loginModalTitle": "ログイン",
+  "loginButton": "ログイン",
+  "username": "ユーザー",
+  "password": "パスワード",
+  "email": "メール",
+  "helperResetPassword": "登録したパスワードをリセットしたいメールアドレスを使用してください。"
 }

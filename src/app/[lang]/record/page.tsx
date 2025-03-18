@@ -136,28 +136,34 @@ export default function RecordPage() {
             />
           </Box>
         </Box>
-        <Divider sx={{ borderWidth: 1, borderColor: theme => theme.palette.primary.light }} />
-        <Box marginTop={2} flex={1}>
-          <DataTable
-            data={drawingList}
-            columns={columns}
-            totalRows={totalRows}
-            apiref={recordDataGridRef}
-            paginationModel={paginationModel}
-            onSelected={selectedRow => {}}
-            onRowModesModelChange={handleRowModesModelChange}
-            onPaginationModelChange={handlePaginationModelChange}
-            rowModesModel={rowModesModel}
-            columnVisibilityModel={columnVisibilityModel}
-            onColumnVisibilityModelChange={handleColumnVisibility}
-            paginationMode='server'
-            localeText={muiDataGridLocales[locale].components.MuiDataGrid.defaultProps.localeText}
-            slots={{
-              toolbar: CustomToolbar,
-            }}
-            sx={{ height: '100%', width: '100%' }}
-          />
-        </Box>
+        <Divider
+          sx={{
+            marginBottom: 2,
+            borderWidth: 1,
+            borderColor: theme => theme.palette.primary.light,
+          }}
+        />
+        {/* <Box display={'flex'} marginTop={2} flex={1}> */}
+        <DataTable
+          data={drawingList}
+          columns={columns}
+          totalRows={totalRows}
+          apiref={recordDataGridRef}
+          paginationModel={paginationModel}
+          onSelected={selectedRow => {}}
+          onRowModesModelChange={handleRowModesModelChange}
+          onPaginationModelChange={handlePaginationModelChange}
+          rowModesModel={rowModesModel}
+          columnVisibilityModel={columnVisibilityModel}
+          onColumnVisibilityModelChange={handleColumnVisibility}
+          paginationMode='server'
+          localeText={muiDataGridLocales[locale].components.MuiDataGrid.defaultProps.localeText}
+          slots={{
+            toolbar: CustomToolbar,
+          }}
+          // sx={{ height: 600, width: '100%' }}
+        />
+        {/* </Box> */}
       </Box>
     </PageTransition>
   )

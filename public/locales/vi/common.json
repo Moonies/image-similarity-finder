@@ -16,8 +16,15 @@
   },
   "uploadDrawingImageModalTitle": "Tải lên bản vẽ mới",
   "submitButton": "Nộp",
+  "cancelButton": "Hủy",
   "imagePlaceholder": "Không có tập tin được chọn",
   "titleSaveAs": "Lưu dưới dạng",
   "alertNoneText": "Vui lòng nhập tên tệp mới trước khi nhấp vào nút gửi",
-  "inputAddNewDrawingFileName": "Tên tệp bản vẽ"
+  "inputAddNewDrawingFileName": "Tên tệp bản vẽ",
+  "loginModalTitle": "Đăng nhập",
+  "loginButton": "Đăng nhập",
+  "username": "Tên người dùng",
+  "password": "Mật khẩu",
+  "email": "Thư điện tử",
+  "helperResetPassword": "Vui lòng sử dụng email mà bạn muốn đặt lại mật khẩu đã đăng ký."
 }

@@ -16,8 +16,15 @@
   },
   "uploadDrawingImageModalTitle": "Upload new Drawing",
   "submitButton": "Submit",
+  "cancelButton": "Cancel",
   "imagePlaceholder": "No File Chosen",
   "titleSaveAs": "Save As",
   "alertNoneText": "Please Input New File Name before click submit button",
-  "inputAddNewDrawingFileName": "Drawing File Name"
+  "inputAddNewDrawingFileName": "Drawing File Name",
+  "loginModalTitle": "Login",
+  "loginButton": "Login",
+  "username": "Username",
+  "password": "Password",
+  "email": "Email",
+  "helperResetPassword": "Please use email you would like to reset your registered password."
 }
