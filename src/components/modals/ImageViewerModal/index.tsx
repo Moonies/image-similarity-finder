@@ -26,7 +26,7 @@ export default function ImageViewerModal({
   const [currentZoomIndex, setCurrentZoomIndex] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
   const [position, setPosition] = useState({ x: 0, y: 0 })
-  const [penUploadImageModal, setOpenUploadImageModal] = useState(false)
+  const [openUploadImageModal, setOpenUploadImageModal] = useState(false)
   const imageRef = useRef<HTMLImageElement>(null)
 
   // Refs to store drag start positions
@@ -207,8 +207,8 @@ export default function ImageViewerModal({
               />
             </Box>
           </Box>
-          {penUploadImageModal && (
-            <ImageUploadModal onClose={handleUploadImage} open={penUploadImageModal} />
+          {openUploadImageModal && (
+            <ImageUploadModal onClose={handleUploadImage} open={openUploadImageModal} />
           )}
         </DialogContent>
       </Box>
