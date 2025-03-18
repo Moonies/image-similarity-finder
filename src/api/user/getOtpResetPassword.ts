@@ -7,8 +7,8 @@ export default async function getOtpResetPassword(
   httpRequest: HttpRequest,
   mail: string
 ): Promise<ApiResponse<null>> {
-  const baseURL = process.env.NEXT_PUBLIC_API_URL
-  // const baseURL = `http://${window.location.hostname}:${window.location.port}`
+  // const baseURL = process.env.NEXT_PUBLIC_API_URL
+  const baseURL = `https://${window.location.hostname}:${window.location.port}`
 
   try {
     const response = await axios.post(
