@@ -28,8 +28,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "next-i18next.config.js",
-    "generate-env.js"
+    "next-i18next.config.js"
   ],
   "exclude": ["node_modules", ".next"]
 }
