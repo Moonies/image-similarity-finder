@@ -19,9 +19,9 @@ export default async function MainAppLayout({
 }) {
   const { lang } = await params
   return (
-    <ThemeContextProvider>
-      <ThemeRegistry>
-        <LanguageProvider locale={lang}>
+    <LanguageProvider locale={lang}>
+      <ThemeContextProvider>
+        <ThemeRegistry>
           <ErrorProvider>
             <ReduxProvider>
               <ConfirmModalProvider>
@@ -36,8 +36,8 @@ export default async function MainAppLayout({
               </ConfirmModalProvider>
             </ReduxProvider>
           </ErrorProvider>
-        </LanguageProvider>
-      </ThemeRegistry>
-    </ThemeContextProvider>
+        </ThemeRegistry>
+      </ThemeContextProvider>
+    </LanguageProvider>
   )
 }

@@ -7,6 +7,7 @@ import {
   ListItemText,
   MenuItem,
   SelectChangeEvent,
+  Typography,
 } from '@mui/material'
 import { ArrowBack as ArrowBackIcon, Logout as LogoutIcon } from '@mui/icons-material'
 import { useCallback, useEffect, useState } from 'react'
@@ -20,6 +21,8 @@ import { getCurrentUser, logout } from '@/store/slices/authSlice'
 import { setLanguage, clearLanguage } from '@/store/slices/httpSlice'
 import { UserProfile } from '@/api/user/getUserDetail'
 import { clearMessage } from '@/store/slices/chatSlice'
+import { motion, AnimatePresence } from 'framer-motion'
+import Image from '@/components/Image'
 
 export default function SideMenu() {
   const router = useRouter()
@@ -78,6 +81,7 @@ export default function SideMenu() {
     dispatch(clearLanguage())
     router.push('/')
     router.refresh()
+    window.location.reload()
   }, [dispatch, router])
 
   useEffect(() => {
@@ -144,6 +148,37 @@ export default function SideMenu() {
           </Box>
         )}
         <Box flex={1} display={'flex'} flexDirection={'column'} justifyContent={'flex-end'}>
+          <Box display={'flex'} padding={1} justifyContent={'center'}>
+            <AnimatePresence mode='wait'>
+              {open ? (
+                <motion.div
+                  key='logo'
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Image src='logoFull' alt='logo' width={220} />
+                  <Typography variant='h6' textAlign={'center'}>
+                    App version {process.env.APP_VERSION}
+                  </Typography>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key='logoMini'
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Image src='logoMini' alt='logo' width={56} />
+                  <Typography variant='subtitle2' textAlign={'center'}>
+                    {process.env.APP_VERSION}
+                  </Typography>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </Box>
           <Box display={'flex'}>
             <ListItemButton onClick={handleLogoutClick}>
               <ListItemIcon>

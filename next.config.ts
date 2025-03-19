@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next'
+import packageJson from './package.json'
 
 const nextConfig: NextConfig = {
   reactStrictMode: true, //defatul true for debug
@@ -16,6 +17,9 @@ const nextConfig: NextConfig = {
   },
   typescript: {
     ignoreBuildErrors: true,
+  },
+  env: {
+    APP_VERSION: packageJson.version,
   },
   webpack: config => {
     config.resolve.alias = {
