@@ -22,6 +22,7 @@ export default function ChatPage() {
 
   const [input, setInput] = useState('')
   const [isVisiblePromptCard, setIsVisiblePromptCard] = useState(true)
+  const [isComposing, setIsComposing] = useState(false)
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const { handleSendMessage, loadingBot, messages, setMessages } = useChat()
   const messageDataGridRef = useGridApiRef()
@@ -33,6 +34,7 @@ export default function ChatPage() {
   }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (isComposing) return // not send message when use IME keyboard(Japanese, Chianese)
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault() // Prevents the default behavior of form submission
       handleSendMessage(input)
@@ -190,6 +192,8 @@ export default function ChatPage() {
             maxRows={4}
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
+            onCompositionStart={() => setIsComposing(true)}
+            onCompositionEnd={() => setIsComposing(false)}
             disabled={loadingBot}
           />
           <IconButton

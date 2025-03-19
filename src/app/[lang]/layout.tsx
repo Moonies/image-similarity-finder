@@ -21,9 +21,9 @@ export default async function MainAppLayout({
   return (
     <ThemeContextProvider>
       <ThemeRegistry>
-        <ErrorProvider>
-          <ReduxProvider>
-            <LanguageProvider locale={lang}>
+        <LanguageProvider locale={lang}>
+          <ErrorProvider>
+            <ReduxProvider>
               <ConfirmModalProvider>
                 <LoadingProvider>
                   <AuthProvider>
@@ -34,9 +34,9 @@ export default async function MainAppLayout({
                   </AuthProvider>
                 </LoadingProvider>
               </ConfirmModalProvider>
-            </LanguageProvider>
-          </ReduxProvider>
-        </ErrorProvider>
+            </ReduxProvider>
+          </ErrorProvider>
+        </LanguageProvider>
       </ThemeRegistry>
     </ThemeContextProvider>
   )

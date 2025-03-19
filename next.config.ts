@@ -17,6 +17,13 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  webpack: config => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'pdfjs-dist': 'pdfjs-dist/legacy/build/pdf', // Alias to the legacy build
+    }
+    return config
+  },
 }
 
 export default nextConfig
