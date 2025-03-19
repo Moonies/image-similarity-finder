@@ -13,7 +13,7 @@ export default async function login(
   password: string
 ): Promise<ApiResponse<TokenData>> {
   // const baseURL = process.env.NEXT_PUBLIC_API_URL
-  const baseURL = `https://${window.location.hostname}:8081`
+  const baseURL = `http://${window.location.hostname}:8081`
 
   try {
     const response = await axios.post(`${baseURL}/api/auth/login`, {
