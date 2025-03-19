@@ -15,7 +15,7 @@ export default async function checkAuth(
 ): Promise<ApiResponse<AuthData>> {
   //refresh token only without Authorization Header
   // const baseURL = process.env.NEXT_PUBLIC_API_URL
-  const baseURL = `https://${window.location.hostname}:${window.location.port}`
+  const baseURL = `https://${window.location.hostname}:8081`
   try {
     const response = await axios.post(`${baseURL}/api/auth/refresh`, {
       username: username,
