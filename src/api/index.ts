@@ -14,9 +14,25 @@ export type ApiResponse<T> = {
     totalPages: number
   } | null
 }
+export const getBaseURL = (): string => {
+  // Use environment variables to determine the base URL
+  const env = process.env.NEXT_PUBLIC_ENV // 'local', 'preproduction', 'production'
+
+  if (env === 'local') {
+    return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+  } else if (env === 'preproduction') {
+    return `http://${window.location.hostname}:8081`
+  } else if (env === 'production') {
+    return `https://${window.location.hostname}:${window.location.port}`
+  }
+
+  // Fallback to localhost if no environment is set
+  return 'http://localhost:3000'
+}
 
 export const axiosInstance: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000', //for dev
+  baseURL: getBaseURL(),
+  // baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000', //for dev
   // baseURL: `http://${window.location.hostname}:8081`, // for pre-production
   // baseURL: `https://${window.location.hostname}:${window.location.port}`, // for production
   timeout: 300000, // 5 minute

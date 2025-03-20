@@ -1,5 +1,5 @@
 import { HttpRequest } from '@/hooks/useHttp'
-import { ApiResponse } from '@/api'
+import { ApiResponse, getBaseURL } from '@/api'
 import axios from 'axios'
 import { getCurrentLanguage } from '@/store/slices/httpSlice'
 
@@ -7,8 +7,11 @@ export default async function getOtpResetPassword(
   httpRequest: HttpRequest,
   mail: string
 ): Promise<ApiResponse<null>> {
-  // const baseURL = process.env.NEXT_PUBLIC_API_URL
-  const baseURL = `http://${window.location.hostname}:$8081`
+  const baseURL = getBaseURL()
+
+  // const baseURL = process.env.NEXT_PUBLIC_API_URL // for dev
+  // const baseURL = `https://${window.location.hostname}:8081` //for pre-production
+  // const baseURL = `https://${window.location.hostname}:${window.location.port}` //for production
 
   try {
     const response = await axios.post(

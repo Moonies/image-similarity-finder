@@ -16,15 +16,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # SSH into your server and deploy
-      - name: Injection .env
-        run: |
-          cat > .env.production << EOF
-          NEXT_PUBLIC_API_URL=http://192.168.68.161:8081
-          SSL_CERTIFICATE=${{ secrets.ISF_CERTIFICATE }}
-          CERTIFICATE_KEY=${{ secrets.ISF_SERVER_KEY }}
-          EOF
-
       - name: Execute Common Docker Steps
         uses: Sansen-Shimizu/common-actions/./docker@v1
         with:

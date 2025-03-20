@@ -1,4 +1,4 @@
-import { ApiResponse } from '@/api'
+import { ApiResponse, getBaseURL } from '@/api'
 import axios from 'axios'
 
 export interface TokenData {
@@ -12,8 +12,11 @@ export default async function login(
   username: string,
   password: string
 ): Promise<ApiResponse<TokenData>> {
-  // const baseURL = process.env.NEXT_PUBLIC_API_URL
-  const baseURL = `http://${window.location.hostname}:8081`
+  const baseURL = getBaseURL()
+
+  // const baseURL = process.env.NEXT_PUBLIC_API_URL // for dev
+  // const baseURL = `https://${window.location.hostname}:8081` //for pre-production
+  // const baseURL = `https://${window.location.hostname}:${window.location.port}` //for production
 
   try {
     const response = await axios.post(`${baseURL}/api/auth/login`, {

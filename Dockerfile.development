@@ -1,18 +1,30 @@
-FROM node:22.3
-
+# Stage 1: Base image for setting up the working directory and package files
+FROM node:22.3 AS base
 WORKDIR /app
+# Copy only package files to ensure that dependency installation is cached separately
+COPY package.json package-lock.json ./
 
-# Copy package files
-COPY package*.json ./
-RUN npm install
+# Stage 2: Install dependencies using a deterministic installation process
+FROM base AS deps
+# Using 'npm ci' ensures that dependencies are installed exactly as specified in package-lock.json
+RUN npm ci
 
-# Copy project files
+# Stage 3: Build the application
+FROM deps AS builder
+# Copy the remainder of the source code; this layer will be rebuilt only if your code changes
 COPY . .
+RUN npm run build:preprod
 
-# Temporarily rename .env.development to .env.production for build
-COPY .env.development .env.production  
-
-RUN npm run build
-
+# Stage 4: Create the production image
+FROM node:22.3-slim AS production
+WORKDIR /app
+# Copy the installed dependencies from the 'deps' stage
+COPY --from=deps /app/node_modules ./node_modules
+# Copy only the necessary files from the builder stage
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/next.config.ts ./
+# If your application requires additional files (e.g., configuration), copy them here.
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD [ "npm", "run", "start" ]
