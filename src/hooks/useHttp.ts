@@ -39,7 +39,6 @@ export default function useHttp() {
     async (apiFunction: () => Promise<AxiosResponse>, disableDisplayError = false) => {
       try {
         const response: AxiosResponse = await apiFunction()
-        console.log(response)
         if (
           !response.headers // No response body or headers
         ) {
@@ -48,7 +47,6 @@ export default function useHttp() {
         return response
       } catch (error: any) {
         if (axios.isAxiosError(error) && error.response) {
-          console.log(error)
           if (disableDisplayError) return error
           if (error.response) {
             setLoading(false)
@@ -86,21 +84,24 @@ export default function useHttp() {
                 }
                 break
               case 413:
-                notificationSnackbar.error(`${t('error')}: ${error?.code}  \n ${error?.message}`)
+                notificationSnackbar.error(
+                  `${t('error.code')}: ${error?.code}  \n ${error?.message}`
+                )
                 break
               default:
                 notificationSnackbar.error(
-                  `${t('error')}: ${error?.code}
-                \n status: ${error?.status}
-                \n ${error?.response.data.errorMessage}`
+                  `${t('error.code')}: ${error?.response.data.errorCode}
+                  \n ${t('error.message')}: ${error?.response.data.errorMessage}
+                \n ${t('error.devMessage')}: ${error?.response.data.message}`
                 )
                 break
             }
           }
+
           return error
         } else {
           notificationSnackbar.error(
-            `${t('error')}: ${error?.code}
+            `${t('error.code')}: ${error?.code}
           \n ${error.message}`
           )
           return error

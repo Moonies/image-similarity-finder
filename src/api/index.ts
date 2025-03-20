@@ -41,3 +41,27 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(error)
   }
 )
+
+// Response Interceptor
+axiosInstance.interceptors.response.use(
+  response => {
+    return response // Return successful responses as-is
+  },
+  async error => {
+    if (error.response && error.response.data) {
+      const contentType = error.response.headers['content-type']
+
+      if (contentType && contentType.includes('application/json')) {
+        try {
+          const text = await error.response.data.text() // Convert Blob to text
+          const json = JSON.parse(text) // Parse JSON
+          error.response.data = json // Replace Blob with parsed JSON
+        } catch (err) {
+          console.error('Failed to parse JSON:', err)
+        }
+      }
+    }
+
+    return Promise.reject(error) // Reject the error
+  }
+)
