@@ -16,6 +16,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Injection .env
+        run: |
+          cat > .env.production << EOF
+          NEXT_PUBLIC_ENV=preproduction
+          EOF
+
       - name: Execute Common Docker Steps
         uses: Sansen-Shimizu/common-actions/./docker@v1
         with:

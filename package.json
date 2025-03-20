@@ -7,7 +7,6 @@
     "start": "next start",
     "lint": "next lint",
     "build": "next build",
-    "build:preprod": "NODE_ENV=preproduction next build",
     "version": "echo $npm_package_version",
     "build:patch": "npm version patch -m \"chore: bump version to %s\" && next build && git push && git push --tags",
     "build:minor": "npm version minor -m \"chore: bump version to %s\" && next build && git push && git push --tags",

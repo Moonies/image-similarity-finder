@@ -18,7 +18,8 @@ export const getBaseURL = (): string => {
   // Use environment variables to determine the base URL
   const env = process.env.NEXT_PUBLIC_ENV // 'local', 'preproduction', 'production'
 
-  if (env === 'local') {
+  console.log(env)
+  if (env === 'development') {
     return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
   } else if (env === 'preproduction') {
     return `http://${window.location.hostname}:8081`
