@@ -20,8 +20,13 @@
     "success": "成功通知",
     "info": "信息通知"
   },
-  "error": "错误",
-  "status": "状态",
+  "error": {
+    "title": "错误",
+    "code": "错误代码",
+    "message": "错误消息",
+    "devMessage": "开发者消息",
+    "status": "状态"
+  },
   "closeButton": "关闭",
   "cancelButton": "取消",
   "confirmButton": "确认"

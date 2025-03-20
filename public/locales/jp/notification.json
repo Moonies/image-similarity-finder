@@ -20,8 +20,13 @@
     "success": "成功通知",
     "info": "情報通知"
   },
-  "error": "エラー",
-  "status": "ステータス",
+  "error": {
+    "title": "エラー",
+    "code": "エラー コード",
+    "message": "エラメッセージ",
+    "devMessage": "開発者のメッセージ",
+    "status": "ステータス"
+  },
   "closeButton": "閉じる",
   "cancelButton": "キャンセル",
   "confirmButton": "はい"
