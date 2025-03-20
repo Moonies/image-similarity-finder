@@ -9,6 +9,7 @@ import { LoginModal } from '@/components/modals/LoginModal'
 // import { useNotification } from '@/hooks/useNotification'
 // import { TokenData } from '@/hooks/useAuth'
 import { useLoading } from '@/hooks/useLoading'
+import { getCurrentToken } from '@/store/slices/authSlice'
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   // const dispatch = useAppDispatch()
@@ -66,7 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // })
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    const token = getCurrentToken()
     // console.log(token)
     setLoading(true)
     // Only validate if token exists
