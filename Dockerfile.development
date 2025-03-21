@@ -13,6 +13,10 @@ RUN npm ci
 FROM deps AS builder
 # Copy the remainder of the source code; this layer will be rebuilt only if your code changes
 COPY . .
+
+# Ensure the locales directory is included
+RUN mkdir -p public/locales && cp -r ./locales ./public/
+
 RUN npm run build
 
 # Stage 4: Create the production image

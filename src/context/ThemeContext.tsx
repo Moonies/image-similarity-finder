@@ -49,7 +49,6 @@ export const ThemeContextProvider: React.FC<{ children: React.ReactNode }> = ({ 
   }
 
   useEffect(() => {
-    console.log('Theme')
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('theme') as ThemeMode
       if (savedTheme) {
