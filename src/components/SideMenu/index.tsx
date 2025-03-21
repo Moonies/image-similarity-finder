@@ -171,7 +171,7 @@ export default function SideMenu() {
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <Image src='logoMini' alt='logo' width={56} />
+                  <Image src='logoMini' alt='logo' width={56} priority={true} />
                   <Typography variant='subtitle2' textAlign={'center'}>
                     {process.env.APP_VERSION}
                   </Typography>
