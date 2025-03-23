@@ -6,7 +6,6 @@ import { Box, Container, Link, Typography } from '@mui/material'
 import PageTransition from '@/components/PageTransition'
 import { useThemeContext } from '@/context/ThemeContext'
 import parse, { DOMNode, HTMLReactParserOptions } from 'html-react-parser'
-import packageInfo from '@/../package.json'
 
 const mockApi = {
   htmlString: {
@@ -113,14 +112,14 @@ interface TransformNode {
   }
 }
 
-export default function Home() {
+export default function WelcomPage() {
   const { mode } = useThemeContext()
   const { locale } = useThemeContext()
   const { t } = useTranslation('welcome-page')
 
   const [htmlStringData, setHtmlStringData] = useState<string>()
 
-  const version = packageInfo.version
+  const version = process.env.APP_VERSION
 
   const options: HTMLReactParserOptions = {
     replace(domNode: DOMNode) {
