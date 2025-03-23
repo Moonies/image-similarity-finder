@@ -25,3 +25,4 @@ jobs:
         project: isf
         repository: frontend
         tag_version: ${{ github.ref_name }}
+        cache: false

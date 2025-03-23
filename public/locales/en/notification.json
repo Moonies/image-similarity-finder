@@ -20,8 +20,13 @@
     "success": "Success Notification",
     "info": "Info Notification"
   },
-  "error": "Error",
-  "status": "Status",
+  "error": {
+    "title": "Error",
+    "code": "Error Code",
+    "message": "Error Message",
+    "devMessage": "Dev Message",
+    "status": "Status"
+  },
   "closeButton": "Close",
   "cancelButton": "Cancel",
   "confirmButton": "Confirm"

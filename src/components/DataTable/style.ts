@@ -27,6 +27,9 @@ const ODD_OPACITY = 0.2
 const StyledStripedDataGrid = styled(DataGrid)(({ theme }) => ({
   fontSize: 14,
   // fontWeight: 'bold',
+  [`.MuiTablePagination-root`]: {
+    overflow: 'hidden',
+  },
   [`.${gridClasses.cell}.right`]: {
     textAlign: 'right',
   },

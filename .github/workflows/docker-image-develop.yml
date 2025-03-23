@@ -16,13 +16,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # SSH into your server and deploy
       - name: Injection .env
         run: |
           cat > .env.production << EOF
-          NEXT_PUBLIC_API_URL=http://192.168.68.161:8081
-          SSL_CERTIFICATE=${{ secrets.ISF_CERTIFICATE }}
-          CERTIFICATE_KEY=${{ secrets.ISF_SERVER_KEY }}
+          NEXT_PUBLIC_ENV=preproduction
           EOF
 
       - name: Execute Common Docker Steps
@@ -30,7 +27,8 @@ jobs:
         with:
           docker_username: ${{ env.DOCKER_USERNAME }}
           docker_password: ${{ env.DOCKER_PASSWORD }}
-          dockerfile: Dockerfile.production
+          dockerfile: Dockerfile.development
           project: isf
           repository: frontend
           tag_version: latest-dev
+          cache: false

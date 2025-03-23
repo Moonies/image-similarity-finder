@@ -20,8 +20,13 @@
     "success": "Thông báo thành công",
     "info": "Thông báo thông tin"
   },
-  "error": "Lỗi",
-  "status": "Trạng thái",
+  "error": {
+    "title": "Lỗi",
+    "code": "Mã lỗi",
+    "message": "Thông báo lỗi",
+    "devMessage": "Tin nhắn của nhà phát triển",
+    "status": "Trạng thái"
+  },
   "closeButton": "Đóng",
   "cancelButton": "Hủy bỏ",
   "confirmButton": "Xác nhận"

@@ -1,4 +1,4 @@
-import { ApiResponse } from '@/api'
+import { ApiResponse, getBaseURL } from '@/api'
 import axios from 'axios'
 
 export interface AuthData {
@@ -14,8 +14,7 @@ export default async function checkAuth(
   refreshToken: string
 ): Promise<ApiResponse<AuthData>> {
   //refresh token only without Authorization Header
-  // const baseURL = process.env.NEXT_PUBLIC_API_URL
-  const baseURL = `http://${window.location.hostname}:8081`
+  const baseURL = getBaseURL()
   try {
     const response = await axios.post(`${baseURL}/api/auth/refresh`, {
       username: username,

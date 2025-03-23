@@ -2,16 +2,18 @@
 
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { useAppSelector } from '@/hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux'
 // import { clearCredentials, setCredentials } from '@/store/slices/authSlice'
 import { LoginModal } from '@/components/modals/LoginModal'
 // import useHttp from '@/hooks/useHttp'
 // import { useNotification } from '@/hooks/useNotification'
 // import { TokenData } from '@/hooks/useAuth'
 import { useLoading } from '@/hooks/useLoading'
+import { getCurrentToken } from '@/store/slices/authSlice'
+import { setBaseUrl } from '@/store/slices/httpSlice'
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  // const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch()
   // const router = useRouter()
   const pathname = usePathname()
   const { isAuthenticated } = useAppSelector(state => state.auth)
@@ -66,7 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // })
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    const token = getCurrentToken()
     // console.log(token)
     setLoading(true)
     // Only validate if token exists
@@ -92,6 +94,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setShowLoginModal(true)
     }
   }, [isAuthenticated, pathname])
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname
+      const port = process.env.NEXT_PUBLIC_ENV === 'production' ? window.location.port : undefined
+      dispatch(setBaseUrl({ locationHost: hostname, locationPort: port })) // Store the hostname and compute baseURL
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   //remove for not have a landing page
   // Prevent rendering children until token validation is complete
