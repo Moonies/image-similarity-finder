@@ -1,0 +1,18 @@
+{
+  "title": "Chào mừng đến với 早楽図面！",
+  "appVersion": {
+    "title": "Phiên bản ứng dụng",
+    "label": "Phiên bản mới nhất"
+  },
+  "note": {
+    "title": "Lưu ý",
+    "description1": "Hiện tại bạn đang sử dụng <strong>phiên bản {{version}}</strong> của ứng dụng, cung cấp cho bạn tất cả các tính năng và cải tiến mới nhất. Đây là phiên bản mới nhất của ứng dụng, được thiết kế để giúp hợp lý hóa quy trình làm việc của bạn và tăng năng suất.",
+    "description2": "Bạn có muốn khai thác hết tiềm năng của ứng dụng của chúng tôi không? Chúng tôi cung cấp các gói đăng ký được thiết kế riêng để đáp ứng nhu cầu kinh doanh của bạn.",
+    "invitation": {
+      "subscriptionLink": "Tìm hiểu thêm về các gói đăng ký của chúng tôi",
+      "conjuction": "hoặc",
+      "contactLink": "liên hệ với chúng tôi",
+      "label": "để nhận ưu đãi cá nhân hóa."
+    }
+  }
+}

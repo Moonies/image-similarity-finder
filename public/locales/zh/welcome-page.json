@@ -1,0 +1,18 @@
+{
+  "title": "歡迎來到早楽図面！",
+  "appVersion": {
+    "title": "應用版本",
+    "label": "最新版本"
+  },
+  "note": {
+    "title": "注意",
+    "description1": "您目前正在使用我們應用程式的 <strong>版本 {{version}}</strong>，提供您所有最新的功能和改進。這是應用程式的最新版本，旨在幫助簡化您的工作流程並提高生產力。",
+    "description2": "有興趣充分發揮我們應用程式的潛力嗎？我們提供量身定制的訂閱方案，以滿足您的業務需求。",
+    "invitation": {
+      "subscriptionLink": "了解更多關於我們的訂閱方案",
+      "conjuction": "或",
+      "contactLink": "聯繫我們",
+      "label": "以獲取個性化報價。"
+    }
+  }
+}

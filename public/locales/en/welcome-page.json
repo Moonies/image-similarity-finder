@@ -1,0 +1,18 @@
+{
+  "title": "Welcome to 早楽図面！",
+  "appVersion": {
+    "title": "App Versions",
+    "label": "Latest Version"
+  },
+  "note": {
+    "title": "Note",
+    "description1": "You are currently using <strong>version {{version}}</strong> of our app, offering you all the latest features and improvements. This is the most recent version of the app, designed to help streamline your workflow and increase productivity.",
+    "description2": "Interested in maximizing the full potential of our app? We offer subscription plans tailored to meet your business needs.",
+    "invitation": {
+      "subscriptionLink": "Learn more about our subscription plans",
+      "conjuction": "or",
+      "contactLink": "contact us",
+      "label": "for a personalized offer."
+    }
+  }
+}
