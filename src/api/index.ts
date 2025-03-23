@@ -1,3 +1,4 @@
+import { store } from '@/store'
 import { getCurrentToken } from '@/store/slices/authSlice'
 import { getCurrentLanguage } from '@/store/slices/httpSlice'
 
@@ -14,27 +15,19 @@ export type ApiResponse<T> = {
     totalPages: number
   } | null
 }
+
 export const getBaseURL = (): string => {
-  // Use environment variables to determine the base URL
-  const env = process.env.NEXT_PUBLIC_ENV // 'local', 'preproduction', 'production'
-
-  if (env === 'development') {
-    return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
-  } else if (env === 'preproduction') {
-    return `http://${window.location.hostname}:8081`
-  } else if (env === 'production') {
-    return `https://${window.location.hostname}:${window.location.port}`
+  const state = store.getState() // Access the Redux store without hook
+  const baseURL = state.http.baseURL // Get the baseURL from the Redux slice
+  if (baseURL) {
+    return baseURL
   }
-
-  // Fallback to localhost if no environment is set
+  // Fallback if baseURL is not available
   return 'http://localhost:3000'
 }
 
 export const axiosInstance: AxiosInstance = axios.create({
-  baseURL: getBaseURL(),
-  // baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000', //for dev
-  // baseURL: `http://${window.location.hostname}:8081`, // for pre-production
-  // baseURL: `https://${window.location.hostname}:${window.location.port}`, // for production
+  // baseURL: getBaseURL(),
   timeout: 300000, // 5 minute
   headers: {
     Accept: '*/*',
@@ -46,6 +39,8 @@ export const axiosInstance: AxiosInstance = axios.create({
 // Set up interceptor to ensure token is always current
 axiosInstance.interceptors.request.use(
   config => {
+    const stateBaseURL = getBaseURL()
+    config.baseURL = stateBaseURL
     const storedToken = getCurrentToken()
     if (storedToken) {
       config.headers.Authorization = `Bearer ${storedToken.token}` // Best practice: use Authorization header
