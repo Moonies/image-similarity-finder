@@ -167,9 +167,11 @@ export default function WelcomPage() {
 
   return (
     <PageTransition>
-      <Box p={2}>
+      <Box padding={2}>
         <Container maxWidth='lg'>
-          <Typography variant='h1'>{t('title')}</Typography>
+          <Typography variant='h1' textAlign={'center'}>
+            {t('title')}
+          </Typography>
 
           <Box marginY={2}>
             <Typography variant='h3' gutterBottom>

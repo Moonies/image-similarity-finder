@@ -233,7 +233,15 @@ export default function ErasePage() {
 
   useEffect(() => {
     //for re-render and set disable contextMenu
-    document.addEventListener('contextmenu', e => e.preventDefault())
+    const handleContextMenu = (e: MouseEvent) => e.preventDefault()
+
+    // Add the event listener
+    document.addEventListener('contextmenu', handleContextMenu)
+
+    // Cleanup function to remove the event listener when the component unmounts
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu)
+    }
   }, [actions])
 
   return (
