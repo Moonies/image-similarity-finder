@@ -6,16 +6,12 @@ import { useRouter } from 'next/navigation'
 import { useLoading } from './useLoading'
 import { useNotification } from './useNotification'
 import useHttp from './useHttp'
-import { UserProfile } from '@/api/user/getUserDetail'
-import { TokenData } from '@/api/user/login'
 
 interface UseAuthHook {
   isAuthenticated: boolean
   login: (username: string, password: string) => Promise<boolean | undefined>
   logout: () => Promise<void>
   refreshToken: (newToken: string) => Promise<void>
-  getCurrentToken: () => TokenData | null | undefined
-  getCurrentUser: () => UserProfile | null | undefined
 }
 
 export function useAuth(): UseAuthHook {
@@ -132,31 +128,11 @@ export function useAuth(): UseAuthHook {
     [handleLogout, setLoading]
   )
 
-  const getCurrentToken = useCallback(() => {
-    try {
-      const storedToken = localStorage.getItem('token')
-      return storedToken ? (JSON.parse(storedToken) as TokenData) : null //set any wait API
-    } catch (error) {
-      notificationModal.error(`${error}`)
-    }
-  }, [notificationModal])
-
-  const getCurrentUser = useCallback(() => {
-    try {
-      const storedUser = localStorage.getItem('user')
-      return storedUser ? (JSON.parse(storedUser) as UserProfile) : null
-    } catch (error) {
-      notificationModal.error(`${error}`)
-    }
-  }, [notificationModal])
-
   return {
     // user,
     isAuthenticated,
     login,
     logout: handleLogout,
     refreshToken: refreshTokenMethod,
-    getCurrentToken,
-    getCurrentUser,
   }
 }

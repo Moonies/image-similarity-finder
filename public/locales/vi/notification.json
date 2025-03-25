@@ -27,6 +27,13 @@
     "devMessage": "Tin nhắn của nhà phát triển",
     "status": "Trạng thái"
   },
+  "advertise": {
+    "title": "Mở khóa các tính năng của gói Pro!",
+    "subTitle": "Nâng cấp để truy cập vào :",
+    "footer": "Bạn có thắc mắc? Hãy nhắn tin cho nhóm hỗ trợ của chúng tôi—chúng tôi luôn sẵn sàng trợ giúp!",
+    "feature1": "Tính năng xóa",
+    "feature2": "Trò chuyện với các tính năng của cơ sở dữ liệu"
+  },
   "closeButton": "Đóng",
   "cancelButton": "Hủy bỏ",
   "confirmButton": "Xác nhận"

@@ -27,6 +27,13 @@
     "devMessage": "Dev Message",
     "status": "Status"
   },
+  "advertise": {
+    "title": "Unlock Pro Plan Features!",
+    "subTitle": "Upgrade for access to :",
+    "footer": "Have questions? Message our support team—we’re here to help!",
+    "feature1": "Eraser Feature",
+    "feature2": "Chat With Database Features"
+  },
   "closeButton": "Close",
   "cancelButton": "Cancel",
   "confirmButton": "Confirm"

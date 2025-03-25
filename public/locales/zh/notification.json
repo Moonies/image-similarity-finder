@@ -27,6 +27,13 @@
     "devMessage": "开发者消息",
     "status": "状态"
   },
+  "advertise": {
+    "title": "解锁专业版计划功能！",
+    "subTitle": "升级以访问:",
+    "footer": "有疑问？向我们的支持团队发送消息 - 我们随时为您提供帮助！",
+    "feature1": "橡皮擦功能",
+    "feature2": "与数据库功能聊天"
+  },
   "closeButton": "关闭",
   "cancelButton": "取消",
   "confirmButton": "确认"
