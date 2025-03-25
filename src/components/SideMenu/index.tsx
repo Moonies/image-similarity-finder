@@ -23,6 +23,7 @@ import { UserProfile } from '@/api/user/getUserDetail'
 import { clearMessage } from '@/store/slices/chatSlice'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from '@/components/Image'
+import LicenseAdvertiseDialog from '../dialog/LicenseAdvertiseDialog'
 
 export default function SideMenu() {
   const router = useRouter()
@@ -31,16 +32,32 @@ export default function SideMenu() {
   const { toggleTheme, setLocale } = useThemeContext()
   const { i18n } = useTranslation()
   const [languageSwitcher, setLanguageSwitcher] = useState(i18n.language)
-  const { menuItems, logoutMenu } = useMenu()
+  const { menuItems, logoutMenu, checkLicense } = useMenu()
   const dispatch = useAppDispatch()
   const { user } = useAppSelector(state => state.auth)
   const [storedUser, setStoredUser] = useState<UserProfile | null>()
+  const [openAdvertise, setOpenAdvertise] = useState(false)
 
-  const handleNavigation = (path: string) => {
-    const [lang, _currentPath] = pathname.replace(/^\//, '').split('/') // This will get 'en' and 'currentpaht' from '/en/viewer'
-    // if (path === `/${currentPath}`) return //if want to not return when still same parent path
-    router.push(`/${lang}${path}`)
-  }
+  const handleNavigation = useCallback(
+    async (path: string) => {
+      const [lang, _currentPath] = pathname.replace(/^\//, '').split('/') // This will get 'en' and 'currentpaht' from '/en/viewer'
+      // if (path === `/${currentPath}`) return //if want to not return when still same parent path
+      router.push(`/${lang}${path}`)
+    },
+    [pathname, router]
+  )
+
+  const checkLicenseVersion = useCallback(
+    async (key: string, path: string) => {
+      const response = await checkLicense(key)
+      if (response) {
+        handleNavigation(path)
+      } else {
+        setOpenAdvertise(true)
+      }
+    },
+    [checkLicense, handleNavigation]
+  )
 
   const updatePathname = (lng: string) => {
     // Extract the current path without the language prefix
@@ -55,7 +72,10 @@ export default function SideMenu() {
       case 'mode':
         toggleTheme()
         break
-
+      case 'eraser':
+      case 'chat':
+        checkLicenseVersion(key, path)
+        break
       default:
         handleNavigation(path)
         break
@@ -194,6 +214,7 @@ export default function SideMenu() {
           </Box>
         </Box>
       </Box>
+      <LicenseAdvertiseDialog open={openAdvertise} onClose={() => setOpenAdvertise(false)} />
     </StyledDrawer>
   )
 }

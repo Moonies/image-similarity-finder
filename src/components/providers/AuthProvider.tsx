@@ -1,81 +1,50 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux'
 // import { clearCredentials, setCredentials } from '@/store/slices/authSlice'
 import { LoginModal } from '@/components/modals/LoginModal'
-// import useHttp from '@/hooks/useHttp'
+import useHttp from '@/hooks/useHttp'
 // import { useNotification } from '@/hooks/useNotification'
 // import { TokenData } from '@/hooks/useAuth'
 import { useLoading } from '@/hooks/useLoading'
 import { getCurrentToken } from '@/store/slices/authSlice'
 import { setBaseUrl } from '@/store/slices/httpSlice'
+import LicenseAdvertiseDialog from '@/components/dialog/LicenseAdvertiseDialog'
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch()
-  // const router = useRouter()
+  const router = useRouter()
   const pathname = usePathname()
   const { isAuthenticated } = useAppSelector(state => state.auth)
   const [showLoginModal, setShowLoginModal] = useState(false)
+  const [openAdvertise, setOpenAdvertise] = useState(false)
   // const [isTokenValidating, setIsTokenValidating] = useState(true)
   // const { notificationSnackbar } = useNotification()
   const { setLoading } = useLoading()
-  // const { api } = useHttp()
+  const { api } = useHttp()
 
-  // Check and validate token
-  // const validateToken = useRef(async (token: TokenData) => {
-  //   setIsTokenValidating(true)
-  //   const useStored = localStorage.getItem('user')
-  //   const currentUser: string = isAuthenticated ? user : JSON.parse(useStored as string)
-  //   try {
-  //     if (!token) {
-  //       throw new Error('No token')
-  //     }
-  //     const result = await api.user.checkAuth(currentUser, token.refreshToken)
-  //     if (result.code === 200 && result.data) {
-  //       // If validation successful, set credentials
-  //       dispatch(
-  //         setCredentials({
-  //           user: currentUser,
-  //           token: result.data,
-  //         })
-  //       )
-  //       // router.push('/')
-  //     } else {
-  //       notificationSnackbar.error(result.message)
-  //       localStorage.removeItem('token')
-  //       dispatch(clearCredentials())
-
-  //       // Show login modal or redirect based on route
-  //       if (pathname !== '/login') {
-  //         setShowLoginModal(true)
-  //       }
-  //     }
-  //   } catch (error) {
-  //     // Token invalid or expired
-  //     localStorage.removeItem('token')
-  //     dispatch(clearCredentials())
-
-  //     // Show login modal or redirect based on route
-  //     if (pathname !== '/login') {
-  //       setShowLoginModal(true)
-  //     }
-  //   } finally {
-  //     setIsTokenValidating(false)
-  //     setLoading(false)
-  //   }
-  // })
+  const checkLicensePlan = async (path: string) => {
+    const response = await api.permission.checkLicense(`/${path}`)
+    if (response.code !== 200) {
+      router.push('/en')
+      setOpenAdvertise(true)
+    }
+  }
 
   useEffect(() => {
     const token = getCurrentToken()
-    // console.log(token)
     setLoading(true)
     // Only validate if token exists
     if (token) {
       setLoading(false) //for test token expire
-
       // validateToken.current(JSON.parse(token) as TokenData)
+      //if user change path in address bar, can be recheck again to protect pro features
+      const [_lang, currentPath] = pathname.replace(/^\//, '').split('/')
+      if (currentPath === 'erase' || currentPath === 'chat') {
+        checkLicensePlan(currentPath)
+      }
     } else {
       setLoading(false)
       // No token and not on login page
@@ -83,14 +52,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setShowLoginModal(true)
       // }
     }
-  }, [pathname, setLoading])
+    //depend on path only
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname])
 
   // Protect routes
   useEffect(() => {
     const protectedRoutes = ['/']
 
     if (!isAuthenticated && protectedRoutes.includes(pathname)) {
-      // router.push('/login')
+      // router.push('/')
       setShowLoginModal(true)
     }
   }, [isAuthenticated, pathname])
@@ -118,6 +89,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         onClose={() => setShowLoginModal(false)}
         onCancle={() => console.log('cancle')}
       />
+      <LicenseAdvertiseDialog open={openAdvertise} onClose={() => setOpenAdvertise(false)} />
     </>
   )
 }

@@ -27,6 +27,13 @@
     "devMessage": "開発者のメッセージ",
     "status": "ステータス"
   },
+  "advertise": {
+    "title": "Pro プランの機能のロックを解除しましょう！",
+    "subTitle": "アップグレードすると次の機能にアクセスできます:",
+    "footer": "ご質問がありますか? サポート チームにメッセージをお送りください。喜んでお手伝いいたします！",
+    "feature1": "消しゴム機能",
+    "feature2": "データベース機能とのチャット"
+  },
   "closeButton": "閉じる",
   "cancelButton": "キャンセル",
   "confirmButton": "はい"
