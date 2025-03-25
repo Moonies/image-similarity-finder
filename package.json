@@ -36,7 +36,7 @@
     "@reduxjs/toolkit": "^2.4.0",
     "@zip.js/zip.js": "^2.7.54",
     "accept-language": "^3.0.20",
-    "axios": "^1.7.9",
+    "axios": "^1.8.2",
     "dayjs": "^1.11.13",
     "framer-motion": "^11.18.1",
     "html-react-parser": "^5.2.2",
