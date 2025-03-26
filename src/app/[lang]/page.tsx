@@ -6,6 +6,7 @@ import { Box, Container, Link, Typography } from '@mui/material'
 import PageTransition from '@/components/PageTransition'
 import { useThemeContext } from '@/context/ThemeContext'
 import parse, { DOMNode, HTMLReactParserOptions } from 'html-react-parser'
+import useHttp from '@/hooks/useHttp'
 
 const mockApi = {
   htmlString: {
@@ -41,16 +42,8 @@ const mockApi = {
             <li>User Management: Control user roles and permissions effectively.</li> \
             <li>Dark/Light Mode Toggle: Toggle between modes for a personalized experience.</li> \
           </ul> \
-          <div> \
-            <p>See how easy it is to manage your workflow with <strong>早楽図面</strong>.</p> \
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/OrRffCobuts" title="Getting Started with NextJS and PrimeReact" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> \
-          </div>\
           <h2>User Support</h2> \
           <p>If you encounter any issues or need help, contact our support team via email at <strong>support@sansenshimizu.com</strong>.</p> \
-          <div> \
-            <p>(Sample Image)</p> \
-            <img src="/static/images/blueprint.png" alt="Sample Image" style="width: 400px; height: auto" /> \
-          </div> \
         </div>',
     jp: '<style> \
           h1 { \
@@ -85,16 +78,8 @@ const mockApi = {
             <li>ユーザー管理：ユーザーの役割と権限を効果的に管理します。</li> \
             <li>ダーク/ライトモードのトグル：モードを切り替えて、パーソナライズされた体験を提供します。</li> \
           </ul> \
-          <div> \
-            <p><strong>早楽図面</strong>を使って、ワークフローを簡単に管理する方法をご覧ください。</p> \
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/OrRffCobuts" title="NextJSとPrimeReactを使ったスタートガイド" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> \
-          </div>\
           <h2>ユーザーサポート</h2> \
           <p>何か問題が発生した場合やサポートが必要な場合は、<strong>support@sansenshimizu.com</strong> までメールでお問い合わせください。</p> \
-          <div> \
-            <p>(サンプルイメージ)</p> \
-            <img src="/static/images/blueprint.png" alt="画像" style="width: 400px; height: auto" /> \
-          </div> \
          </div>',
     zh: '',
     vi: '',
@@ -118,7 +103,7 @@ export default function WelcomPage() {
   const { t } = useTranslation('welcome-page')
 
   const [htmlStringData, setHtmlStringData] = useState<string>()
-
+  const { api } = useHttp()
   const version = process.env.APP_VERSION
 
   const options: HTMLReactParserOptions = {
@@ -149,6 +134,11 @@ export default function WelcomPage() {
     },
   }
 
+  const getManuelFiles = async () => {
+    const result = await api.files.getManuel()
+    console.log(result)
+  }
+
   // fetch mock data
   const getHtmlString = useMemo(
     () => async () => {
@@ -161,6 +151,10 @@ export default function WelcomPage() {
     [locale]
   )
 
+  useEffect(() => {
+    getManuelFiles()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   useEffect(() => {
     getHtmlString()
   }, [getHtmlString])
