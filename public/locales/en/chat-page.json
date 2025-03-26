@@ -4,24 +4,29 @@
   "promptTitle": "Prompt Suggestions",
   "prompts": {
     "card1": {
-      "title": "Retrieve Drawing by ID",
-      "message": "Find and display information about the drawing with the specified ID."
+      "title": "Retrieve Drawing by Drawing Number",
+      "message": "Find and display information about the drawing with the specified Number.",
+      "example": "Retrieve the drawings with the drawing number equal <YOUR DRAWING NUMBER>"
     },
     "card2": {
-      "title": "Fetch Recent Drawings",
-      "message": "Get me a list of the most recent drawings added to the database."
+      "title": "Fetch Sum cost for Drawings",
+      "message": "You can use simple calculation.",
+      "example": "Give me the sum of the general cost for all the drawings"
     },
     "card3": {
-      "title": "Get Drawing Cost",
-      "message": "Fetch the general cost of the drawing '<NAME OF THE DRAWING>' from the database."
+      "title": "Get Drawing with condition",
+      "message": "You can get Drawing with condition.",
+      "example": "Retrieve all the drawings with <YOUR CONDITION>"
     },
     "card4": {
-      "title": "List Drawings",
-      "message": "Show all available drawings in the database."
+      "title": "Get List Drawings",
+      "message": "You can get all Drawing.",
+      "example": "Retrieve all the drawings"
     },
     "card5": {
-      "title": "Recent Additions",
-      "message": "Retrieve the latest drawings added to the system."
+      "title": "Get Average cost for all Drawing",
+      "message": "You can find average cost all Drawing.",
+      "example": "Give me the average general cost for all the drawings"
     }
   }
 }

@@ -6,9 +6,18 @@ interface PromptMessage {
   timeout: number
   title: string
   message: string
+  exampleMessage: string
+  onClick: () => void
 }
 
-const PromptCard = ({ isVisible, timeout, title, message }: PromptMessage) => {
+const PromptCard = ({
+  isVisible,
+  timeout,
+  title,
+  message,
+  exampleMessage,
+  onClick,
+}: PromptMessage) => {
   return (
     <Grow
       in={isVisible}
@@ -24,7 +33,9 @@ const PromptCard = ({ isVisible, timeout, title, message }: PromptMessage) => {
         sx={{
           backgroundColor: theme => theme.palette.background.paper,
           color: theme => theme.palette.text.primary,
+          cursor: 'pointer',
         }}
+        onClick={onClick}
       >
         <Stack spacing={1} direction={'row'} paddingBottom={1} alignItems={'center'}>
           <TipsAndUpdatesOutlinedIcon />
@@ -33,6 +44,7 @@ const PromptCard = ({ isVisible, timeout, title, message }: PromptMessage) => {
           </Typography>
         </Stack>
         <Typography color='text.secondary'>{message}</Typography>
+        <Typography variant='caption'>{exampleMessage}</Typography>
       </Box>
     </Grow>
   )

@@ -2,7 +2,7 @@
 
 import { Avatar, Box, Button, IconButton, Skeleton, TextField, Typography } from '@mui/material'
 import { Send as SendIcon } from '@mui/icons-material'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import useChat, { Message } from './hooks/useChat'
 import DataTable from '@/components/DataTable'
 import { useGridApiRef } from '@mui/x-data-grid'
@@ -41,6 +41,32 @@ export default function ChatPage() {
       setInput('')
     }
   }
+
+  const handleExampleChat = useCallback(
+    (sampleId: number) => {
+      switch (sampleId) {
+        case 1:
+          setInput(t('prompts.card1.example'))
+          break
+        case 2:
+          setInput(t('prompts.card2.example'))
+          break
+        case 3:
+          setInput(t('prompts.card3.example'))
+          break
+        case 4:
+          setInput(t('prompts.card4.example'))
+          break
+        case 5:
+          setInput(t('prompts.card5.example'))
+          break
+        default:
+          setInput('')
+          break
+      }
+    },
+    [t]
+  )
 
   useEffect(() => {
     if (messages.length !== 0) {
@@ -103,7 +129,7 @@ export default function ChatPage() {
           }}
         >
           {/* Prompt Suggestions */}
-          <PromptSuggestionsCard isVisible={isVisiblePromptCard} />
+          <PromptSuggestionsCard isVisible={isVisiblePromptCard} onSelect={handleExampleChat} />
           {messages.map((message: Message, index: number) => (
             <Box
               key={index}
