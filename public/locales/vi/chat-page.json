@@ -1,5 +1,32 @@
 {
   "title": "Trò chuyện với cơ sở dữ liệu",
   "inputPlaceholder": "Nhập tin nhắn...",
-  "promptTitle": "Đề xuất nhanh chóng"
+  "promptTitle": "Đề xuất nhanh chóng",
+  "prompts": {
+    "card1": {
+      "title": "Tìm kiếm bản vẽ theo số hiệu",
+      "message": "Tìm và hiển thị thông tin về bản vẽ với số hiệu được chỉ định.",
+      "example": "Tìm các bản vẽ có số hiệu bằng <SỐ HIỆU BẢN VẼ CỦA BẠN>."
+    },
+    "card2": {
+      "title": "Lấy tổng chi phí cho các bản vẽ",
+      "message": "Bạn có thể sử dụng phép tính đơn giản.",
+      "example": "Hãy cho tôi tổng chi phí chung của tất cả các bản vẽ."
+    },
+    "card3": {
+      "title": "Lấy bản vẽ với điều kiện",
+      "message": "Bạn có thể lấy bản vẽ với điều kiện.",
+      "example": "Truy xuất tất cả các bản vẽ với <ĐIỀU KIỆN CỦA BẠN>."
+    },
+    "card4": {
+      "title": "Lấy danh sách bản vẽ",
+      "message": "Bạn có thể lấy tất cả các bản vẽ.",
+      "example": "Truy xuất tất cả các bản vẽ."
+    },
+    "card5": {
+      "title": "Lấy chi phí trung bình cho tất cả các bản vẽ",
+      "message": "Bạn có thể tìm chi phí trung bình của tất cả các bản vẽ.",
+      "example": "Hãy cho tôi chi phí chung trung bình của tất cả các bản vẽ."
+    }
+  }
 }

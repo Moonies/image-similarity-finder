@@ -49,7 +49,7 @@ export default function SideMenu() {
 
   const checkLicenseVersion = useCallback(
     async (key: string, path: string) => {
-      const response = await checkLicense(key)
+      const response = await checkLicense(path)
       if (response) {
         handleNavigation(path)
       } else {
