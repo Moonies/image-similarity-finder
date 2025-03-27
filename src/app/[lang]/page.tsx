@@ -1,11 +1,18 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Box, Container, Link, Typography } from '@mui/material'
 import PageTransition from '@/components/PageTransition'
 import { useThemeContext } from '@/context/ThemeContext'
 import parse, { DOMNode, HTMLReactParserOptions } from 'html-react-parser'
+
+const mockFile = [
+  { fileName: 'abc', blobUrl: 'aaaaaaa' },
+  { fileName: 'ggg', blobUrl: 'aaaaaaa' },
+  { fileName: 'eee', blobUrl: 'aaaaaaa' },
+  { fileName: 'ccc', blobUrl: 'aaaaaaa' },
+]
 
 const mockApi = {
   htmlString: {
@@ -96,10 +103,16 @@ interface TransformNode {
   }
 }
 
+type ManualFile = {
+  fileName: string
+  blobUrl: string
+}[]
+
 export default function WelcomPage({ files }: { files: string[] }) {
   const { mode } = useThemeContext()
   const { locale } = useThemeContext()
   const { t } = useTranslation('welcome-page')
+  const [manualFiles, setManualFiles] = useState<ManualFile>([])
 
   const [htmlStringData, setHtmlStringData] = useState<string>()
   const version = process.env.APP_VERSION
@@ -144,30 +157,41 @@ export default function WelcomPage({ files }: { files: string[] }) {
     [locale]
   )
 
-  useEffect(() => {
-    const fetchFiles = async () => {
-      // Fetch from the dynamic API route
-      const response = await fetch(`/read-files/`)
-      const data = await response.json()
-      const processedFiles = data.files.map((file: { fileName: string; content: string }) => {
-        const binary = atob(file.content) // Decode base64 to binary
-        const bytes = new Uint8Array(binary.length)
-        for (let i = 0; i < binary.length; i++) {
-          bytes[i] = binary.charCodeAt(i)
-        }
-        const blob = new Blob([bytes]) // Create a Blob from the binary data
-        const blobUrl = URL.createObjectURL(blob) // Create a URL for the Blob
-        return { fileName: file.fileName, blobUrl } // Return the file name and Blob URL
-      })
-      console.log(processedFiles)
+  const handleDownload = useCallback(
+    (fileName: string) => {
+      const selectedData = manualFiles.find(item => item.fileName === fileName)
+      if (!selectedData) return
       const link = document.createElement('a')
-      link.href = processedFiles[1].blobUrl
-      link.download = processedFiles[1].fileName // Use the file's original name
+      link.href = selectedData.blobUrl
+      link.download = selectedData.fileName // Use the file's original name
       link.click()
-      // setFiles(data.files || []);
-    }
+    },
+    [manualFiles]
+  )
 
-    fetchFiles()
+  const fetchFiles = async () => {
+    // Fetch from the dynamic API route
+    const response = await fetch(`/read-files/`)
+    const data = await response.json()
+    const processedFiles = data.files.map((file: { fileName: string; content: string }) => {
+      const binary = atob(file.content) // Decode base64 to binary
+      const bytes = new Uint8Array(binary.length)
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i)
+      }
+      const blob = new Blob([bytes]) // Create a Blob from the binary data
+      const blobUrl = URL.createObjectURL(blob) // Create a URL for the Blob
+      return { fileName: file.fileName, blobUrl } // Return the file name and Blob URL
+    })
+    console.log(processedFiles)
+    setManualFiles(processedFiles)
+  }
+
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_ENV !== 'development') {
+      //on local can't find path on docker
+      fetchFiles()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []) // Re-fetch if `lang` changes
 
