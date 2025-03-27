@@ -11,7 +11,7 @@
     "build:patch": "npm version patch -m \"chore: bump version to %s\" && next build && git push && git push --tags",
     "build:minor": "npm version minor -m \"chore: bump version to %s\" && next build && git push && git push --tags",
     "build:major": "npm version major -m \"chore: bump version to %s\" && next build && git push && git push --tags",
-    "docker:build:dev": "docker build -f Dockerfile.development -t internal.sansenshimizu.com/isf/frontend:$(npm run version --silent)-dev -t internal.sansenshimizu.com/isf/frontend:latest-dev .",
+    "docker:build:dev": "docker build -f Dockerfile.development -t internal.sansenshimizu.com/isf/frontend:$(npm run version --silent)-dev -t internal.sansenshimizu.com/isf/frontend:dev-onfire .",
     "docker:push:dev": "docker push internal.sansenshimizu.com/isf/frontend:$(npm run version --silent)-dev && docker push internal.sansenshimizu.com/isf/frontend:latest-dev",
     "docker:build:preprod": "docker build -f Dockerfile.development -t internal.sansenshimizu.com/isf/frontend:$(npm run version --silent)-preprod -t internal.sansenshimizu.com/isf/frontend:latest-preprod .",
     "docker:push:preprod": "docker push internal.sansenshimizu.com/isf/frontend:$(npm run version --silent)-preprod && docker push internal.sansenshimizu.com/isf/frontend:latest-preprod",

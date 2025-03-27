@@ -7,6 +7,8 @@ import PageTransition from '@/components/PageTransition'
 import { useThemeContext } from '@/context/ThemeContext'
 import parse, { DOMNode, HTMLReactParserOptions } from 'html-react-parser'
 import useHttp from '@/hooks/useHttp'
+import { readFolder } from '@/utils/fileConvert'
+import { usePathname } from 'next/navigation'
 
 const mockApi = {
   htmlString: {
@@ -97,13 +99,14 @@ interface TransformNode {
   }
 }
 
-export default function WelcomPage() {
+export default function WelcomPage({ files }: { files: string[] }) {
   const { mode } = useThemeContext()
   const { locale } = useThemeContext()
+  const pathname = usePathname()
+  const [lang, _currentPath] = pathname.replace(/^\//, '').split('/')
   const { t } = useTranslation('welcome-page')
 
   const [htmlStringData, setHtmlStringData] = useState<string>()
-  const { api } = useHttp()
   const version = process.env.APP_VERSION
 
   const options: HTMLReactParserOptions = {
@@ -134,9 +137,9 @@ export default function WelcomPage() {
     },
   }
 
-  const getManuelFiles = async () => {
-    const result = await api.files.getManuel()
-    console.log(result)
+  const getFiles = async () => {
+    const files = await readFolder('manual')
+    console.log(files)
   }
 
   // fetch mock data
@@ -152,9 +155,18 @@ export default function WelcomPage() {
   )
 
   useEffect(() => {
-    getManuelFiles()
+    const fetchFiles = async () => {
+      // Fetch from the dynamic API route
+      const response = await fetch(`/${lang}/read-folder`)
+      const data = await response.json()
+      console.log(data)
+      // setFiles(data.files || []);
+    }
+
+    fetchFiles()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []) // Re-fetch if `lang` changes
+
   useEffect(() => {
     getHtmlString()
   }, [getHtmlString])

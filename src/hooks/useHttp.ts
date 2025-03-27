@@ -7,7 +7,6 @@ import { default as drawingApi, DrawingApi } from '@/api/drawing'
 import { default as eraserApi, EraserApi } from '@/api/eraser'
 import { default as chatApi, ChatApi } from '@/api/chat'
 import { default as roleApi, RoleApi } from '@/api/role'
-import { default as filesApi, FilesApi } from '@/api/files'
 import { default as permissionApi, PermissionApi } from '@/api/permission'
 import { getCurrentToken, getCurrentUser, setCredentials } from '@/store/slices/authSlice'
 import { useAppDispatch } from './useRedux'
@@ -26,7 +25,6 @@ type ApiType = {
   chat: ChatApi
   role: RoleApi
   permission: PermissionApi
-  files: FilesApi
 }
 
 export default function useHttp() {
@@ -125,7 +123,6 @@ export default function useHttp() {
         chat: chatApi(httpRequest),
         role: roleApi(httpRequest),
         permission: permissionApi(httpRequest),
-        files: filesApi(),
       }
     }
     return apiRef.current

@@ -1,20 +1,14 @@
 import fs from 'fs'
+import { NextApiRequest, NextApiResponse } from 'next'
 import path from 'path'
 
-export default async function handler(): Promise<{ result: any }> {
-  // Path to the mounted folder in the container
-  const folderPath = path.join(process.cwd(), 'manual')
-
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  const folderPath = path.join(process.cwd(), 'folderName')
   try {
-    // Read the contents of the folder
     const files = fs.readdirSync(folderPath)
-
-    // Respond with the list of files
-    return { result: files }
+    res.status(200).json({ files })
   } catch (error) {
     console.error('Error reading folder:', error)
-
-    // Respond with an error message
-    return { result: undefined }
+    res.status(500).json({ error: 'Unable to read folder' })
   }
 }
