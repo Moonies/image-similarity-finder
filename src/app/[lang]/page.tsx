@@ -149,7 +149,17 @@ export default function WelcomPage({ files }: { files: string[] }) {
       // Fetch from the dynamic API route
       const response = await fetch(`/read-files/`)
       const data = await response.json()
-      console.log(data)
+      const processedFiles = data.files.map((file: { fileName: string; content: string }) => {
+        const binary = atob(file.content) // Decode base64 to binary
+        const bytes = new Uint8Array(binary.length)
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i)
+        }
+        const blob = new Blob([bytes]) // Create a Blob from the binary data
+        const blobUrl = URL.createObjectURL(blob) // Create a URL for the Blob
+        return { fileName: file.fileName, blobUrl } // Return the file name and Blob URL
+      })
+      console.log(processedFiles)
       // setFiles(data.files || []);
     }
 
