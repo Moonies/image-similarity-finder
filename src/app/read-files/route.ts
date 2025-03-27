@@ -15,7 +15,7 @@ export async function GET() {
         const filePath = path.join(uploadFolder, file)
         const content = fs.readFileSync(filePath) // Read file content
         const base64Content = content.toString('base64')
-        return { fileName: file, base64Content } // Return file name and content
+        return { fileName: file, content: base64Content } // Return file name and content
       })
       .filter(file => file.fileName !== '.DS_Store')
 
