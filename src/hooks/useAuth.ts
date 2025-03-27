@@ -1,7 +1,7 @@
 'use client'
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux'
-import { setCredentials, logout, setUser } from '@/store/slices/authSlice'
+import { setCredentials, clearUser, setUser } from '@/store/slices/authSlice'
 import { useRouter } from 'next/navigation'
 import { useLoading } from './useLoading'
 import { useNotification } from './useNotification'
@@ -85,7 +85,7 @@ export function useAuth(): UseAuthHook {
       localStorage.removeItem('refreshToken')
 
       // Clear Redux store
-      dispatch(logout())
+      dispatch(clearUser())
 
       // Redirect to login
       router.push('/login')
