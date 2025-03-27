@@ -10,12 +10,13 @@ export async function GET() {
     const files = fs.readdirSync(uploadFolder)
 
     // Optionally, return file names or contents
-    const fileContents = files.map(file => {
-      if (file === '.DS_Store') return
-      const filePath = path.join(uploadFolder, file)
-      const content = fs.readFileSync(filePath, 'utf-8') // Read file content
-      return { fileName: file, content } // Return file name and content
-    })
+    const fileContents = files
+      .map(file => {
+        const filePath = path.join(uploadFolder, file)
+        const content = fs.readFileSync(filePath, 'utf-8') // Read file content
+        return { fileName: file, content } // Return file name and content
+      })
+      .filter(file => file.fileName !== '.DS_Store')
 
     return NextResponse.json({ files: fileContents })
   } catch (error) {
