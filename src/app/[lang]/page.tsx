@@ -6,7 +6,6 @@ import { Box, Container, Link, Typography } from '@mui/material'
 import PageTransition from '@/components/PageTransition'
 import { useThemeContext } from '@/context/ThemeContext'
 import parse, { DOMNode, HTMLReactParserOptions } from 'html-react-parser'
-import { usePathname } from 'next/navigation'
 
 const mockApi = {
   htmlString: {
@@ -100,8 +99,6 @@ interface TransformNode {
 export default function WelcomPage({ files }: { files: string[] }) {
   const { mode } = useThemeContext()
   const { locale } = useThemeContext()
-  const pathname = usePathname()
-  const [lang, _currentPath] = pathname.replace(/^\//, '').split('/')
   const { t } = useTranslation('welcome-page')
 
   const [htmlStringData, setHtmlStringData] = useState<string>()
@@ -150,8 +147,8 @@ export default function WelcomPage({ files }: { files: string[] }) {
   useEffect(() => {
     const fetchFiles = async () => {
       // Fetch from the dynamic API route
-      const response = await fetch(`/${lang}/read-folder`)
-      const data = await response.blob()
+      const response = await fetch(`/read-files/`)
+      const data = await response.json()
       console.log(data)
       // setFiles(data.files || []);
     }
