@@ -96,13 +96,13 @@ export default function SideMenu() {
   }
 
   const handleLogoutClick = useCallback(async () => {
-    dispatch(clearMessage())
-    dispatch(clearUser())
-    dispatch(clearLanguage())
-    router.push('/')
-    router.refresh()
     const response = await logout()
     if (response) {
+      dispatch(clearMessage())
+      dispatch(clearUser())
+      dispatch(clearLanguage())
+      router.push('/')
+      router.refresh()
       window.location.reload()
     }
   }, [dispatch, logout, router])
