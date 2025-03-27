@@ -11,6 +11,7 @@ export async function GET() {
 
     // Optionally, return file names or contents
     const fileContents = files.map(file => {
+      if (file === '.DS_Store') return
       const filePath = path.join(uploadFolder, file)
       const content = fs.readFileSync(filePath, 'utf-8') // Read file content
       return { fileName: file, content } // Return file name and content
