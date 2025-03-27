@@ -1,7 +1,5 @@
 import UTIF from 'utif'
 import * as pdfjsLib from 'pdfjs-dist'
-import fs from 'fs'
-import path from 'path'
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdfjs/pdf.worker.js'
 
 export const convertTifToBlob = async (blobFile: Blob | File) => {
@@ -58,15 +56,4 @@ export const convertPdfToBlob = async (pdfFile: Blob | File) => {
   canvas.remove()
 
   return imageDataUrl
-}
-
-export async function readFolder(folderName: string): Promise<string[]> {
-  const folderPath = path.join(process.cwd(), folderName)
-
-  try {
-    return fs.readdirSync(folderPath) // Read files in the directory
-  } catch (error) {
-    console.error('Error reading folder:', error)
-    return []
-  }
 }
