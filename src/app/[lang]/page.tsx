@@ -6,8 +6,6 @@ import { Box, Container, Link, Typography } from '@mui/material'
 import PageTransition from '@/components/PageTransition'
 import { useThemeContext } from '@/context/ThemeContext'
 import parse, { DOMNode, HTMLReactParserOptions } from 'html-react-parser'
-import useHttp from '@/hooks/useHttp'
-import { readFolder } from '@/utils/fileConvert'
 import { usePathname } from 'next/navigation'
 
 const mockApi = {
@@ -135,11 +133,6 @@ export default function WelcomPage({ files }: { files: string[] }) {
 
       return false
     },
-  }
-
-  const getFiles = async () => {
-    const files = await readFolder('manual')
-    console.log(files)
   }
 
   // fetch mock data
