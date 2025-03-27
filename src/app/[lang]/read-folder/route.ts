@@ -4,9 +4,9 @@ import fs from 'fs'
 export async function GET(req: Request, { params }: { params: { lang: string } }) {
   // Adjust path based on `lang`
 
-  let files: string[] = []
+  let files
   try {
-    files = fs.readdirSync('/app/manual') // Read files in the directory
+    files = fs.createReadStream('/app/manual') // Read files in the directory
   } catch (error) {
     console.error('Error reading folder:', error)
   }
