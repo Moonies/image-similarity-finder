@@ -151,7 +151,7 @@ export default function WelcomPage({ files }: { files: string[] }) {
     const fetchFiles = async () => {
       // Fetch from the dynamic API route
       const response = await fetch(`/${lang}/read-folder`)
-      const data = await response.json()
+      const data = await response.blob()
       console.log(data)
       // setFiles(data.files || []);
     }
