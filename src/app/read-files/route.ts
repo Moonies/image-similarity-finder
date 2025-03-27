@@ -3,7 +3,7 @@ import path from 'path'
 import { NextResponse } from 'next/server'
 
 export async function GET() {
-  const uploadFolder = path.join(process.cwd(), 'app/manual') // Adjust this to your folder path
+  const uploadFolder = path.join(process.cwd(), '/manual') // Adjust this to your folder path
 
   try {
     // Read all files in the folder
