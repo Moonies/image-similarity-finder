@@ -160,6 +160,10 @@ export default function WelcomPage({ files }: { files: string[] }) {
         return { fileName: file.fileName, blobUrl } // Return the file name and Blob URL
       })
       console.log(processedFiles)
+      const link = document.createElement('a')
+      link.href = processedFiles[1].blobUrl
+      link.download = processedFiles[1].fileName // Use the file's original name
+      link.click()
       // setFiles(data.files || []);
     }
 
