@@ -9,6 +9,7 @@ import { default as removeUser } from './removeUser'
 import { default as getUserDetail, UserProfile } from './getUserDetail'
 import { default as getOtpResetPassword } from './getOtpResetPassword'
 import { default as updateUserPassword, UpdateUserPasswordDetail } from './updateUserPassword'
+import { default as logout } from './logout'
 export interface UserApi {
   login: (username: string, password: string) => Promise<ApiResponse<TokenData>>
   checkAuth: (username: string, refreshToken: string) => Promise<ApiResponse<AuthData>>
@@ -19,6 +20,7 @@ export interface UserApi {
   getUserDetail: (username: string) => Promise<ApiResponse<UserProfile>>
   getOtpResetPassword: (mail: string) => Promise<ApiResponse<null>>
   updateUserPassword: (params: UpdateUserPasswordDetail) => Promise<ApiResponse<null>>
+  logout: () => Promise<ApiResponse<null>>
 }
 
 export default function user(httpRequest: HttpRequest): UserApi {
@@ -32,5 +34,6 @@ export default function user(httpRequest: HttpRequest): UserApi {
     getUserDetail: username => getUserDetail(httpRequest, username),
     getOtpResetPassword: mail => getOtpResetPassword(httpRequest, mail),
     updateUserPassword: params => updateUserPassword(httpRequest, params),
+    logout: () => logout(httpRequest),
   }
 }

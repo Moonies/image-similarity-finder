@@ -30,6 +30,16 @@ export default function useMenu() {
     [api.permission]
   )
 
+  const logout = useMemo(
+    () => async () => {
+      const result = await api.user.logout()
+      if (result.code === 200) {
+        return true
+      }
+    },
+    [api.user]
+  )
+
   const menuItems = [
     { label: t('sideMenu.home'), key: 'home', icon: HomeIcon, path: '/' },
     { label: t('sideMenu.search'), key: 'search', icon: UploadIcon, path: '/search' },
@@ -48,5 +58,5 @@ export default function useMenu() {
     { label: '', key: 'language', icon: LanguageIcon, path: '' },
   ]
   const logoutMenu = t('sideMenu.logout')
-  return { menuItems, logoutMenu, checkLicense }
+  return { menuItems, logoutMenu, checkLicense, logout }
 }

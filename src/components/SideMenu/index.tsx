@@ -17,7 +17,7 @@ import { useThemeContext } from '@/context/ThemeContext'
 import { useTranslation } from 'react-i18next'
 import useMenu from './hooks/useMenu'
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux'
-import { getCurrentUser, logout } from '@/store/slices/authSlice'
+import { getCurrentUser, clearUser } from '@/store/slices/authSlice'
 import { setLanguage, clearLanguage } from '@/store/slices/httpSlice'
 import { UserProfile } from '@/api/user/getUserDetail'
 import { clearMessage } from '@/store/slices/chatSlice'
@@ -32,7 +32,7 @@ export default function SideMenu() {
   const { toggleTheme, setLocale } = useThemeContext()
   const { i18n } = useTranslation()
   const [languageSwitcher, setLanguageSwitcher] = useState(i18n.language)
-  const { menuItems, logoutMenu, checkLicense } = useMenu()
+  const { menuItems, logoutMenu, checkLicense, logout } = useMenu()
   const dispatch = useAppDispatch()
   const { user } = useAppSelector(state => state.auth)
   const [storedUser, setStoredUser] = useState<UserProfile | null>()
@@ -95,14 +95,17 @@ export default function SideMenu() {
     setLocale(i18n.language)
   }
 
-  const handleLogoutClick = useCallback(() => {
-    dispatch(clearMessage())
-    dispatch(logout())
-    dispatch(clearLanguage())
-    router.push('/')
-    router.refresh()
-    window.location.reload()
-  }, [dispatch, router])
+  const handleLogoutClick = useCallback(async () => {
+    const response = await logout()
+    if (response) {
+      dispatch(clearMessage())
+      dispatch(clearUser())
+      dispatch(clearLanguage())
+      router.push('/')
+      router.refresh()
+      window.location.reload()
+    }
+  }, [dispatch, logout, router])
 
   useEffect(() => {
     const [lang, _currentPath] = pathname.replace(/^\//, '').split('/')

@@ -42,7 +42,7 @@ const authSlice = createSlice({
       localStorage.removeItem('token')
       localStorage.removeItem('user')
     },
-    logout: state => {
+    clearUser: state => {
       state.isAuthenticated = false
       state.user = null
       state.token = null
@@ -66,5 +66,5 @@ export const getCurrentUser = (): UserProfile | null => {
   return storedUser ? (JSON.parse(storedUser) as UserProfile) : null
 }
 
-export const { setCredentials, clearCredentials, logout, setUser } = authSlice.actions
+export const { setCredentials, clearCredentials, clearUser, setUser } = authSlice.actions
 export default authSlice.reducer
