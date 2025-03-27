@@ -26,6 +26,11 @@ const nextConfig: NextConfig = {
       ...config.resolve.alias,
       'pdfjs-dist': 'pdfjs-dist/legacy/build/pdf', // Alias to the legacy build
     }
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false, // Ignore fs for client-side builds
+    }
+
     return config
   },
 }
