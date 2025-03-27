@@ -34,6 +34,6 @@ export default function user(httpRequest: HttpRequest): UserApi {
     getUserDetail: username => getUserDetail(httpRequest, username),
     getOtpResetPassword: mail => getOtpResetPassword(httpRequest, mail),
     updateUserPassword: params => updateUserPassword(httpRequest, params),
-    logout: () => logout(),
+    logout: () => logout(httpRequest),
   }
 }
