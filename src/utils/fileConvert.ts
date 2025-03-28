@@ -1,29 +1,25 @@
-import UTIF from 'utif'
+import Tiff from 'tiff.js'
 import * as pdfjsLib from 'pdfjs-dist'
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdfjs/pdf.worker.js'
 
 export const convertTifToBlob = async (blobFile: Blob | File) => {
-  const buffer = await blobFile.arrayBuffer()
-  const ifds = UTIF.decode(buffer)
-  UTIF.decodeImage(buffer, ifds[0])
-  const rgba = UTIF.toRGBA8(ifds[0])
+  const arrayBuffer = await blobFile.arrayBuffer()
 
-  const canvas = document.createElement('canvas')
-  canvas.width = ifds[0].width
-  canvas.height = ifds[0].height
+  try {
+    // Use tiff.js to process the TIFF file
+    const tiff = new Tiff({ buffer: arrayBuffer })
+    const canvas = tiff.toCanvas() // Convert TIFF to a canvas
 
-  const ctx = canvas.getContext('2d')
-  if (ctx) {
-    const imgData = ctx.createImageData(canvas.width, canvas.height)
-    imgData.data.set(rgba)
-    ctx.putImageData(imgData, 0, 0)
+    // Convert the canvas to a data URL (PNG format)
+    const blob = await new Promise<Blob | null>(resolve =>
+      canvas.toBlob(blob => resolve(blob), 'image/png')
+    )
+    tiff.close()
+    return blob
 
-    const pngBlob = await new Promise<Blob>(resolve => {
-      canvas.toBlob(blob => {
-        if (blob) resolve(blob)
-      }, 'image/png')
-    })
-    return pngBlob
+    // Clean up resources
+  } catch (error) {
+    console.error('Error decoding TIFF file:', error)
   }
 }
 
