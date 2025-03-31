@@ -14,5 +14,7 @@
       "contactLink": "お問い合わせ",
       "label": "して、パーソナライズされたオファーを受け取る。"
     }
-  }
+  },
+  "changeLogTitle": "変更ログ",
+  "downloadButton": "ファイルをダウンロード"
 }

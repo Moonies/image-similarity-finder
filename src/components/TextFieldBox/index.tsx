@@ -26,7 +26,7 @@ const TextFieldBox: React.FC<TextFieldBoxProps> = ({
         {text}
       </Typography>
       {list ? (
-        <TextField id='outlined-select-currency' {...props} size='small' fullWidth>
+        <TextField id='textField-Select' {...props} size='small' fullWidth>
           {list.map(option => (
             <MenuItem key={option.id} value={option.id}>
               {option.name}
