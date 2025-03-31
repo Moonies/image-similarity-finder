@@ -64,7 +64,7 @@ export const extractTextFromPDF = async (file: string): Promise<string> => {
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i)
     const textContent = await page.getTextContent()
-    console.log(textContent)
+    // console.log(textContent)
     // Extract text while preserving spaces and line breaks
     const pageText = textContent.items
       .map(item => (item as any).str) // Extract the text of each item
@@ -83,7 +83,7 @@ export const processPDFText = (text: string): string => {
 
   lines.forEach(line => {
     const trimmedLine = line.trim()
-    console.log(trimmedLine)
+    // console.log(trimmedLine)
     if (trimmedLine.startsWith('Change') || trimmedLine.startsWith('変更ログ')) {
       // Add the main title
       html += `<h2 style="font-size: 32px;">${trimmedLine}</h2>\n`
