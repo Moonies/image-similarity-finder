@@ -193,13 +193,21 @@ export default function WelcomPage({ files }: { files: string[] }) {
 
   const handleSelectFile = useCallback(
     (fileName: string) => {
-      const selectedFile = mockFile.find(item => item.fileName === fileName)
-      if (selectedFile) {
-        setSelectedFile(selectedFile?.fileName)
-        fetchPDF(selectedFile?.fileUrl)
+      if (process.env.NEXT_PUBLIC_ENV !== 'development') {
+        const selectedFile = manualFiles.find(item => item.fileName === fileName)
+        if (selectedFile) {
+          setSelectedFile(selectedFile?.fileName)
+          fetchPDF(selectedFile?.blobUrl)
+        }
+      } else {
+        const selectedFile = mockFile.find(item => item.fileName === fileName)
+        if (selectedFile) {
+          setSelectedFile(selectedFile?.fileName)
+          fetchPDF(selectedFile?.fileUrl)
+        }
       }
     },
-    [mockFile]
+    [manualFiles, mockFile]
   )
 
   const fetchPDF = async (selectedFile: string) => {
