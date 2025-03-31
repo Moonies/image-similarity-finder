@@ -337,7 +337,12 @@ export default function WelcomPage({ files }: { files: string[] }) {
               onChange={e => handleSelectFile(e.target.value)}
               value={selectedFile}
             >
-              {mockFile.map((option, index) => (
+              {/* {mockFile.map((option, index) => (
+                <MenuItem key={index} value={option.fileName}>
+                  {option.fileName}
+                </MenuItem>
+              ))} */}
+              {manualFiles.map((option, index) => (
                 <MenuItem key={index} value={option.fileName}>
                   {option.fileName}
                 </MenuItem>
