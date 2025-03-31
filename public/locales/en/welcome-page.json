@@ -14,5 +14,35 @@
       "contactLink": "contact us",
       "label": "for a personalized offer."
     }
+  },
+  "changeLogTitle": "Change Log",
+  "downloadButton": "Download file",
+  "readMe": {
+    "startTitle": "Getting Started",
+    "startBody": "We are excited to have you onboard. This app is designed to help streamline your workflow, manage records, and enhance your productivity. Explore its powerful features below.",
+    "guide": {
+      "title": "Quick Guide",
+      "instructions": {
+        "list1": "Upload images in the \"Upload\" section.",
+        "list2": "Manage your records in the \"Check Records\" section. Customize columns and search efficiently.",
+        "list3": "Remove unwanted data in the \"Eraser\" section.",
+        "list4": "Manage users under \"User Management\".",
+        "list5": "Switch between light and dark modes using the toggle in the sidebar."
+      }
+    },
+    "features": {
+      "title": "Key Features",
+      "instructions": {
+        "list1": "Upload: Seamlessly upload images and manage them.",
+        "list2": "Record Management: Easily manage and customize your data columns, from material costs to suppliers.",
+        "list3": "Real-time Chat Support: Get quick assistance through our chat feature.",
+        "list4": "User Management: Control user roles and permissions effectively.",
+        "list5": "Dark/Light Mode Toggle: Toggle between modes for a personalized experience."
+      }
+    },
+    "support": {
+      "title": "User Support",
+      "helperText": "If you encounter any issues or need help, contact our support team via email at "
+    }
   }
 }

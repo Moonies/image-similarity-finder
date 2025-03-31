@@ -3,9 +3,9 @@ import packageJson from './package.json'
 
 const nextConfig: NextConfig = {
   reactStrictMode: true, //defatul true for debug
-  // devIndicators: {
-  //   appIsrStatus: false,
-  // },
+  devIndicators: {
+    appIsrStatus: false,
+  },
   // interpolation: {
   //   escapeValue: false,
   // },
