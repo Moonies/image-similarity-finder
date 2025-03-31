@@ -233,15 +233,18 @@ export default function WelcomPage({ files }: { files: string[] }) {
       return { fileName: file.fileName, blobUrl } // Return the file name and Blob URL
     })
     setManualFiles(processedFiles)
+    fetchPDF(processedFiles[0].blobUrl)
+    setSelectedFile(processedFiles[0].fileName)
   }
 
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_ENV !== 'development') {
       //on local can't find path on docker
       fetchFiles()
+    } else {
+      fetchPDF(mockFile[0].fileUrl)
+      setSelectedFile(mockFile[0].fileName)
     }
-    fetchPDF(mockFile[0].fileUrl)
-    setSelectedFile(mockFile[0].fileName)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []) // Re-fetch if `lang` changes
 
