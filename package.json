@@ -66,5 +66,8 @@
     "eslint-config-next": "15.0.3",
     "eslint-plugin-react-hooks": "^5.1.0",
     "typescript": "^5"
+  },
+  "overrides": {
+    "@babel/runtime": "7.27.0"
   }
 }

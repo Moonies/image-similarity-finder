@@ -340,37 +340,39 @@ export default function WelcomPage({ files }: { files: string[] }) {
             </Typography>
           </Box>
 
-          <Box display={'flex'} gap={2}>
-            <TextField
-              id='change-log-select'
-              select
-              label={t('changeLogTitle')}
-              onChange={e => handleSelectFile(e.target.value)}
-              value={selectedFile}
-            >
-              {/* {mockFile.map((option, index) => (
+          {manualFiles.length > 0 && (
+            <Box display={'flex'} gap={2}>
+              <TextField
+                id='change-log-select'
+                select
+                label={t('changeLogTitle')}
+                onChange={e => handleSelectFile(e.target.value)}
+                value={selectedFile}
+              >
+                {/* {mockFile.map((option, index) => (
                 <MenuItem key={index} value={option.fileName}>
                   {option.fileName}
                 </MenuItem>
               ))} */}
-              {manualFiles.map((option, index) => (
-                <MenuItem key={index} value={option.fileName}>
-                  {option.fileName}
-                </MenuItem>
-              ))}
-            </TextField>
-            <Box justifyContent={'center'} alignContent={'center'}>
-              <Button
-                role={undefined}
-                variant='contained'
-                tabIndex={-1}
-                startIcon={<DownloadIcon />}
-                onClick={handleDownload}
-              >
-                {t('downloadButton')}
-              </Button>
+                {manualFiles.map((option, index) => (
+                  <MenuItem key={index} value={option.fileName}>
+                    {option.fileName}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <Box justifyContent={'center'} alignContent={'center'}>
+                <Button
+                  role={undefined}
+                  variant='contained'
+                  tabIndex={-1}
+                  startIcon={<DownloadIcon />}
+                  onClick={handleDownload}
+                >
+                  {t('downloadButton')}
+                </Button>
+              </Box>
             </Box>
-          </Box>
+          )}
 
           <AnimatePresence mode='wait'>
             {pdfText && (

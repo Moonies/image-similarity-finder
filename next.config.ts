@@ -1,5 +1,7 @@
 import type { NextConfig } from 'next'
 import packageJson from './package.json'
+import fs from 'fs'
+import path from 'path'
 
 const nextConfig: NextConfig = {
   reactStrictMode: true, //defatul true for debug
@@ -29,6 +31,13 @@ const nextConfig: NextConfig = {
     config.resolve.fallback = {
       ...config.resolve.fallback,
       fs: false, // Ignore fs for client-side builds
+    }
+    if (process.env.NEXT_PUBLIC_ENV === 'production') {
+      // Remove specific static files in production
+      const mockDataPath = path.join(__dirname, 'public/static')
+      if (fs.existsSync(mockDataPath)) {
+        fs.rmSync(mockDataPath, { recursive: true, force: true })
+      }
     }
 
     return config
