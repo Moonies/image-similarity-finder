@@ -1,6 +1,5 @@
 import useHttp from '@/hooks/useHttp'
 import { Box } from '../page'
-import { v4 as uuidv4 } from 'uuid'
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux'
 import { setPredictorId, setFileName } from '@/store/slices/eraseSlice'
 import { useNotification } from '@/hooks/useNotification'
@@ -109,10 +108,9 @@ export default function useEraser() {
   }
 
   const addEraseDrawing = async (drawingImage: File) => {
-    const id = uuidv4()
-    const result = await api.eraser.addEraserDrawingImage(drawingImage, id)
+    const result = await api.eraser.addEraserDrawingImage(drawingImage, drawingImage.name)
     if (result.code === 200 && result.data) {
-      dispatch(setPredictorId({ predictorId: id }))
+      dispatch(setPredictorId({ predictorId: drawingImage.name }))
       dispatch(setFileName({ fileName: drawingImage.name }))
       return result.data
     }
