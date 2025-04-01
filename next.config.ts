@@ -1,13 +1,9 @@
 import type { NextConfig } from 'next'
 import packageJson from './package.json'
-import fs from 'fs'
-import path from 'path'
 
 const nextConfig: NextConfig = {
   reactStrictMode: true, //defatul true for debug
-  devIndicators: {
-    appIsrStatus: false,
-  },
+  devIndicators: false,
   // interpolation: {
   //   escapeValue: false,
   // },
@@ -33,11 +29,10 @@ const nextConfig: NextConfig = {
       fs: false, // Ignore fs for client-side builds
     }
     if (process.env.NEXT_PUBLIC_ENV === 'production') {
-      // Remove specific static files in production
-      const mockDataPath = path.join(__dirname, 'public/static')
-      if (fs.existsSync(mockDataPath)) {
-        fs.rmSync(mockDataPath, { recursive: true, force: true })
-      }
+      config.module.rules.push({
+        test: /^mock.*\..*$/, // Matches files like mock.js, mock.json, mock.ts, etc.
+        use: 'null-loader', // Ignore these files in production
+      })
     }
 
     return config
