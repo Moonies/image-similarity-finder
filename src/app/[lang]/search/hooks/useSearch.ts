@@ -50,6 +50,7 @@ export default function useSearch() {
             uploadedFile: fileSelected,
             uploadedImage: uploadedFile,
             uploadedFileName: fileSelected.name,
+            uploadedAmount: amount,
           })
         } else if (fileSelected.type === 'application/pdf') {
           const pdfBlob = await convertPdfToBlob(fileSelected)
@@ -59,6 +60,7 @@ export default function useSearch() {
             uploadedFile: fileSelected,
             uploadedImage: uploadedFile,
             uploadedFileName: fileSelected.name,
+            uploadedAmount: amount,
           })
         } else {
           const uploadedFile = URL.createObjectURL(fileSelected)
@@ -66,6 +68,7 @@ export default function useSearch() {
             uploadedFile: fileSelected,
             uploadedImage: uploadedFile,
             uploadedFileName: fileSelected.name,
+            uploadedAmount: amount,
           })
         }
         router.push(`/${lang}/search/${id}`)
