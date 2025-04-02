@@ -112,6 +112,7 @@ export default function useSearchDetail() {
 
   const processImage = useCallback(
     async (zipData: ZipContent[]) => {
+      setLoading(true)
       const newUrls = await Promise.all(
         zipData
           .filter((_, index) => index !== zipData.length - 1)

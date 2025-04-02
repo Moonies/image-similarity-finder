@@ -54,6 +54,7 @@ export default function useSearch() {
               uploadedFile: fileSelected,
               uploadedImage: uploadedFile,
               uploadedFileName: fileSelected.name,
+              uploadedAmount: amount,
             })
           }
           setLoading(false)
@@ -65,6 +66,7 @@ export default function useSearch() {
             uploadedFile: fileSelected,
             uploadedImage: uploadedFile,
             uploadedFileName: fileSelected.name,
+            uploadedAmount: amount,
           })
         } else {
           const uploadedFile = URL.createObjectURL(fileSelected)
@@ -72,6 +74,7 @@ export default function useSearch() {
             uploadedFile: fileSelected,
             uploadedImage: uploadedFile,
             uploadedFileName: fileSelected.name,
+            uploadedAmount: amount,
           })
         }
         router.push(`/${lang}/search/${id}`)

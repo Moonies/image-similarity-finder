@@ -47,7 +47,9 @@ export default function SearchDetail() {
   } = useSearchDetail()
   const [informationMode, setInformationMode] = useState<informationMode>('view')
   const { printFile } = usePrint()
-  const [amountImage, setAmountImage] = useState(3)
+  const [amountImage, setAmountImage] = useState(
+    uploadCachedData ? uploadCachedData.uploadedAmount : 3
+  )
 
   const listAmout = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
