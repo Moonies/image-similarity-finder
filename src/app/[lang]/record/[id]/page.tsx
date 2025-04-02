@@ -12,6 +12,8 @@ import Image from 'next/image'
 import ImageViewerModal from '@/components/modals/ImageViewerModal'
 import { useLoading } from '@/hooks/useLoading'
 import PageTransition from '@/components/PageTransition'
+import { convertTifToBlob } from '@/utils/fileConvert'
+import { useNotification } from '@/hooks/useNotification'
 
 export default function RecordDetail() {
   const router = useRouter()
@@ -21,6 +23,7 @@ export default function RecordDetail() {
   const [selectedImage, setSelectedImage] = useState('')
   const { withLoading, setLoading } = useLoading()
   const [newImageUpload, setNewImageUpload] = useState<File>()
+  const { notificationSnackbar } = useNotification()
   const {
     handleChange,
     recordData,
@@ -51,15 +54,28 @@ export default function RecordDetail() {
   }, [handleUpdateDrawing, newImageUpload, recordData, router, setLoading])
 
   const handleUpdateNewImage = useCallback(
-    (newImage: File) => {
+    async (newImage: File) => {
       setNewImageUpload(newImage)
-      const uploadedFile = URL.createObjectURL(newImage)
-      setTimeout(() => {
-        setDrawingImage(uploadedFile)
-        setLoading(false)
-      }, 1000)
+      if (newImage.type === 'image/tiff' || newImage.type === 'image/tif') {
+        const tifBlob = await convertTifToBlob(newImage)
+        if (!tifBlob) {
+          notificationSnackbar.error('convert tif file failed')
+          return
+        }
+        const uploadedFile = URL.createObjectURL(tifBlob)
+        setTimeout(() => {
+          setDrawingImage(uploadedFile)
+          setLoading(false)
+        }, 1000)
+      } else {
+        const uploadedFile = URL.createObjectURL(newImage)
+        setTimeout(() => {
+          setDrawingImage(uploadedFile)
+          setLoading(false)
+        }, 1000)
+      }
     },
-    [setDrawingImage, setLoading]
+    [notificationSnackbar, setDrawingImage, setLoading]
   )
 
   return (
