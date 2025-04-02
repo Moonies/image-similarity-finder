@@ -43,6 +43,7 @@ export default function SearchDetail() {
     setIsnewDrawing,
     processImage,
     handleAmountSearch,
+    totalResult,
   } = useSearchDetail()
   const [informationMode, setInformationMode] = useState<informationMode>('view')
   const { printFile } = usePrint()
@@ -83,39 +84,6 @@ export default function SearchDetail() {
     },
     [handleUpdateDrawingDetail, informationMode, printFile, selectedImage, setIsnewDrawing]
   )
-
-  // const processImage = useCallback(async () => {
-  //   if (!cachedData?.length) return
-
-  //   const newUrls = await Promise.all(
-  //     cachedData
-  //       .filter((_, index) => index !== cachedData.length - 1)
-  //       .map(async (image, index, array) => {
-  //         // if (index === array.length - 1) return
-  //         const response: string = await getContentUrl(image.type, image.content)
-  //         return {
-  //           id: index,
-  //           // url: image.type === 'image' ? URL.createObjectURL(image.content as Blob) : '',
-  //           url: response,
-  //           name: image.name.replace('files/', ''),
-  //         }
-  //       })
-  //   )
-  //   setImageUrls(newUrls)
-  //   const metaData = cachedData[cachedData.length - 1].content as any
-  //   const transformedContent: MetaData = Object.entries(metaData).reduce((acc, [key, value]) => {
-  //     // Remove 'files/' from the key
-  //     const newKey = key.replace('files/', '')
-  //     return {
-  //       ...acc,
-  //       [newKey]: value,
-  //     }
-  //   }, {})
-
-  //   setIsnewDrawing(metaData.newDrawing)
-  //   setMetaData(transformedContent)
-  //   setLoading(false)
-  // }, [cachedData, getContentUrl, setLoading])
 
   useEffect(() => {
     if (!cachedData?.length) return
@@ -219,6 +187,10 @@ export default function SearchDetail() {
                 </MenuItem>
               ))}
             </TextField>
+            <Typography alignContent={'flex-end'} fontWeight={600}>
+              {t('amountResult')}
+              {totalResult}
+            </Typography>
           </Box>
           <Divider sx={{ marginX: 2, borderWidth: 1 }} />
           <Box

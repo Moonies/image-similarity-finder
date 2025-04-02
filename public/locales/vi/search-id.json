@@ -2,5 +2,7 @@
   "queryTitle": "Hình ảnh truy vấn",
   "similarTitle": "Hình ảnh tương tự",
   "infoButton": "Thêm thông tin",
-  "similarPecent": "Mức độ tương đồng"
+  "similarPecent": "Mức độ tương đồng",
+  "amountLabel": "Số lượng Hình ảnh tương tự",
+  "amountResult": "tổng số kết quả : "
 }
