@@ -12,16 +12,15 @@ import {
   Typography,
 } from '@mui/material'
 import { useCallback, useEffect, useState } from 'react'
-import ImageViewerModal from '@/components/modals/ImageViewerModal'
 import InformationForm from './components/InformationForm'
 import { useTranslation } from 'react-i18next'
 import { useCache } from '@/context/CacheContext'
 import useSearchDetail from './hooks/useSearchDetail'
 import { UpdateDrawingImageDetail } from '@/api/drawing/updateDrawingDetail'
-import Image from 'next/image'
 import { DrawingImageDetail } from '@/api/drawing'
 import PageTransition from '@/components/PageTransition'
 import usePrint from '@/hooks/usePrint'
+import ImageWithViewer from '@/components/Image/ImageWithViewer'
 
 type informationMode = 'add' | 'view'
 export default function SearchDetail() {
@@ -169,15 +168,15 @@ export default function SearchDetail() {
           <Box display={'flex'} flex={1} flexDirection={'column'} alignItems={'center'} padding={2}>
             <Box>
               {uploadCachedData && (
-                <Image
-                  loader={({ src }) => src}
-                  src={uploadCachedData.uploadedImage}
-                  alt='Preview'
+                <ImageWithViewer
+                  imageUrl={uploadCachedData.uploadedImage}
                   width={750} //Next Image can't auto width&height fill is oversize
                   height={500}
                   style={{ maxWidth: '100%' }}
-                  unoptimized={true}
-                  onClick={e => {
+                  isModalOpen={modalOpen}
+                  setIsModalOpen={setModalOpen}
+                  selectedImageUrl={selectedImage}
+                  onClick={() => {
                     setSelectedImage(uploadCachedData.uploadedImage)
                     setModalOpen(true)
                   }}
@@ -280,14 +279,6 @@ export default function SearchDetail() {
           onSubmit={handleSubmit}
           mode={informationMode}
         />
-
-        {modalOpen && (
-          <ImageViewerModal
-            open={modalOpen}
-            onClose={() => setModalOpen(false)}
-            imagePreview={selectedImage}
-          />
-        )}
       </Box>
     </PageTransition>
   )

@@ -8,10 +8,9 @@ import useEditRecord from './hooks/useEditRecord'
 import { useTranslation } from 'react-i18next'
 import { useCache } from '@/context/CacheContext'
 import { DrawingImageDetail } from '@/api/drawing'
-import Image from 'next/image'
-import ImageViewerModal from '@/components/modals/ImageViewerModal'
 import { useLoading } from '@/hooks/useLoading'
 import PageTransition from '@/components/PageTransition'
+import ImageWithViewer from '@/components/Image/ImageWithViewer'
 
 export default function RecordDetail() {
   const router = useRouter()
@@ -95,14 +94,16 @@ export default function RecordDetail() {
             textAlign={'center'}
           >
             {drawingImage && (
-              <Image
-                loader={({ src }) => src}
-                src={drawingImage}
-                alt='Preview'
+              <ImageWithViewer
+                imageUrl={drawingImage}
                 width={750} //Next Image can't auto width&height fill is oversize
                 height={500}
-                className='w-full h-auto'
-                onClick={e => {
+                isModalOpen={modalOpen}
+                setIsModalOpen={setModalOpen}
+                selectedImageUrl={selectedImage}
+                editable={true}
+                newImageUpdate={handleUpdateNewImage}
+                onClick={() => {
                   setSelectedImage(drawingImage)
                   setModalOpen(true)
                 }}
@@ -247,15 +248,6 @@ export default function RecordDetail() {
             </Button>
           </Box>
         </Box>
-        {modalOpen && (
-          <ImageViewerModal
-            open={modalOpen}
-            onClose={() => setModalOpen(false)}
-            imagePreview={selectedImage}
-            editable={true}
-            onUpdate={handleUpdateNewImage}
-          />
-        )}
       </Box>
     </PageTransition>
   )
