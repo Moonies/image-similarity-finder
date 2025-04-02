@@ -26,6 +26,7 @@ export default function useSearchDetail() {
   const [imageUrls, setImageUrls] = useState<ImageUrl[]>([])
   const [metaData, setMetaData] = useState<MetaData>()
   const [isNewDrawing, setIsnewDrawing] = useState(false)
+  const [totalResult, setTotalResult] = useState(0)
 
   const { t } = useTranslation('notification')
 
@@ -136,9 +137,9 @@ export default function useSearchDetail() {
           [newKey]: value,
         }
       }, {})
-
       setIsnewDrawing(metaData.newDrawing)
       setMetaData(transformedContent)
+      setTotalResult(metaData.total)
       setLoading(false)
     },
     [getContentUrl, setLoading]
@@ -150,7 +151,6 @@ export default function useSearchDetail() {
       const response = await searchDrawing(fileSelected, amount)
       if (response) {
         const rawDataImageList = await handleZipInput(response)
-        console.log(rawDataImageList)
         processImage(rawDataImageList)
       }
     },
@@ -167,5 +167,6 @@ export default function useSearchDetail() {
     setIsnewDrawing,
     processImage,
     handleAmountSearch,
+    totalResult,
   }
 }

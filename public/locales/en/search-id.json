@@ -3,5 +3,7 @@
   "similarTitle": "Similar Image",
   "infoButton": "More info",
   "similarPecent": "Similarity",
-  "addNewButton": "Add New Drawing"
+  "addNewButton": "Add New Drawing",
+  "amountLabel": "Amount Similar Image",
+  "amountResult": "Total Result : "
 }

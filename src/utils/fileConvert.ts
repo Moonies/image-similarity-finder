@@ -1,25 +1,171 @@
 import Tiff from 'tiff.js'
+import UTIF from 'utif'
+
 import * as pdfjsLib from 'pdfjs-dist'
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdfjs/pdf.worker.js'
 
+//tiff.js
+// export const convertTifToBlob = async (blobFile: Blob | File) => {
+//   // const arrayBuffer = await blobFile.arrayBuffer()
+
+//   const arrayBuffer = await new Promise<ArrayBuffer>((resolve, reject) => {
+//     const reader = new FileReader()
+//     reader.onload = () => resolve(reader.result as ArrayBuffer)
+//     reader.onerror = () => reject(reader.error)
+//     reader.readAsArrayBuffer(blobFile)
+//   })
+
+//   try {
+//     // Use tiff.js to process the TIFF file
+//     const tiff = new Tiff({ buffer: arrayBuffer })
+//     try {
+//       const canvas = tiff.toCanvas() // Convert TIFF to a canvas
+
+//       // Convert the canvas to a data URL (PNG format)
+//       const blob = await new Promise<Blob | null>((resolve, reject) =>
+//         canvas.toBlob(
+//           blob => (blob ? resolve(blob) : reject(new Error('Failed to create Blob'))),
+//           'image/png'
+//         )
+//       )
+
+//       tiff.close() // Clean up resources
+//       return blob
+//     } catch (canvasError) {
+//       console.error('Error converting TIFF to canvas:', canvasError)
+//       tiff.close()
+//       throw canvasError
+//     }
+//   } catch (error) {
+//     console.error('Error decoding TIFF file:', error)
+//   }
+// const startTime = Date.now()
+// let attempt = 0
+// const timeoutMs = 5 * 60 * 1000
+// while (true) {
+//   attempt++
+//   try {
+//     console.log(`Attempt ${attempt} to convert TIFF to Blob`)
+
+//     // Use tiff.js to process the TIFF file
+//     const tiff = new Tiff({ buffer: arrayBuffer })
+
+//     try {
+//       const canvas = tiff.toCanvas() // Convert TIFF to a canvas
+
+//       // Convert the canvas to a Blob (PNG format)
+//       const blob = await new Promise<Blob | null>((resolve, reject) =>
+//         canvas.toBlob(
+//           blob => (blob ? resolve(blob) : reject(new Error('Failed to create Blob'))),
+//           'image/png'
+//         )
+//       )
+
+//       tiff.close() // Clean up resources
+//       console.log(`Conversion succeeded on attempt ${attempt}`)
+//       return blob // Exit the loop and return the Blob
+//     } catch (canvasError) {
+//       console.error(`Error converting TIFF to canvas on attempt ${attempt}:`, canvasError)
+//       tiff.close()
+//       throw canvasError
+//     }
+//   } catch (error) {
+//     console.error(`Error decoding TIFF file on attempt ${attempt}:`, error)
+//   }
+
+//   // Check if the timeout has been exceeded
+//   if (Date.now() - startTime > timeoutMs) {
+//     console.error(
+//       `Conversion failed after ${timeoutMs / 1000 / 60} minutes and ${attempt} attempts.`
+//     )
+//     return null // Exit the loop and return null
+//   }
+
+//   // Optional: Add a delay between retries to avoid overwhelming the system
+//   await new Promise(resolve => setTimeout(resolve, 1000)) // 500ms delay
+// }
+// }
+
+// //UTIF
+export const convertTifToBlobUTIF = async (blobFile: Blob | File) => {
+  const buffer = await blobFile.arrayBuffer()
+  const ifds = UTIF.decode(buffer)
+  UTIF.decodeImage(buffer, ifds[0])
+  const rgba = UTIF.toRGBA8(ifds[0])
+
+  const canvas = document.createElement('canvas')
+  canvas.width = ifds[0].width
+  canvas.height = ifds[0].height
+
+  const ctx = canvas.getContext('2d')
+  if (ctx) {
+    const imgData = ctx.createImageData(canvas.width, canvas.height)
+    imgData.data.set(rgba)
+    ctx.putImageData(imgData, 0, 0)
+
+    const pngBlob = await new Promise<Blob>(resolve => {
+      canvas.toBlob(blob => {
+        if (blob) resolve(blob)
+      }, 'image/png')
+    })
+    return pngBlob
+  }
+}
+
 export const convertTifToBlob = async (blobFile: Blob | File) => {
-  const arrayBuffer = await blobFile.arrayBuffer()
+  // const arrayBuffer = await blobFile.arrayBuffer()
+
+  const arrayBuffer = await new Promise<ArrayBuffer>((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result as ArrayBuffer)
+    reader.onerror = () => reject(reader.error)
+    reader.readAsArrayBuffer(blobFile)
+  })
 
   try {
     // Use tiff.js to process the TIFF file
     const tiff = new Tiff({ buffer: arrayBuffer })
-    const canvas = tiff.toCanvas() // Convert TIFF to a canvas
+    try {
+      const canvas = tiff.toCanvas() // Convert TIFF to a canvas
 
-    // Convert the canvas to a data URL (PNG format)
-    const blob = await new Promise<Blob | null>(resolve =>
-      canvas.toBlob(blob => resolve(blob), 'image/png')
-    )
-    tiff.close()
-    return blob
+      // Convert the canvas to a data URL (PNG format)
+      const blob = await new Promise<Blob | null>((resolve, reject) =>
+        canvas.toBlob(
+          blob => (blob ? resolve(blob) : reject(new Error('Failed to create Blob'))),
+          'image/png'
+        )
+      )
 
-    // Clean up resources
+      tiff.close() // Clean up resources
+      return blob
+    } catch (canvasError) {
+      console.error('Error converting TIFF to canvas:', canvasError)
+      tiff.close()
+      throw canvasError
+    }
   } catch (error) {
-    console.error('Error decoding TIFF file:', error)
+    const ifds = UTIF.decode(arrayBuffer)
+    UTIF.decodeImage(arrayBuffer, ifds[0])
+    const rgba = UTIF.toRGBA8(ifds[0])
+
+    const canvas = document.createElement('canvas')
+    canvas.width = ifds[0].width
+    canvas.height = ifds[0].height
+
+    const ctx = canvas.getContext('2d')
+    if (ctx) {
+      const imgData = ctx.createImageData(canvas.width, canvas.height)
+      imgData.data.set(rgba)
+      ctx.putImageData(imgData, 0, 0)
+
+      const pngBlob = await new Promise<Blob>(resolve => {
+        canvas.toBlob(blob => {
+          if (blob) resolve(blob)
+        }, 'image/png')
+      })
+      return pngBlob
+    }
+    // console.error('Error decoding TIFF file:', error)
   }
 }
 
