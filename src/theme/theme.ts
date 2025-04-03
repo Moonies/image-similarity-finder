@@ -6,6 +6,18 @@ import {
   zhCN as DataGridZH,
   viVN as DataGridVI,
 } from '@mui/x-data-grid/locales'
+import localFont from 'next/font/local'
+
+// const geistSans = localFont({
+//   src: '../app/fonts/GeistVF.woff',
+//   // variable: '--font-geist-sans',
+//   // weight: '100 900',
+// })
+const geistMono = localFont({
+  src: '../app/fonts/GeistMonoVF.woff',
+  // variable: '--font-geist-mono',
+  // weight: '100 900',
+})
 
 type ThemeMode = 'light' | 'dark'
 
@@ -85,7 +97,8 @@ const themeOption: ThemeOptions = {
     // Add more component overrides
   },
   typography: {
-    fontFamily: 'Roboto, Arial, sans-serif',
+    // fontFamily: 'Roboto, Arial, sans-serif',
+    fontFamily: geistMono.style.fontFamily,
   },
   // Additional theme customizations
 }
