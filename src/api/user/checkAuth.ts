@@ -1,4 +1,5 @@
 import { ApiResponse, getBaseURL } from '@/api'
+import { getCurrentLanguage } from '@/store/slices/httpSlice'
 import axios from 'axios'
 
 export interface AuthData {
@@ -16,10 +17,18 @@ export default async function checkAuth(
   //refresh token only without Authorization Header
   const baseURL = getBaseURL()
   try {
-    const response = await axios.post(`${baseURL}/api/auth/refresh`, {
-      username: username,
-      refreshToken: refreshToken,
-    })
+    const response = await axios.post(
+      `${baseURL}/api/auth/refresh`,
+      {
+        username: username,
+        refreshToken: refreshToken,
+      },
+      {
+        headers: {
+          ['Accept-Language']: getCurrentLanguage(),
+        },
+      }
+    )
 
     return { code: 200, message: 'success', data: response.data }
   } catch (error) {

@@ -1,4 +1,5 @@
 import { ApiResponse, getBaseURL } from '@/api'
+import { getCurrentLanguage } from '@/store/slices/httpSlice'
 import axios from 'axios'
 
 export interface TokenData {
@@ -14,10 +15,18 @@ export default async function login(
 ): Promise<ApiResponse<TokenData>> {
   const baseURL = getBaseURL()
   try {
-    const response = await axios.post(`${baseURL}/api/auth/login`, {
-      username: username,
-      password: password,
-    })
+    const response = await axios.post(
+      `${baseURL}/api/auth/login`,
+      {
+        username: username,
+        password: password,
+      },
+      {
+        headers: {
+          ['Accept-Language']: getCurrentLanguage(),
+        },
+      }
+    )
 
     return { code: 200, message: 'success', data: response.data }
   } catch (error) {

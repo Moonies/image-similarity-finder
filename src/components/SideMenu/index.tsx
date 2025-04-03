@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next'
 import useMenu from './hooks/useMenu'
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux'
 import { getCurrentUser, clearUser } from '@/store/slices/authSlice'
-import { setLanguage, clearLanguage } from '@/store/slices/httpSlice'
+import { setLanguage } from '@/store/slices/httpSlice'
 import { UserProfile } from '@/api/user/getUserDetail'
 import { clearMessage } from '@/store/slices/chatSlice'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -100,7 +100,7 @@ export default function SideMenu() {
     if (response) {
       dispatch(clearMessage())
       dispatch(clearUser())
-      dispatch(clearLanguage())
+      // dispatch(clearLanguage())
       router.push('/')
       router.refresh()
       window.location.reload()
