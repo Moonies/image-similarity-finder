@@ -2,5 +2,7 @@
   "queryTitle": "查询图片",
   "similarTitle": "相似图片",
   "infoButton": "更多信息",
-  "similarPecent": "相似度"
+  "similarPecent": "相似度",
+  "amountLabel": "相似图像数量",
+  "amountResult": "总结果 : "
 }

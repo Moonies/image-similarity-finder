@@ -34,7 +34,10 @@ const nextConfig: NextConfig = {
         use: 'null-loader', // Ignore these files in production
       })
     }
-
+    config.module.rules.push({
+      test: /\.tiff$/,
+      use: 'file-loader',
+    })
     return config
   },
 }

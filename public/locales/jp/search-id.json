@@ -2,5 +2,7 @@
   "queryTitle": "照会画像",
   "similarTitle": "類似画像",
   "infoButton": "詳細情報",
-  "similarPecent": "類似度"
+  "similarPecent": "類似度",
+  "amountLabel": "類似画像の量",
+  "amountResult": "合計結果 : "
 }

@@ -9,7 +9,7 @@ import { useAppDispatch } from '@/hooks/useRedux'
 import { setAmountSearch } from '@/store/slices/userSettingSlice'
 import { convertPdfToBlob, convertTifToBlob } from '@/utils/fileConvert'
 import { useNotification } from '@/hooks/useNotification'
-
+import { v4 as uuidv4 } from 'uuid'
 export default function useSearch() {
   const params = useParams()
   const lang = params.lang as string
@@ -40,17 +40,21 @@ export default function useSearch() {
         const rawDataImageList = await handleZipInput(response)
         setPageData('zipFile', rawDataImageList)
         console.log(rawDataImageList)
-        const id = encodeURIComponent(JSON.stringify(rawDataImageList))
+        const id = encodeURIComponent(uuidv4())
 
         if (fileSelected.type === 'image/tiff' || fileSelected.type === 'image/tif') {
           const tifBlob = await convertTifToBlob(fileSelected)
-          if (!tifBlob) return notificationSnackbar.error('convert tif file failed')
-          const uploadedFile = URL.createObjectURL(tifBlob)
-          setPageData('rawData', {
-            uploadedFile: fileSelected,
-            uploadedImage: uploadedFile,
-            uploadedFileName: fileSelected.name,
-          })
+          if (!tifBlob) {
+            setLoading(false)
+            return notificationSnackbar.error('convert tif file failed')
+          } else {
+            const uploadedFile = URL.createObjectURL(tifBlob)
+            setPageData('rawData', {
+              uploadedFile: fileSelected,
+              uploadedImage: uploadedFile,
+              uploadedFileName: fileSelected.name,
+            })
+          }
         } else if (fileSelected.type === 'application/pdf') {
           const pdfBlob = await convertPdfToBlob(fileSelected)
           if (!pdfBlob) return notificationSnackbar.error('convert pdf file failed')
