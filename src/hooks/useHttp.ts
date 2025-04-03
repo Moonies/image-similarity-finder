@@ -8,10 +8,16 @@ import { default as eraserApi, EraserApi } from '@/api/eraser'
 import { default as chatApi, ChatApi } from '@/api/chat'
 import { default as roleApi, RoleApi } from '@/api/role'
 import { default as permissionApi, PermissionApi } from '@/api/permission'
-import { getCurrentToken, getCurrentUser, setCredentials } from '@/store/slices/authSlice'
+import {
+  getCurrentToken,
+  getCurrentUser,
+  setCredentials,
+  clearCredentials,
+} from '@/store/slices/authSlice'
 import { useAppDispatch } from './useRedux'
 import { useTranslation } from 'react-i18next'
 import axios, { AxiosError, AxiosResponse } from 'axios'
+import { useRouter } from 'next/navigation'
 
 export type HttpRequest = (
   fetchFunction: () => Promise<AxiosResponse>,
@@ -33,6 +39,8 @@ export default function useHttp() {
   const apiRef = useRef<ApiType | null>(null)
   const { setLoading, withLoading } = useLoading()
   const dispatch = useAppDispatch()
+  const router = useRouter()
+
   const { t } = useTranslation('notification')
 
   const httpRequest: HttpRequest = useCallback(
@@ -67,10 +75,8 @@ export default function useHttp() {
                   )
 
                   if (result?.code === 200 && result.data) {
-                    // console.log('setToken')
                     dispatch(
                       setCredentials({
-                        // user: user,
                         token: result.data,
                       })
                     )
@@ -78,9 +84,14 @@ export default function useHttp() {
                     return withLoading(httpRequest(apiFunction, disableDisplayError))
                   } else {
                     notificationSnackbar.error('Authentication failed: ' + error?.message)
-                    localStorage.removeItem('token')
-                    window.location.reload()
+                    await apiRef.current?.user.logout()
+                    dispatch(clearCredentials())
+                    router.push('/')
                   }
+                } else {
+                  await apiRef.current?.user.logout()
+                  dispatch(clearCredentials())
+                  router.push('/')
                 }
                 break
               case 413:
@@ -108,7 +119,7 @@ export default function useHttp() {
         }
       }
     },
-    [setLoading, openConfirmModal, notificationSnackbar, t, dispatch, withLoading]
+    [setLoading, openConfirmModal, notificationSnackbar, t, dispatch, withLoading, router]
   )
 
   // Create api and store in ref

@@ -44,5 +44,13 @@ export const getCurrentColumnVisibility = () => {
   }
 }
 
+export const getCurrentAmountSearch = () => {
+  const savedSettings = localStorage.getItem('settings')
+  if (savedSettings) {
+    const parsedSettings: UserSettingState = JSON.parse(savedSettings)
+    return parsedSettings.amount
+  }
+}
+
 export const { setColumnVisibility, setAmountSearch } = userSettingSlice.actions
 export default userSettingSlice.reducer
