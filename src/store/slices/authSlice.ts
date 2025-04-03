@@ -36,11 +36,9 @@ const authSlice = createSlice({
       }
     },
     clearCredentials: state => {
-      state.user = null
       state.token = null
       state.isAuthenticated = false
       localStorage.removeItem('token')
-      localStorage.removeItem('user')
     },
     clearUser: state => {
       state.isAuthenticated = false

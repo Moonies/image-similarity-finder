@@ -48,16 +48,13 @@ export default function useSearch() {
             setLoading(false)
             return notificationSnackbar.error('convert tif file failed')
           } else {
-            setLoading(false)
             const uploadedFile = URL.createObjectURL(tifBlob)
             setPageData('rawData', {
               uploadedFile: fileSelected,
               uploadedImage: uploadedFile,
               uploadedFileName: fileSelected.name,
-              uploadedAmount: amount,
             })
           }
-          setLoading(false)
         } else if (fileSelected.type === 'application/pdf') {
           const pdfBlob = await convertPdfToBlob(fileSelected)
           if (!pdfBlob) return notificationSnackbar.error('convert pdf file failed')
@@ -66,7 +63,6 @@ export default function useSearch() {
             uploadedFile: fileSelected,
             uploadedImage: uploadedFile,
             uploadedFileName: fileSelected.name,
-            uploadedAmount: amount,
           })
         } else {
           const uploadedFile = URL.createObjectURL(fileSelected)
@@ -74,7 +70,6 @@ export default function useSearch() {
             uploadedFile: fileSelected,
             uploadedImage: uploadedFile,
             uploadedFileName: fileSelected.name,
-            uploadedAmount: amount,
           })
         }
         router.push(`/${lang}/search/${id}`)

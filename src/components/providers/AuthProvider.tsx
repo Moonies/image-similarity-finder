@@ -3,11 +3,8 @@
 import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux'
-// import { clearCredentials, setCredentials } from '@/store/slices/authSlice'
 import { LoginModal } from '@/components/modals/LoginModal'
 import useHttp from '@/hooks/useHttp'
-// import { useNotification } from '@/hooks/useNotification'
-// import { TokenData } from '@/hooks/useAuth'
 import { useLoading } from '@/hooks/useLoading'
 import { getCurrentToken } from '@/store/slices/authSlice'
 import { setBaseUrl } from '@/store/slices/httpSlice'
@@ -20,8 +17,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAppSelector(state => state.auth)
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [openAdvertise, setOpenAdvertise] = useState(false)
-  // const [isTokenValidating, setIsTokenValidating] = useState(true)
-  // const { notificationSnackbar } = useNotification()
   const { setLoading } = useLoading()
   const { api } = useHttp()
 
@@ -39,7 +34,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Only validate if token exists
     if (token) {
       setLoading(false) //for test token expire
-      // validateToken.current(JSON.parse(token) as TokenData)
       //if user change path in address bar, can be recheck again to protect pro features
       const [_lang, currentPath] = pathname.replace(/^\//, '').split('/')
       if (currentPath === 'erase' || currentPath === 'chat') {
@@ -48,7 +42,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } else {
       setLoading(false)
       // No token and not on login page
-      // setIsTokenValidating(false)
       setShowLoginModal(true)
       // }
     }
@@ -61,10 +54,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const protectedRoutes = ['/']
 
     if (!isAuthenticated && protectedRoutes.includes(pathname)) {
-      // router.push('/')
       setShowLoginModal(true)
     }
-  }, [isAuthenticated, pathname])
+  }, [isAuthenticated, pathname, router])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

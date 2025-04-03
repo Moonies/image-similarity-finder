@@ -7,11 +7,12 @@ import { useTranslation } from 'react-i18next'
 import useSearch from './hooks/useSearch'
 import { useNotification } from '@/hooks/useNotification'
 import PageTransition from '@/components/PageTransition'
+import { getCurrentAmountSearch } from '@/store/slices/userSettingSlice'
 
 export default function SearchPage() {
   const { t } = useTranslation('search-page')
   const [uploadFile, setUploadFile] = useState<File>()
-  const [amountImage, setAmountImage] = useState(3)
+  const [amountImage, setAmountImage] = useState(getCurrentAmountSearch() ?? 3)
   const { handleUpload, handleAmountSearch } = useSearch()
   const { notificationModal } = useNotification()
   const buttonUploadRef = useRef<HTMLInputElement>(null)
