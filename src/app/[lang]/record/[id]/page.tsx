@@ -10,7 +10,7 @@ import { useCache } from '@/context/CacheContext'
 import { DrawingImageDetail } from '@/api/drawing'
 import { useLoading } from '@/hooks/useLoading'
 import PageTransition from '@/components/PageTransition'
-import ImageWithViewer from '@/components/Image/ImageWithViewer'
+import ImageViewer from '@/components/ImageViewer'
 import { convertTifToBlob } from '@/utils/fileConvert'
 import { useNotification } from '@/hooks/useNotification'
 
@@ -18,8 +18,6 @@ export default function RecordDetail() {
   const router = useRouter()
   const { getPageData } = useCache()
   const isFirstMount = useRef(true)
-  const [modalOpen, setModalOpen] = useState(false)
-  const [selectedImage, setSelectedImage] = useState('')
   const { withLoading, setLoading } = useLoading()
   const [newImageUpload, setNewImageUpload] = useState<File>()
   const { notificationSnackbar } = useNotification()
@@ -93,16 +91,6 @@ export default function RecordDetail() {
             background: theme => theme.palette.background.paper,
           }}
         >
-          {/* <Box display={'flex'} justifyContent={'flex-end'} margin={2}>
-            <IconButton
-              edge='end'
-              color='inherit'
-              // onClick={handleZoomIn}
-              aria-label='Upload'
-            >
-              <EditIcon />
-            </IconButton>
-          </Box> */}
           <Box
             display={'flex'}
             justifyContent={'center'}
@@ -110,19 +98,12 @@ export default function RecordDetail() {
             textAlign={'center'}
           >
             {drawingImage && (
-              <ImageWithViewer
+              <ImageViewer
                 imageUrl={drawingImage}
                 width={750} //Next Image can't auto width&height fill is oversize
-                height={500}
-                isModalOpen={modalOpen}
-                setIsModalOpen={setModalOpen}
-                selectedImageUrl={selectedImage}
+                height={700}
                 editable={true}
                 newImageUpdate={handleUpdateNewImage}
-                onClick={() => {
-                  setSelectedImage(drawingImage)
-                  setModalOpen(true)
-                }}
               />
             )}
           </Box>

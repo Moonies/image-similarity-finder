@@ -5,7 +5,6 @@ import {
   Button,
   Card,
   CardActions,
-  CardMedia,
   Divider,
   MenuItem,
   TextField,
@@ -20,7 +19,7 @@ import { UpdateDrawingImageDetail } from '@/api/drawing/updateDrawingDetail'
 import { DrawingImageDetail } from '@/api/drawing'
 import PageTransition from '@/components/PageTransition'
 import usePrint from '@/hooks/usePrint'
-import ImageWithViewer from '@/components/Image/ImageWithViewer'
+import ImageViewer from '@/components/ImageViewer'
 import { getCurrentAmountSearch } from '@/store/slices/userSettingSlice'
 
 type informationMode = 'add' | 'view'
@@ -29,7 +28,6 @@ export default function SearchDetail() {
   const { getPageData } = useCache()
   const cachedData = getPageData('zipFile')
   const uploadCachedData = getPageData('rawData')
-  const [modalOpen, setModalOpen] = useState(false)
   const [selectedImage, setSelectedImage] = useState('')
   const [openInformation, setOpenInformation] = useState(false)
   const [selectedImageDetail, setSelectedImageDetail] = useState<Partial<DrawingImageDetail>>({})
@@ -137,18 +135,11 @@ export default function SearchDetail() {
           <Box display={'flex'} flex={1} flexDirection={'column'} alignItems={'center'} padding={2}>
             <Box>
               {uploadCachedData && (
-                <ImageWithViewer
+                <ImageViewer
                   imageUrl={uploadCachedData.uploadedImage}
                   width={750} //Next Image can't auto width&height fill is oversize
                   height={500}
-                  style={{ maxWidth: '100%' }}
-                  isModalOpen={modalOpen}
-                  setIsModalOpen={setModalOpen}
-                  selectedImageUrl={selectedImage}
-                  onClick={() => {
-                    setSelectedImage(uploadCachedData.uploadedImage)
-                    setModalOpen(true)
-                  }}
+                  style={{ height: '100%' }}
                 />
               )}
             </Box>
@@ -210,7 +201,7 @@ export default function SearchDetail() {
               imageUrls.map(item => {
                 return (
                   <Card key={item.id} sx={{ minWidth: 345, maxWidth: 475 }}>
-                    <CardMedia
+                    {/* <CardMedia
                       component='img'
                       height={345}
                       // width={475}
@@ -223,7 +214,8 @@ export default function SearchDetail() {
                       sx={{
                         objectFit: 'contain',
                       }}
-                    />
+                    /> */}
+                    <ImageViewer imageUrl={item.url} height={345} cardMedia={true} />
                     <CardActions sx={{ justifyContent: 'space-between' }}>
                       <Button
                         size='small'
