@@ -8,10 +8,9 @@ import useEditRecord from './hooks/useEditRecord'
 import { useTranslation } from 'react-i18next'
 import { useCache } from '@/context/CacheContext'
 import { DrawingImageDetail } from '@/api/drawing'
-import Image from 'next/image'
-import ImageViewerModal from '@/components/modals/ImageViewerModal'
 import { useLoading } from '@/hooks/useLoading'
 import PageTransition from '@/components/PageTransition'
+import ImageViewer from '@/components/ImageViewer'
 import { convertTifToBlob } from '@/utils/fileConvert'
 import { useNotification } from '@/hooks/useNotification'
 
@@ -19,8 +18,6 @@ export default function RecordDetail() {
   const router = useRouter()
   const { getPageData } = useCache()
   const isFirstMount = useRef(true)
-  const [modalOpen, setModalOpen] = useState(false)
-  const [selectedImage, setSelectedImage] = useState('')
   const { withLoading, setLoading } = useLoading()
   const [newImageUpload, setNewImageUpload] = useState<File>()
   const { notificationSnackbar } = useNotification()
@@ -94,16 +91,6 @@ export default function RecordDetail() {
             background: theme => theme.palette.background.paper,
           }}
         >
-          {/* <Box display={'flex'} justifyContent={'flex-end'} margin={2}>
-            <IconButton
-              edge='end'
-              color='inherit'
-              // onClick={handleZoomIn}
-              aria-label='Upload'
-            >
-              <EditIcon />
-            </IconButton>
-          </Box> */}
           <Box
             display={'flex'}
             justifyContent={'center'}
@@ -111,17 +98,12 @@ export default function RecordDetail() {
             textAlign={'center'}
           >
             {drawingImage && (
-              <Image
-                loader={({ src }) => src}
-                src={drawingImage}
-                alt='Preview'
+              <ImageViewer
+                imageUrl={drawingImage}
                 width={750} //Next Image can't auto width&height fill is oversize
-                height={500}
-                className='w-full h-auto'
-                onClick={e => {
-                  setSelectedImage(drawingImage)
-                  setModalOpen(true)
-                }}
+                height={700}
+                editable={true}
+                newImageUpdate={handleUpdateNewImage}
               />
             )}
           </Box>
@@ -263,15 +245,6 @@ export default function RecordDetail() {
             </Button>
           </Box>
         </Box>
-        {modalOpen && (
-          <ImageViewerModal
-            open={modalOpen}
-            onClose={() => setModalOpen(false)}
-            imagePreview={selectedImage}
-            editable={true}
-            onUpdate={handleUpdateNewImage}
-          />
-        )}
       </Box>
     </PageTransition>
   )

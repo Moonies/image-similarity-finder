@@ -5,23 +5,21 @@ import {
   Button,
   Card,
   CardActions,
-  CardMedia,
   Divider,
   MenuItem,
   TextField,
   Typography,
 } from '@mui/material'
 import { useCallback, useEffect, useState } from 'react'
-import ImageViewerModal from '@/components/modals/ImageViewerModal'
 import InformationForm from './components/InformationForm'
 import { useTranslation } from 'react-i18next'
 import { useCache } from '@/context/CacheContext'
 import useSearchDetail from './hooks/useSearchDetail'
 import { UpdateDrawingImageDetail } from '@/api/drawing/updateDrawingDetail'
-import Image from 'next/image'
 import { DrawingImageDetail } from '@/api/drawing'
 import PageTransition from '@/components/PageTransition'
 import usePrint from '@/hooks/usePrint'
+import ImageViewer from '@/components/ImageViewer'
 import { getCurrentAmountSearch } from '@/store/slices/userSettingSlice'
 
 type informationMode = 'add' | 'view'
@@ -30,7 +28,6 @@ export default function SearchDetail() {
   const { getPageData } = useCache()
   const cachedData = getPageData('zipFile')
   const uploadCachedData = getPageData('rawData')
-  const [modalOpen, setModalOpen] = useState(false)
   const [selectedImage, setSelectedImage] = useState('')
   const [openInformation, setOpenInformation] = useState(false)
   const [selectedImageDetail, setSelectedImageDetail] = useState<Partial<DrawingImageDetail>>({})
@@ -138,18 +135,11 @@ export default function SearchDetail() {
           <Box display={'flex'} flex={1} flexDirection={'column'} alignItems={'center'} padding={2}>
             <Box>
               {uploadCachedData && (
-                <Image
-                  loader={({ src }) => src}
-                  src={uploadCachedData.uploadedImage}
-                  alt='Preview'
+                <ImageViewer
+                  imageUrl={uploadCachedData.uploadedImage}
                   width={750} //Next Image can't auto width&height fill is oversize
                   height={500}
-                  style={{ maxWidth: '100%' }}
-                  unoptimized={true}
-                  onClick={e => {
-                    setSelectedImage(uploadCachedData.uploadedImage)
-                    setModalOpen(true)
-                  }}
+                  style={{ height: '100%' }}
                 />
               )}
             </Box>
@@ -211,7 +201,7 @@ export default function SearchDetail() {
               imageUrls.map(item => {
                 return (
                   <Card key={item.id} sx={{ minWidth: 345, maxWidth: 475 }}>
-                    <CardMedia
+                    {/* <CardMedia
                       component='img'
                       height={345}
                       // width={475}
@@ -224,7 +214,8 @@ export default function SearchDetail() {
                       sx={{
                         objectFit: 'contain',
                       }}
-                    />
+                    /> */}
+                    <ImageViewer imageUrl={item.url} height={345} cardMedia={true} />
                     <CardActions sx={{ justifyContent: 'space-between' }}>
                       <Button
                         size='small'
@@ -253,14 +244,6 @@ export default function SearchDetail() {
           onSubmit={handleSubmit}
           mode={informationMode}
         />
-
-        {modalOpen && (
-          <ImageViewerModal
-            open={modalOpen}
-            onClose={() => setModalOpen(false)}
-            imagePreview={selectedImage}
-          />
-        )}
       </Box>
     </PageTransition>
   )
