@@ -20,7 +20,7 @@ export interface UserApi {
   getUserDetail: (username: string) => Promise<ApiResponse<UserProfile>>
   getOtpResetPassword: (mail: string) => Promise<ApiResponse<null>>
   updateUserPassword: (params: UpdateUserPasswordDetail) => Promise<ApiResponse<null>>
-  logout: () => Promise<ApiResponse<null>>
+  logout: (disableError?: boolean) => Promise<ApiResponse<null>>
 }
 
 export default function user(httpRequest: HttpRequest): UserApi {
@@ -34,6 +34,6 @@ export default function user(httpRequest: HttpRequest): UserApi {
     getUserDetail: username => getUserDetail(httpRequest, username),
     getOtpResetPassword: mail => getOtpResetPassword(httpRequest, mail),
     updateUserPassword: params => updateUserPassword(httpRequest, params),
-    logout: () => logout(httpRequest),
+    logout: disableError => logout(httpRequest, disableError),
   }
 }

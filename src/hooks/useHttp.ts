@@ -17,7 +17,7 @@ import {
 import { useAppDispatch } from './useRedux'
 import { useTranslation } from 'react-i18next'
 import axios, { AxiosError, AxiosResponse } from 'axios'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 export type HttpRequest = (
   fetchFunction: () => Promise<AxiosResponse>,
@@ -40,6 +40,8 @@ export default function useHttp() {
   const { setLoading, withLoading } = useLoading()
   const dispatch = useAppDispatch()
   const router = useRouter()
+  const pathname = usePathname()
+  const [lang, _currentPath] = pathname.replace(/^\//, '').split('/') // This will get 'en' and 'currentpaht' from '/en/viewer'
 
   const { t } = useTranslation('notification')
 
@@ -60,38 +62,45 @@ export default function useHttp() {
             setLoading(false)
             switch (error.response.status) {
               case 401:
-                const confirmed = await openConfirmModal({
-                  title: 'Token Expired',
-                  message: 'Please reconnect to refresh your session.',
-                })
+                if (error.response.headers['www-authenticate'] === 'Token Expired') {
+                  const confirmed = await openConfirmModal({
+                    title: 'Token Expired',
+                    message: 'Please reconnect to refresh your session.',
+                  })
 
-                if (confirmed) {
-                  const user = getCurrentUser()
-                  const storedToken = getCurrentToken()
+                  if (confirmed) {
+                    const user = getCurrentUser()
+                    const storedToken = getCurrentToken()
 
-                  const result = await apiRef.current?.user.checkAuth(
-                    user?.username ?? '',
-                    storedToken?.refreshToken ?? ''
-                  )
-
-                  if (result?.code === 200 && result.data) {
-                    dispatch(
-                      setCredentials({
-                        token: result.data,
-                      })
+                    const result = await apiRef.current?.user.checkAuth(
+                      user?.username ?? '',
+                      storedToken?.refreshToken ?? ''
                     )
 
-                    return withLoading(httpRequest(apiFunction, disableDisplayError))
+                    if (result?.code === 200 && result.data) {
+                      dispatch(
+                        setCredentials({
+                          token: result.data,
+                        })
+                      )
+
+                      return withLoading(httpRequest(apiFunction, disableDisplayError))
+                    } else {
+                      notificationSnackbar.error('Authentication failed: ' + error?.message)
+                      await apiRef.current?.user.logout(true)
+                      dispatch(clearCredentials())
+                      router.replace(`/${lang}`)
+                    }
                   } else {
-                    notificationSnackbar.error('Authentication failed: ' + error?.message)
-                    await apiRef.current?.user.logout()
+                    await apiRef.current?.user.logout(true)
                     dispatch(clearCredentials())
-                    router.push('/')
+                    router.replace(`/${lang}`)
                   }
                 } else {
-                  await apiRef.current?.user.logout()
-                  dispatch(clearCredentials())
-                  router.push('/')
+                  notificationSnackbar.error(
+                    `${t('error.code')}: ${error?.code}  \n ${error?.message}`
+                  )
+                  router.replace(`/${lang}`)
                 }
                 break
               case 413:
@@ -119,7 +128,7 @@ export default function useHttp() {
         }
       }
     },
-    [setLoading, openConfirmModal, notificationSnackbar, t, dispatch, withLoading, router]
+    [setLoading, notificationSnackbar, t, openConfirmModal, dispatch, withLoading, router, lang]
   )
 
   // Create api and store in ref

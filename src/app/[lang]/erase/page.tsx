@@ -263,20 +263,20 @@ export default function ErasePage() {
               <Button variant='contained' onClick={handleUndo} disabled={actions === 0}>
                 {t('undoButton')}
               </Button>
-              <Button variant='contained' onClick={handleReset}>
+              <Button variant='contained' onClick={handleReset} disabled={originalImage === null}>
                 {t('resetButton')}
               </Button>
               <Button
                 variant='contained'
                 onClick={() => setDrawingMode(!drawingMode)}
-                disabled={boxSelectionMode}
+                disabled={originalImage === null || boxSelectionMode}
               >
                 {drawingMode ? t('stopDrawingButton') : t('drawingButton')}
               </Button>
               <Button
                 variant='contained'
                 onClick={() => setBoxSelectionMode(!boxSelectionMode)}
-                disabled={drawingMode}
+                disabled={originalImage === null || drawingMode}
               >
                 {boxSelectionMode ? t('stopDrawBoxButton') : t('drawBoxButton')}
               </Button>

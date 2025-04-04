@@ -46,7 +46,7 @@ export default function InputUploadFile({
         multiple={multiple}
         onChange={event => onChoose(event.target.files)}
         ref={ref}
-        accept='image/*'
+        accept='application/pdf, image/*'
       />
     </Button>
   )
