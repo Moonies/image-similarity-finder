@@ -7,7 +7,7 @@ export default async function resetEraserDrawingImage(
   predictorId: string
 ): Promise<ApiResponse<null>> {
   const response = await httpRequest(() =>
-    axiosInstance.delete(`/api/erase/delete/${predictorId}`, {
+    axiosInstance.get(`/api/erase/reset/${predictorId}`, {
       // responseType: 'blob',
       headers: {
         'Access-Control-Allow-Origin': '*',
