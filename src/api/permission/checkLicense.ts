@@ -6,7 +6,7 @@ export default async function checkLicense(
   httpRequest: HttpRequest,
   feature: string
 ): Promise<ApiResponse<null>> {
-  const response = await httpRequest(() => axiosInstance.get(`/api/check-license${feature}`), true)
+  const response = await httpRequest(() => axiosInstance.get(`/api/check-license${feature}`))
 
   if (axios.isAxiosError(response)) {
     return { code: response?.status ?? 500, message: response.message, data: undefined }
