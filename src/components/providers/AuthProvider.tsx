@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-import { useAppDispatch, useAppSelector } from '@/hooks/useRedux'
+import { useAppDispatch } from '@/hooks/useRedux'
 import { LoginModal } from '@/components/modals/LoginModal'
 import useHttp from '@/hooks/useHttp'
 import { useLoading } from '@/hooks/useLoading'
@@ -14,7 +14,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const pathname = usePathname()
-  const { isAuthenticated } = useAppSelector(state => state.auth)
+  const [lang, currentPath] = pathname.replace(/^\//, '').split('/')
+
+  // const isAuthenticated = getAuthenticated()
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [openAdvertise, setOpenAdvertise] = useState(false)
   const { setLoading } = useLoading()
@@ -23,7 +25,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const checkLicensePlan = async (path: string) => {
     const response = await api.permission.checkLicense(`/${path}`)
     if (response.code !== 200) {
-      router.push('/en')
+      router.push(`/${lang}`)
       setOpenAdvertise(true)
     }
   }
@@ -35,7 +37,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (token) {
       setLoading(false) //for test token expire
       //if user change path in address bar, can be recheck again to protect pro features
-      const [_lang, currentPath] = pathname.replace(/^\//, '').split('/')
       if (currentPath === 'erase' || currentPath === 'chat') {
         checkLicensePlan(currentPath)
       }
@@ -43,20 +44,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false)
       // No token and not on login page
       setShowLoginModal(true)
-      // }
+      router.push(`/${lang}`)
     }
     //depend on path only
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])
 
   // Protect routes
-  useEffect(() => {
-    const protectedRoutes = ['/']
+  // useEffect(() => {
+  //   // const protectedRoutes = ['/']
+  //   console.log('check rote', isAuthenticated)
+  //   if (!isAuthenticated) {
+  //     router.push(`/${lang}`)
 
-    if (!isAuthenticated && protectedRoutes.includes(pathname)) {
-      setShowLoginModal(true)
-    }
-  }, [isAuthenticated, pathname, router])
+  //     setShowLoginModal(true)
+  //   }
+  // }, [isAuthenticated, lang, pathname, router])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

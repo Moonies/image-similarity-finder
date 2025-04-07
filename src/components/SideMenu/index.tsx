@@ -24,27 +24,33 @@ import { clearMessage } from '@/store/slices/chatSlice'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from '@/components/Image'
 import LicenseAdvertiseDialog from '../dialog/LicenseAdvertiseDialog'
+import { useConfirmModal } from '@/hooks/useConfirm'
+import { useLoading } from '@/hooks/useLoading'
 
 export default function SideMenu() {
   const router = useRouter()
   const pathname = usePathname()
+  const [lang, _currentPath] = pathname.replace(/^\//, '').split('/')
+
   const [open, setOpen] = useState(false)
   const { toggleTheme, setLocale } = useThemeContext()
-  const { i18n } = useTranslation()
+  const { i18n, t } = useTranslation('common')
   const [languageSwitcher, setLanguageSwitcher] = useState(i18n.language)
   const { menuItems, logoutMenu, checkLicense, logout } = useMenu()
   const dispatch = useAppDispatch()
   const { user } = useAppSelector(state => state.auth)
   const [storedUser, setStoredUser] = useState<UserProfile | null>()
   const [openAdvertise, setOpenAdvertise] = useState(false)
+  const { openConfirmModal } = useConfirmModal()
+  const { withLoading } = useLoading()
 
   const handleNavigation = useCallback(
     async (path: string) => {
-      const [lang, _currentPath] = pathname.replace(/^\//, '').split('/') // This will get 'en' and 'currentpaht' from '/en/viewer'
+      // const [lang, _currentPath] = pathname.replace(/^\//, '').split('/') // This will get 'en' and 'currentpaht' from '/en/viewer'
       // if (path === `/${currentPath}`) return //if want to not return when still same parent path
       router.push(`/${lang}${path}`)
     },
-    [pathname, router]
+    [lang, router]
   )
 
   const checkLicenseVersion = useCallback(
@@ -96,19 +102,25 @@ export default function SideMenu() {
   }
 
   const handleLogoutClick = useCallback(async () => {
-    const response = await logout()
-    if (response) {
-      dispatch(clearMessage())
-      dispatch(clearUser())
-      // dispatch(clearLanguage())
-      router.push('/')
-      router.refresh()
-      window.location.reload()
+    const confirmed = await openConfirmModal({
+      title: t('logoutModalTitle'),
+      message: t('logoutMessage'),
+    })
+    if (confirmed) {
+      const response = await withLoading(logout())
+      if (response) {
+        dispatch(clearMessage())
+        dispatch(clearUser())
+        // dispatch(clearLanguage())
+        router.push('/')
+        router.refresh()
+        window.location.reload()
+      }
     }
-  }, [dispatch, logout, router])
+  }, [dispatch, logout, openConfirmModal, router, t, withLoading])
 
   useEffect(() => {
-    const [lang, _currentPath] = pathname.replace(/^\//, '').split('/')
+    // const [lang, _currentPath] = pathname.replace(/^\//, '').split('/')
     if (languageSwitcher !== lang) {
       setLanguageSwitcher(lang)
     }
@@ -123,99 +135,106 @@ export default function SideMenu() {
     <StyledDrawer variant='permanent' open={open}>
       <Box display={'flex'} flex={1} flexDirection={'column'}>
         {storedUser && (
-          <Box display={'flex'} flex={1} flexDirection={'column'}>
-            {menuItems.map((item, index) => {
-              if (
-                (item.key !== 'language' && storedUser?.role.permissions.includes(item.key)) ||
-                item.key === 'mode'
-              ) {
-                //&& storedUser?.role.permissions.includes(item.key) remove from if for test role & permission
-                return (
-                  <ListItemButton
-                    key={index}
-                    onClick={() => handleClick(item.key, item.path)}
-                    selected={item.path === `/${getCurrnetGroupPath()}`}
-                  >
-                    <ListItemIcon>
-                      <item.icon sx={{ color: 'white' }} />
-                    </ListItemIcon>
-                    <ListItemText primary={item.label} />
-                  </ListItemButton>
-                )
-              } else if (item.key === 'language') {
-                return (
-                  <StyledSelect
-                    labelId='select-label-language'
-                    id='select-language'
-                    value={languageSwitcher}
-                    onChange={handleLanguageClick}
-                    key={index}
-                    size='small'
-                  >
-                    <MenuItem value={'en'} id='select-en'>
-                      English
-                    </MenuItem>
-                    <MenuItem value={'jp'} id='select-jp'>
-                      日本語
-                    </MenuItem>
-                    <MenuItem value={'zh'} id='select-zh'>
-                      中文
-                    </MenuItem>
-                    <MenuItem value={'vi'} id='select-vi'>
-                      Tiếng Việt
-                    </MenuItem>
-                  </StyledSelect>
-                )
-              }
-            })}
-          </Box>
+          <>
+            <Box display={'flex'} flex={1} flexDirection={'column'}>
+              {menuItems.map((item, index) => {
+                if (
+                  (item.key !== 'language' && storedUser?.role.permissions.includes(item.key)) ||
+                  item.key === 'mode'
+                ) {
+                  //&& storedUser?.role.permissions.includes(item.key) remove from if for test role & permission
+                  return (
+                    <ListItemButton
+                      key={index}
+                      onClick={() => handleClick(item.key, item.path)}
+                      selected={item.path === `/${getCurrnetGroupPath()}`}
+                    >
+                      <ListItemIcon>
+                        <item.icon sx={{ color: 'white' }} />
+                      </ListItemIcon>
+                      <ListItemText primary={item.label} />
+                    </ListItemButton>
+                  )
+                } else if (item.key === 'language') {
+                  return (
+                    <StyledSelect
+                      labelId='select-label-language'
+                      id='select-language'
+                      value={languageSwitcher}
+                      onChange={handleLanguageClick}
+                      key={index}
+                      size='small'
+                    >
+                      <MenuItem value={'en'} id='select-en'>
+                        English
+                      </MenuItem>
+                      <MenuItem value={'jp'} id='select-jp'>
+                        日本語
+                      </MenuItem>
+                      <MenuItem value={'zh'} id='select-zh'>
+                        中文
+                      </MenuItem>
+                      <MenuItem value={'vi'} id='select-vi'>
+                        Tiếng Việt
+                      </MenuItem>
+                    </StyledSelect>
+                  )
+                }
+              })}
+            </Box>
+
+            <Box flex={1} display={'flex'} flexDirection={'column'} justifyContent={'flex-end'}>
+              <Box display={'flex'} padding={1} justifyContent={'center'}>
+                <AnimatePresence mode='wait'>
+                  {open ? (
+                    <motion.div
+                      key='logo'
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Image src='logoFull' alt='logo' width={220} />
+                      <Typography variant='h6' textAlign={'center'}>
+                        App version {process.env.APP_VERSION}
+                      </Typography>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key='logoMini'
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Image src='logoMini' alt='logo' width={56} priority={true} />
+                      <Typography variant='subtitle2' textAlign={'center'}>
+                        {process.env.APP_VERSION}
+                      </Typography>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </Box>
+              <Box display={'flex'}>
+                <ListItemButton onClick={handleLogoutClick}>
+                  <ListItemIcon>
+                    <LogoutIcon sx={{ color: 'white' }} />
+                  </ListItemIcon>
+                  <ListItemText primary={logoutMenu} />
+                </ListItemButton>
+              </Box>
+              <Box display={'flex'}>
+                <StyledSidebarButton onClick={() => setOpen(!open)}>
+                  {open ? (
+                    <ArrowBackIcon />
+                  ) : (
+                    <ArrowBackIcon sx={{ transform: 'rotate(180deg)' }} />
+                  )}
+                </StyledSidebarButton>
+              </Box>
+            </Box>
+          </>
         )}
-        <Box flex={1} display={'flex'} flexDirection={'column'} justifyContent={'flex-end'}>
-          <Box display={'flex'} padding={1} justifyContent={'center'}>
-            <AnimatePresence mode='wait'>
-              {open ? (
-                <motion.div
-                  key='logo'
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Image src='logoFull' alt='logo' width={220} />
-                  <Typography variant='h6' textAlign={'center'}>
-                    App version {process.env.APP_VERSION}
-                  </Typography>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key='logoMini'
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Image src='logoMini' alt='logo' width={56} priority={true} />
-                  <Typography variant='subtitle2' textAlign={'center'}>
-                    {process.env.APP_VERSION}
-                  </Typography>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </Box>
-          <Box display={'flex'}>
-            <ListItemButton onClick={handleLogoutClick}>
-              <ListItemIcon>
-                <LogoutIcon sx={{ color: 'white' }} />
-              </ListItemIcon>
-              <ListItemText primary={logoutMenu} />
-            </ListItemButton>
-          </Box>
-          <Box display={'flex'}>
-            <StyledSidebarButton onClick={() => setOpen(!open)}>
-              {open ? <ArrowBackIcon /> : <ArrowBackIcon sx={{ transform: 'rotate(180deg)' }} />}
-            </StyledSidebarButton>
-          </Box>
-        </Box>
       </Box>
       <LicenseAdvertiseDialog open={openAdvertise} onClose={() => setOpenAdvertise(false)} />
     </StyledDrawer>

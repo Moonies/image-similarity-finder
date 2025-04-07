@@ -25,6 +25,7 @@ const authSlice = createSlice({
       // Save to localStorage
       if (typeof window !== 'undefined') {
         localStorage.setItem('token', JSON.stringify(action.payload.token))
+        sessionStorage.setItem('authenticated', JSON.stringify(true))
       }
     },
     setUser: (state, action: PayloadAction<{ user: UserProfile }>) => {
@@ -49,6 +50,7 @@ const authSlice = createSlice({
       if (typeof window !== 'undefined') {
         localStorage.removeItem('token')
         localStorage.removeItem('user')
+        sessionStorage.removeItem('authenticated')
       }
     },
   },
@@ -62,6 +64,14 @@ export const getCurrentToken = (): TokenData | null => {
 export const getCurrentUser = (): UserProfile | null => {
   const storedUser = localStorage.getItem('user')
   return storedUser ? (JSON.parse(storedUser) as UserProfile) : null
+}
+
+export const getAuthenticated = (): boolean => {
+  if (typeof window !== 'undefined') {
+    const storedAuthenticated = sessionStorage.getItem('authenticated')
+    return storedAuthenticated ? (JSON.parse(storedAuthenticated) as boolean) : false
+  }
+  return false
 }
 
 export const { setCredentials, clearCredentials, clearUser, setUser } = authSlice.actions
