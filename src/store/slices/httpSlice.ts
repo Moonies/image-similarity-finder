@@ -6,7 +6,7 @@ interface HttpState {
 }
 
 const initialState: HttpState = {
-  acceptLanguage: 'en-US',
+  acceptLanguage: 'en',
   baseURL: '',
 }
 
@@ -46,8 +46,11 @@ const httpSlice = createSlice({
 })
 
 export const getCurrentLanguage = (): string | null => {
-  const storedLanguage = localStorage.getItem('acceptLanguage')
-  return storedLanguage ? JSON.parse(storedLanguage) : null
+  if (typeof window !== 'undefined') {
+    const storedLanguage = localStorage.getItem('acceptLanguage')
+    return storedLanguage ? JSON.parse(storedLanguage) : null
+  }
+  return null
 }
 
 export const { setLanguage, clearLanguage, setBaseUrl } = httpSlice.actions

@@ -7,8 +7,9 @@ import { LoginModal } from '@/components/modals/LoginModal'
 import useHttp from '@/hooks/useHttp'
 import { useLoading } from '@/hooks/useLoading'
 import { getCurrentToken } from '@/store/slices/authSlice'
-import { setBaseUrl } from '@/store/slices/httpSlice'
+import { setBaseUrl, setLanguage } from '@/store/slices/httpSlice'
 import LicenseAdvertiseDialog from '@/components/dialog/LicenseAdvertiseDialog'
+import i18next from '@/config/i18n'
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch()
@@ -20,6 +21,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [openAdvertise, setOpenAdvertise] = useState(false)
   const { setLoading } = useLoading()
+  const supportedLanguage = i18next.options.supportedLngs as string[]
+
   const { api } = useHttp()
 
   const checkLicensePlan = async (path: string) => {
@@ -31,6 +34,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
+    if (supportedLanguage?.includes(lang)) {
+      dispatch(setLanguage({ acceptLanguage: lang }))
+    } else {
+      dispatch(setLanguage({ acceptLanguage: 'en' }))
+    }
     const token = getCurrentToken()
     setLoading(true)
     // Only validate if token exists

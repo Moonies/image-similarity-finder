@@ -9,8 +9,8 @@ import parse, { DOMNode, HTMLReactParserOptions } from 'html-react-parser'
 import { extractTextFromPDF, processPDFText, reformatText } from '@/utils/fileConvert'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Download as DownloadIcon } from '@mui/icons-material'
-import { useAppSelector } from '@/hooks/useRedux'
-import { getAuthenticated } from '@/store/slices/authSlice'
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux'
+import { getCurrentToken, setAuthenSession } from '@/store/slices/authSlice'
 
 // waiting for backend update
 // const mockApi = {
@@ -114,8 +114,8 @@ export default function WelcomPage({ files }: { files: string[] }) {
   const [manualFiles, setManualFiles] = useState<ManualFile>([])
   const [pdfText, setPdfText] = useState<string>('')
   const [selectedFile, setSelectedFile] = useState<string>('')
-  const { token } = useAppSelector(state => state.auth)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const { isAuthenticated } = useAppSelector(state => state.auth)
+  const dispatch = useAppDispatch()
 
   // waiting for backend update
   // const [htmlStringData, setHtmlStringData] = useState<string>()
@@ -251,7 +251,6 @@ export default function WelcomPage({ files }: { files: string[] }) {
   }
 
   useEffect(() => {
-    setIsAuthenticated(getAuthenticated())
     if (process.env.NEXT_PUBLIC_ENV !== 'development') {
       //on local can't find path on docker
       fetchFiles()
@@ -267,8 +266,10 @@ export default function WelcomPage({ files }: { files: string[] }) {
   // }, [getHtmlString])
 
   useEffect(() => {
-    setIsAuthenticated(getAuthenticated())
-  }, [token])
+    if (!!getCurrentToken()) {
+      dispatch(setAuthenSession())
+    }
+  }, [dispatch])
 
   return (
     <PageTransition>
