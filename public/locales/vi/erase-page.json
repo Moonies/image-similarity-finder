@@ -20,5 +20,10 @@
   "alertNonUpload": "Ứng dụng đã ở trạng thái ban đầu",
   "alertAddNewDrawing": "Số bản vẽ hiện tại không tồn tại. Bạn có cần thêm bản vẽ mới không?",
   "addNewDrawingMessageSuccess": "thêm bản vẽ mới thành công!!",
-  "downloadButton": "tải về"
+  "downloadButton": "tải về",
+  "notification": {
+    "reset": {
+      "success": "Đặt lại thành công"
+    }
+  }
 }

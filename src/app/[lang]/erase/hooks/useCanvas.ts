@@ -264,14 +264,14 @@ export const useCanvas = (
       const originalWidth = originalImage.width
       const originalHeight = originalImage.height
 
-      const result = convertDrawnCoordinatesToOriginal(
+      const _result = convertDrawnCoordinatesToOriginal(
         drawnCoordinates,
         canvasWidth,
         canvasHeight,
         originalWidth,
         originalHeight
       )
-      console.log('Drawn Coordinates:', result)
+      // console.log('Drawn Coordinates:', result)
 
       const response = await updateEraseDrawing(maskCanvasRef)
       if (!response) return

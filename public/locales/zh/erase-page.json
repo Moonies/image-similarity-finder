@@ -20,5 +20,10 @@
   "alertNonUpload": "应用程序已经处于初始状态",
   "alertAddNewDrawing": "当前图纸编号不存在。是否需要添加新图纸？",
   "addNewDrawingMessageSuccess": "添加新图纸成功！！",
-  "downloadButton": "下载"
+  "downloadButton": "下载",
+  "notification": {
+    "reset": {
+      "success": "重置成功"
+    }
+  }
 }

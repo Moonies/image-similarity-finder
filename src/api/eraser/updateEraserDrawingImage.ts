@@ -9,15 +9,7 @@ export default async function updateEraserDrawingImage(
   const formData = new FormData()
   formData.append('file', processedFile, processedFile.name)
 
-  const response = await httpRequest(() =>
-    axiosInstance.post(`/api/erase/save`, formData, {
-      // responseType: 'blob',
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-  )
+  const response = await httpRequest(() => axiosInstance.post(`/api/erase/save`))
   if (axios.isAxiosError(response)) {
     return { code: response?.status ?? 500, message: response.message, data: undefined }
   }
