@@ -93,7 +93,6 @@ export default function useHttp() {
                       window.location.reload()
                     }
                   } else {
-                    // await apiRef.current?.user.logout(true)
                     dispatch(clearCredentials())
                     router.replace(`/${lang}`)
                   }

@@ -16,7 +16,7 @@ export default function useEditRecord(drawingDetail: DrawingImageDetail) {
     () => async (drawingId: string) => {
       const result = await api.drawing.getDrawingImage(drawingId)
       if (result.code === 200 && result.data) {
-        console.log(result)
+        // console.log(result)
         setDrawingImage(result.data)
       }
     },
