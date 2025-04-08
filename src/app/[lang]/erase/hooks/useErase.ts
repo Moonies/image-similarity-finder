@@ -4,12 +4,14 @@ import { useAppDispatch, useAppSelector } from '@/hooks/useRedux'
 import { setPredictorId, setFileName } from '@/store/slices/eraseSlice'
 import { useNotification } from '@/hooks/useNotification'
 import { PredictData } from '@/api/eraser/addPredictDrawing'
+import { useTranslation } from 'react-i18next'
 
 export default function useEraser() {
   const { api } = useHttp()
   const dispatch = useAppDispatch()
   const { predictorId } = useAppSelector(state => state.erase)
   const { notificationSnackbar } = useNotification()
+  const { t } = useTranslation('erase-page')
 
   const calculateScalingAndOffsets = (
     canvasWidth: number,
@@ -92,7 +94,6 @@ export default function useEraser() {
     const maskDataBase64 = maskDataURL.split(',')[1]
     // console.log(maskDataURL)
     const result = await api.eraser.updateEraserDrawing(maskDataBase64, predictorId)
-    console.log(result)
     return result
   }
 
@@ -103,7 +104,6 @@ export default function useEraser() {
     // console.log(maskDataURL)
     const maskDataBase64 = maskDataURL.split(',')[1]
     const result = await api.eraser.updateEraserDrawing(maskDataBase64, predictorId)
-    // console.log(result)
     return result
   }
 
@@ -111,7 +111,7 @@ export default function useEraser() {
     const result = await api.eraser.addEraserDrawingImage(drawingImage, drawingImage.name)
     if (result.code === 200 && result.data) {
       dispatch(setPredictorId({ predictorId: drawingImage.name }))
-      dispatch(setFileName({ fileName: drawingImage.name }))
+      dispatch(setFileName({ fileName: drawingImage.name.split('.')[0] }))
       return result.data
     }
   }
@@ -135,7 +135,7 @@ export default function useEraser() {
   const resetEraserDrawing = async () => {
     const result = await api.eraser.resetEraserDrawingImage(predictorId)
     if (result.code === 200) {
-      notificationSnackbar.success('remove success!!')
+      notificationSnackbar.success(t('notification.reset.success'))
       return true
     }
   }
