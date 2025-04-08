@@ -9,6 +9,8 @@ import parse, { DOMNode, HTMLReactParserOptions } from 'html-react-parser'
 import { extractTextFromPDF, processPDFText, reformatText } from '@/utils/fileConvert'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Download as DownloadIcon } from '@mui/icons-material'
+import { useAppSelector } from '@/hooks/useRedux'
+import { getAuthenticated } from '@/store/slices/authSlice'
 
 // waiting for backend update
 // const mockApi = {
@@ -112,6 +114,9 @@ export default function WelcomPage({ files }: { files: string[] }) {
   const [manualFiles, setManualFiles] = useState<ManualFile>([])
   const [pdfText, setPdfText] = useState<string>('')
   const [selectedFile, setSelectedFile] = useState<string>('')
+  const { token } = useAppSelector(state => state.auth)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
   // waiting for backend update
   // const [htmlStringData, setHtmlStringData] = useState<string>()
 
@@ -246,6 +251,7 @@ export default function WelcomPage({ files }: { files: string[] }) {
   }
 
   useEffect(() => {
+    setIsAuthenticated(getAuthenticated())
     if (process.env.NEXT_PUBLIC_ENV !== 'development') {
       //on local can't find path on docker
       fetchFiles()
@@ -260,6 +266,10 @@ export default function WelcomPage({ files }: { files: string[] }) {
   //   getHtmlString()
   // }, [getHtmlString])
 
+  useEffect(() => {
+    setIsAuthenticated(getAuthenticated())
+  }, [token])
+
   return (
     <PageTransition>
       <Box
@@ -271,179 +281,181 @@ export default function WelcomPage({ files }: { files: string[] }) {
               : theme => theme.palette.background.paper,
         }}
       >
-        <Container maxWidth='lg'>
-          <Typography variant='h1' textAlign={'center'}>
-            {t('title')}
-          </Typography>
-
-          <Box marginY={2}>
-            <Typography variant='h3' gutterBottom>
-              {t('appVersion.title')}
+        {isAuthenticated && (
+          <Container maxWidth='lg'>
+            <Typography variant='h1' textAlign={'center'}>
+              {t('title')}
             </Typography>
-            <Typography variant='h5'>
-              {t('appVersion.label')} : {version}
-            </Typography>
-          </Box>
 
-          <Box
-            paddingY={4}
-            paddingX={6}
-            marginY={4}
-            sx={{
-              backgroundColor:
+            <Box marginY={2}>
+              <Typography variant='h3' gutterBottom>
+                {t('appVersion.title')}
+              </Typography>
+              <Typography variant='h5'>
+                {t('appVersion.label')} : {version}
+              </Typography>
+            </Box>
+
+            <Box
+              paddingY={4}
+              paddingX={6}
+              marginY={4}
+              sx={{
+                backgroundColor:
+                  mode === 'dark'
+                    ? theme => `${theme.palette.warning.light}10`
+                    : theme => `${theme.palette.primary.light}10`,
+              }}
+              borderLeft={
                 mode === 'dark'
-                  ? theme => `${theme.palette.warning.light}10`
-                  : theme => `${theme.palette.primary.light}10`,
-            }}
-            borderLeft={
-              mode === 'dark'
-                ? theme => `4px solid ${theme.palette.warning.light}`
-                : theme => `4px solid ${theme.palette.primary.light}`
-            }
-            borderRadius={2}
-          >
-            <Typography variant='h4' gutterBottom>
-              {t('note.title')}
-            </Typography>
-            <Typography variant='h6' gutterBottom>
-              {parse(t('note.description1', { version: version }))}
-              {/* {t('note.description1', { version: version })} */}
-            </Typography>
-            <Typography variant='h6'>
-              {t('note.description2')}
-              <Link
-                href='#'
-                fontWeight='bold'
-                sx={{
-                  color:
-                    mode === 'dark'
-                      ? theme => theme.palette.warning.light
-                      : theme => theme.palette.primary.main,
-                }}
-              >
-                {t('note.invitation.subscriptionLink')}
-              </Link>{' '}
-              {t('note.invitation.conjuction')}{' '}
-              <Link
-                href='#'
-                fontWeight='bold'
-                sx={{
-                  color:
-                    mode === 'dark'
-                      ? theme => theme.palette.warning.light
-                      : theme => theme.palette.primary.main,
-                }}
-              >
-                {t('note.invitation.contactLink')}
-              </Link>{' '}
-              {t('note.invitation.label')}
-            </Typography>
-          </Box>
+                  ? theme => `4px solid ${theme.palette.warning.light}`
+                  : theme => `4px solid ${theme.palette.primary.light}`
+              }
+              borderRadius={2}
+            >
+              <Typography variant='h4' gutterBottom>
+                {t('note.title')}
+              </Typography>
+              <Typography variant='h6' gutterBottom>
+                {parse(t('note.description1', { version: version }))}
+                {/* {t('note.description1', { version: version })} */}
+              </Typography>
+              <Typography variant='h6'>
+                {t('note.description2')}
+                <Link
+                  href='#'
+                  fontWeight='bold'
+                  sx={{
+                    color:
+                      mode === 'dark'
+                        ? theme => theme.palette.warning.light
+                        : theme => theme.palette.primary.main,
+                  }}
+                >
+                  {t('note.invitation.subscriptionLink')}
+                </Link>{' '}
+                {t('note.invitation.conjuction')}{' '}
+                <Link
+                  href='#'
+                  fontWeight='bold'
+                  sx={{
+                    color:
+                      mode === 'dark'
+                        ? theme => theme.palette.warning.light
+                        : theme => theme.palette.primary.main,
+                  }}
+                >
+                  {t('note.invitation.contactLink')}
+                </Link>{' '}
+                {t('note.invitation.label')}
+              </Typography>
+            </Box>
 
-          {manualFiles.length > 0 && (
-            <Box display={'flex'} gap={2}>
-              <TextField
-                id='change-log-select'
-                select
-                label={t('changeLogTitle')}
-                onChange={e => handleSelectFile(e.target.value)}
-                value={selectedFile}
-              >
-                {/* {mockFile.map((option, index) => (
+            {manualFiles.length > 0 && (
+              <Box display={'flex'} gap={2}>
+                <TextField
+                  id='change-log-select'
+                  select
+                  label={t('changeLogTitle')}
+                  onChange={e => handleSelectFile(e.target.value)}
+                  value={selectedFile}
+                >
+                  {/* {mockFile.map((option, index) => (
                 <MenuItem key={index} value={option.fileName}>
                   {option.fileName}
                 </MenuItem>
               ))} */}
-                {manualFiles.map((option, index) => (
-                  <MenuItem key={index} value={option.fileName}>
-                    {option.fileName}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <Box justifyContent={'center'} alignContent={'center'}>
-                <Button
-                  role={undefined}
-                  variant='contained'
-                  tabIndex={-1}
-                  startIcon={<DownloadIcon />}
-                  onClick={handleDownload}
-                >
-                  {t('downloadButton')}
-                </Button>
+                  {manualFiles.map((option, index) => (
+                    <MenuItem key={index} value={option.fileName}>
+                      {option.fileName}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <Box justifyContent={'center'} alignContent={'center'}>
+                  <Button
+                    role={undefined}
+                    variant='contained'
+                    tabIndex={-1}
+                    startIcon={<DownloadIcon />}
+                    onClick={handleDownload}
+                  >
+                    {t('downloadButton')}
+                  </Button>
+                </Box>
               </Box>
-            </Box>
-          )}
-
-          <AnimatePresence mode='wait'>
-            {pdfText && (
-              <motion.div
-                key={pdfText}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.3 }}
-              >
-                <div
-                  dangerouslySetInnerHTML={{ __html: pdfText }} // Render processed HTML
-                />
-              </motion.div>
             )}
-          </AnimatePresence>
 
-          {/* Information from Backend */}
-          {/* {parse(htmlStringData ?? '', options)} */}
+            <AnimatePresence mode='wait'>
+              {pdfText && (
+                <motion.div
+                  key={pdfText}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div
+                    dangerouslySetInnerHTML={{ __html: pdfText }} // Render processed HTML
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-          <Typography variant='h3' fontWeight={600} gutterBottom>
-            {t('readMe.startTitle')}
-          </Typography>
+            {/* Information from Backend */}
+            {/* {parse(htmlStringData ?? '', options)} */}
 
-          <Typography variant='h5' gutterBottom>
-            {t('readMe.startBody')}
-          </Typography>
-          <Typography variant='h4' fontWeight={600} gutterBottom>
-            {t('readMe.guide.title')}
-          </Typography>
-          <Box display={'flex'} sx={{ fontSize: 22 }}>
-            <ul>
-              <li>{t('readMe.guide.instructions.list1')}</li>
-              <li>{t('readMe.guide.instructions.list2')}</li>
-              <li>{t('readMe.guide.instructions.list3')}</li>
-              <li>{t('readMe.guide.instructions.list4')}</li>
-              <li>{t('readMe.guide.instructions.list5')}</li>
-            </ul>
-          </Box>
-          <Typography variant='h4' fontWeight={600} gutterBottom>
-            {t('readMe.features.title')}
-          </Typography>
-          <Box display={'flex'} sx={{ fontSize: 22 }}>
-            <ul>
-              <li>{t('readMe.features.instructions.list1')}</li>
-              <li>{t('readMe.features.instructions.list2')}</li>
-              <li>{t('readMe.features.instructions.list3')}</li>
-              <li>{t('readMe.features.instructions.list4')}</li>
-              <li>{t('readMe.features.instructions.list5')}</li>
-            </ul>
-          </Box>
-          <Typography variant='h4' fontWeight={600} gutterBottom>
-            {t('readMe.support.title')}
-          </Typography>
-
-          <Typography variant='h6' gutterBottom>
-            {t('readMe.support.helperText')}
-            <Typography
-              component={'strong'}
-              fontWeight={600}
-              sx={{
-                color:
-                  mode === 'dark'
-                    ? theme => theme.palette.warning.light
-                    : theme => theme.palette.primary.main,
-              }}
-            >
-              support@sansenshimizu.com
+            <Typography variant='h3' fontWeight={600} gutterBottom>
+              {t('readMe.startTitle')}
             </Typography>
-          </Typography>
-        </Container>
+
+            <Typography variant='h5' gutterBottom>
+              {t('readMe.startBody')}
+            </Typography>
+            <Typography variant='h4' fontWeight={600} gutterBottom>
+              {t('readMe.guide.title')}
+            </Typography>
+            <Box display={'flex'} sx={{ fontSize: 22 }}>
+              <ul>
+                <li>{t('readMe.guide.instructions.list1')}</li>
+                <li>{t('readMe.guide.instructions.list2')}</li>
+                <li>{t('readMe.guide.instructions.list3')}</li>
+                <li>{t('readMe.guide.instructions.list4')}</li>
+                <li>{t('readMe.guide.instructions.list5')}</li>
+              </ul>
+            </Box>
+            <Typography variant='h4' fontWeight={600} gutterBottom>
+              {t('readMe.features.title')}
+            </Typography>
+            <Box display={'flex'} sx={{ fontSize: 22 }}>
+              <ul>
+                <li>{t('readMe.features.instructions.list1')}</li>
+                <li>{t('readMe.features.instructions.list2')}</li>
+                <li>{t('readMe.features.instructions.list3')}</li>
+                <li>{t('readMe.features.instructions.list4')}</li>
+                <li>{t('readMe.features.instructions.list5')}</li>
+              </ul>
+            </Box>
+            <Typography variant='h4' fontWeight={600} gutterBottom>
+              {t('readMe.support.title')}
+            </Typography>
+
+            <Typography variant='h6' gutterBottom>
+              {t('readMe.support.helperText')}
+              <Typography
+                component={'strong'}
+                fontWeight={600}
+                sx={{
+                  color:
+                    mode === 'dark'
+                      ? theme => theme.palette.warning.light
+                      : theme => theme.palette.primary.main,
+                }}
+              >
+                support@sansenshimizu.com
+              </Typography>
+            </Typography>
+          </Container>
+        )}
       </Box>
     </PageTransition>
   )

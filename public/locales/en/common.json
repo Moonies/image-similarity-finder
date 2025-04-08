@@ -26,5 +26,7 @@
   "username": "Username",
   "password": "Password",
   "email": "Email",
-  "helperResetPassword": "Please use email you would like to reset your registered password."
+  "helperResetPassword": "Please use email you would like to reset your registered password.",
+  "logoutModalTitle": "Confirm Logout",
+  "logoutMessage": "Make sure you’ve saved your work and completed all tasks before logging out. Unsaved changes may be lost."
 }

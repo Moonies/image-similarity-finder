@@ -26,5 +26,7 @@
   "username": "用户名",
   "password": "密码",
   "email": "电子邮件",
-  "helperResetPassword": "请使用您想要重置注册密码的电子邮件。"
+  "helperResetPassword": "请使用您想要重置注册密码的电子邮件。",
+  "logoutModalTitle": "确认注销",
+  "logoutMessage": "请确保在注销前已保存工作并完成所有任务。未保存的更改可能会丢失。"
 }

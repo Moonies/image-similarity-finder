@@ -26,5 +26,7 @@
   "username": "Tên người dùng",
   "password": "Mật khẩu",
   "email": "Thư điện tử",
-  "helperResetPassword": "Vui lòng sử dụng email mà bạn muốn đặt lại mật khẩu đã đăng ký."
+  "helperResetPassword": "Vui lòng sử dụng email mà bạn muốn đặt lại mật khẩu đã đăng ký.",
+  "logoutModalTitle": "Xác nhận Đăng xuất",
+  "logoutMessage": "Đảm bảo bạn đã lưu công việc và hoàn thành tất cả các tác vụ trước khi đăng xuất. Những thay đổi chưa lưu có thể bị mất."
 }
