@@ -24,6 +24,7 @@
   "loginModalTitle": "Login",
   "loginButton": "Login",
   "username": "Username",
+  "role": "Role",
   "password": "Password",
   "email": "Email",
   "helperResetPassword": "Please use email you would like to reset your registered password.",

@@ -24,6 +24,7 @@
   "loginModalTitle": "ログイン",
   "loginButton": "ログイン",
   "username": "ユーザー",
+  "role": "役割",
   "password": "パスワード",
   "email": "メール",
   "helperResetPassword": "登録したパスワードをリセットしたいメールアドレスを使用してください。",

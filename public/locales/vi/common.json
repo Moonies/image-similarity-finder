@@ -24,6 +24,7 @@
   "loginModalTitle": "Đăng nhập",
   "loginButton": "Đăng nhập",
   "username": "Tên người dùng",
+  "role": "Vai trò",
   "password": "Mật khẩu",
   "email": "Thư điện tử",
   "helperResetPassword": "Vui lòng sử dụng email mà bạn muốn đặt lại mật khẩu đã đăng ký.",
