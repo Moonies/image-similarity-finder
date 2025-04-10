@@ -206,6 +206,7 @@ export default function ErasePage() {
       })
       const result = await addNewDrawing(file)
       if (result) {
+        setOpenModalAddNewDrawing(false)
         notificationSnackbar.success(t('addNewDrawingMessageSuccess'))
       }
     },
