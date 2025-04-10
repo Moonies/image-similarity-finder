@@ -4,12 +4,12 @@ import axios from 'axios'
 
 export default async function updateEraserDrawingImage(
   httpRequest: HttpRequest,
-  processedFile: File
+  predictorId: string
+  // processedFile: File
 ): Promise<ApiResponse<null>> {
-  const formData = new FormData()
-  formData.append('file', processedFile, processedFile.name)
-
-  const response = await httpRequest(() => axiosInstance.post(`/api/erase/save`))
+  // const formData = new FormData()
+  // formData.append('file', processedFile, processedFile.name)
+  const response = await httpRequest(() => axiosInstance.post(`/api/erase/save/${predictorId}`))
   if (axios.isAxiosError(response)) {
     return { code: response?.status ?? 500, message: response.message, data: undefined }
   }

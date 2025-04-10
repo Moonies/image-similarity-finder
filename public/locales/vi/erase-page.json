@@ -22,8 +22,14 @@
   "addNewDrawingMessageSuccess": "thêm bản vẽ mới thành công!!",
   "downloadButton": "tải về",
   "notification": {
+    "add": {
+      "success": "thêm bản vẽ mới thành công!!"
+    },
     "reset": {
       "success": "Đặt lại thành công"
+    },
+    "save": {
+      "success": "Lưu thành công"
     }
   }
 }

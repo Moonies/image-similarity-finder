@@ -22,8 +22,14 @@
   "addNewDrawingMessageSuccess": "新しい図面の追加が成功しました!!",
   "downloadButton": "ダウンロード",
   "notification": {
+    "add": {
+      "success": "新しい図面の追加が成功しました!!"
+    },
     "reset": {
       "success": "リセット成功"
+    },
+    "save": {
+      "success": "保存成功"
     }
   }
 }

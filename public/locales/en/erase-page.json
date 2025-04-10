@@ -22,8 +22,14 @@
   "addNewDrawingMessageSuccess": "add new drawing is success!!",
   "downloadButton": "Download",
   "notification": {
+    "add": {
+      "success": "add new drawing is success!!"
+    },
     "reset": {
-      "success": "Reset Process Success"
+      "success": "Reset Process Success!!"
+    },
+    "save": {
+      "success": "Save Process Success!!"
     }
   }
 }

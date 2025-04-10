@@ -22,8 +22,14 @@
   "addNewDrawingMessageSuccess": "添加新图纸成功！！",
   "downloadButton": "下载",
   "notification": {
+    "add": {
+      "success": "添加新图纸成功！！"
+    },
     "reset": {
       "success": "重置成功"
+    },
+    "save": {
+      "success": "保存成功"
     }
   }
 }
