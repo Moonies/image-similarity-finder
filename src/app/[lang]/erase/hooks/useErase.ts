@@ -107,11 +107,23 @@ export default function useEraser() {
     return result
   }
 
+  const saveNewFileDrawing = async () => {
+    const response = await getLatestEraserDrawing(predictorId, true)
+    if (response.code === 200 && response.data) {
+      // console.log(response.data)
+      const file = new File([response.data], predictorId, { type: response.data.type })
+      const result = await addNewDrawing(file)
+      if (result) {
+        notificationSnackbar.success(t('notification.add.success'))
+      }
+    }
+  }
+
   const addEraseDrawing = async (drawingImage: File) => {
     const result = await api.eraser.addEraserDrawingImage(drawingImage, drawingImage.name)
     if (result.code === 200 && result.data) {
       dispatch(setPredictorId({ predictorId: drawingImage.name }))
-      dispatch(setFileName({ fileName: drawingImage.name.split('.')[0] }))
+      dispatch(setFileName({ fileName: drawingImage.name }))
       return result.data
     }
   }
@@ -145,8 +157,8 @@ export default function useEraser() {
     return result
   }
 
-  const updateEraserDrawingImage = async (currentProceesedFile: File) => {
-    const result = await api.eraser.updateEraserDrawingImage(currentProceesedFile)
+  const updateEraserDrawingImage = async (predictorId: string) => {
+    const result = await api.eraser.updateEraserDrawingImage(predictorId)
     return result
   }
 
@@ -155,6 +167,27 @@ export default function useEraser() {
     if (result.code === 200) {
       return true
     }
+  }
+
+  const checkExistDrawing = async (fileName: string) => {
+    const result = await api.drawing.checkExistDrawing(fileName.split('.')[0])
+    if (result.code === 200) {
+      return true
+    }
+    return false
+  }
+
+  const getLatestEraserDrawingImage = async (
+    predictorId: string,
+    disableDisplayError?: boolean
+  ) => {
+    const result = await api.eraser.getLatestEraserDrawingImage(predictorId, disableDisplayError)
+    return result
+  }
+
+  const getLatestEraserDrawing = async (predictorId: string, disableDisplayError?: boolean) => {
+    const result = await api.eraser.getLatestEraserDrawing(predictorId, disableDisplayError)
+    return result
   }
 
   return {
@@ -170,5 +203,8 @@ export default function useEraser() {
     addPredictDrawing,
     updateEraserDrawingImage,
     addNewDrawing,
+    checkExistDrawing,
+    getLatestEraserDrawingImage,
+    saveNewFileDrawing,
   }
 }

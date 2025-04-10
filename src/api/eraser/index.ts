@@ -7,6 +7,8 @@ import { default as processEraserDrawing } from './processEraserDrawing'
 import { default as resetEraserDrawingImage } from './resetEraserDrawingImage'
 import { default as addPredictDrawing, PredictData } from './addPredictDrawing'
 import { default as updateEraserDrawingImage } from './updateEraserDrawingImage'
+import { default as getLatestEraserDrawingImage } from './getLatestEraserDrawingImage'
+import { default as getLatestEraserDrawing } from './getLatestEraserDrawing'
 export interface EraserApi {
   addEraserDrawingImage: (
     file: File,
@@ -17,7 +19,15 @@ export interface EraserApi {
   processEraserDrawing: (predictorId: string) => Promise<ApiResponse<File>>
   resetEraserDrawingImage: (predictorId: string) => Promise<ApiResponse<null>>
   addPredictDrawing: (params: PredictData, predictorId: string) => Promise<ApiResponse<string>>
-  updateEraserDrawingImage: (file: File) => Promise<ApiResponse<null>>
+  updateEraserDrawingImage: (predictorId: string) => Promise<ApiResponse<null>>
+  getLatestEraserDrawingImage: (
+    predictorId: string,
+    disableDisplayError?: boolean
+  ) => Promise<ApiResponse<string>>
+  getLatestEraserDrawing: (
+    predictorId: string,
+    disableDisplayError?: boolean
+  ) => Promise<ApiResponse<File>>
 }
 
 export default function eraser(httpRequest: HttpRequest): EraserApi {
@@ -30,6 +40,10 @@ export default function eraser(httpRequest: HttpRequest): EraserApi {
     processEraserDrawing: predictorId => processEraserDrawing(httpRequest, predictorId),
     resetEraserDrawingImage: predictorId => resetEraserDrawingImage(httpRequest, predictorId),
     addPredictDrawing: (params, predictorId) => addPredictDrawing(httpRequest, params, predictorId),
-    updateEraserDrawingImage: file => updateEraserDrawingImage(httpRequest, file),
+    updateEraserDrawingImage: predictorId => updateEraserDrawingImage(httpRequest, predictorId),
+    getLatestEraserDrawingImage: (predictorId, disableDisplayError) =>
+      getLatestEraserDrawingImage(httpRequest, predictorId, disableDisplayError),
+    getLatestEraserDrawing: (predictorId, disableDisplayError) =>
+      getLatestEraserDrawing(httpRequest, predictorId, disableDisplayError),
   }
 }

@@ -29,6 +29,19 @@ export default function usePrint() {
           // Append the image to the print container
           printContainer?.appendChild(img)
 
+          // Add a listener for the afterprint event
+          const handleAfterPrint = () => {
+            // Remove the image after printing
+            if (printContainer) {
+              printContainer.innerHTML = '' // Clear the container
+            }
+            // Clean up the event listener
+            window.removeEventListener('afterprint', handleAfterPrint)
+          }
+
+          // Add the afterprint event listener
+          window.addEventListener('afterprint', handleAfterPrint)
+
           // Force the browser to re-render the DOM before printing
           setTimeout(() => {
             window.print()

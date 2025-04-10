@@ -34,7 +34,7 @@ export default function ErasePage() {
   const buttonUploadRef = useRef<HTMLInputElement>(null)
   const { setLoading } = useLoading()
   const [currentProceesedFile, setCurrentProcessedFile] = useState<File>()
-  const { fileName } = useAppSelector(state => state.erase)
+  const { fileName, predictorId } = useAppSelector(state => state.erase)
   const [openModalAddNewDrawing, setOpenModalAddNewDrawing] = useState(false)
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -79,13 +79,16 @@ export default function ErasePage() {
     resetEraserDrawing,
     updateEraserDrawingImage,
     addNewDrawing,
+    checkExistDrawing,
+    getLatestEraserDrawingImage,
+    saveNewFileDrawing,
   } = useEraser()
 
   const handleProcessImage = async () => {
     setLoading(true)
     const result = await processEraserDrawing()
     if (!result) return
-    const file = new File([result], fileName, { type: result.type })
+    const file = new File([result], fileName.split('.')[0], { type: result.type })
     setCurrentProcessedFile(file)
     if (result.type === 'image/tiff' || result.type === 'image/tif') {
       const tifBlob = await convertTifToBlob(result)
@@ -164,26 +167,31 @@ export default function ErasePage() {
       message: t('saveMessage'),
     })
     if (confirmed && currentProceesedFile) {
-      const result = await updateEraserDrawingImage(currentProceesedFile)
-      // console.log(result)
-      if (result.code === 404) {
-        const confirmed = await openConfirmModal({
-          title: t('titleConfirmModal'),
-          message: t('alertAddNewDrawing'),
-        })
-        if (confirmed) {
-          const response = await addNewDrawing(currentProceesedFile)
-          if (response) {
-            notificationSnackbar.success(t('addNewDrawingMessageSuccess'))
+      // console.log(fileName)
+      const result = await updateEraserDrawingImage(predictorId)
+      if (result.code === 200) {
+        notificationSnackbar.success(t('notification.save.success'))
+
+        const response = await checkExistDrawing(fileName)
+        if (!response) {
+          const confirmed = await openConfirmModal({
+            title: t('titleConfirmModal'),
+            message: t('alertAddNewDrawing'),
+          })
+          if (confirmed) {
+            saveNewFileDrawing()
           }
         }
       }
     }
   }, [
-    addNewDrawing,
+    checkExistDrawing,
     currentProceesedFile,
+    fileName,
     notificationSnackbar,
     openConfirmModal,
+    predictorId,
+    saveNewFileDrawing,
     t,
     updateEraserDrawingImage,
   ])
@@ -210,15 +218,32 @@ export default function ErasePage() {
     }
   }, [erasedDrawing, printFile])
 
-  const handleDownload = useCallback(() => {
+  const handleDownload = useCallback(async () => {
     if (!currentProceesedFile) return
-    const url = URL.createObjectURL(currentProceesedFile)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = currentProceesedFile.name // Use the file's original name
-    link.click()
-    URL.revokeObjectURL(url)
-  }, [currentProceesedFile])
+    setLoading(true)
+    const response = await getLatestEraserDrawingImage(predictorId, true)
+    if (response.code === 200 && response.data) {
+      setLoading(false)
+      const url = response.data
+      const link = document.createElement('a')
+      link.href = url
+      link.download = currentProceesedFile.name // Use the file's original name
+      link.click()
+      URL.revokeObjectURL(url)
+    } else {
+      setLoading(true)
+      const result = await updateEraserDrawingImage(predictorId)
+      if (result.code === 200) {
+        handleDownload()
+      }
+    }
+  }, [
+    currentProceesedFile,
+    getLatestEraserDrawingImage,
+    predictorId,
+    setLoading,
+    updateEraserDrawingImage,
+  ])
 
   useEffect(() => {
     redrawCanvas()
