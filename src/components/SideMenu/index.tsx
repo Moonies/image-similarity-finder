@@ -215,6 +215,18 @@ export default function SideMenu() {
                   )}
                 </AnimatePresence>
               </Box>
+
+              {open && (
+                <Box padding={2}>
+                  <Typography variant='subtitle1' textAlign={'left'}>
+                    {t('username')}: {storedUser.username}
+                  </Typography>
+                  <Typography variant='subtitle1' textAlign={'left'}>
+                    {t('role')}: {storedUser.role.name}
+                  </Typography>
+                </Box>
+              )}
+
               <Box display={'flex'}>
                 <ListItemButton onClick={handleLogoutClick}>
                   <ListItemIcon>

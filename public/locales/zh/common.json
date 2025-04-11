@@ -24,6 +24,7 @@
   "loginModalTitle": "登录",
   "loginButton": "登录",
   "username": "用户名",
+  "role": "角色",
   "password": "密码",
   "email": "电子邮件",
   "helperResetPassword": "请使用您想要重置注册密码的电子邮件。",
