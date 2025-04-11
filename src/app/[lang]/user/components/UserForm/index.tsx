@@ -96,19 +96,22 @@ export default function UserForm({
             value={recordData?.number ?? ''}
             onChange={e => handleChange('number', e.target.value)}
           />
-          <TextFieldBox
-            id='inputField-username'
-            text={t('form.inputField2')}
-            value={recordData?.username ?? ''}
-            onChange={e => handleChange('username', e.target.value)}
-          />
           {mode === 'add' && (
-            <TextFieldBox
-              id='inputField-password'
-              text={t('form.inputField3')}
-              value={recordData?.password ?? ''}
-              onChange={e => handleChange('password', e.target.value)}
-            />
+            <>
+              <TextFieldBox
+                id='inputField-username'
+                text={t('form.inputField2')}
+                value={recordData?.username ?? ''}
+                onChange={e => handleChange('username', e.target.value)}
+              />
+
+              <TextFieldBox
+                id='inputField-password'
+                text={t('form.inputField3')}
+                value={recordData?.password ?? ''}
+                onChange={e => handleChange('password', e.target.value)}
+              />
+            </>
           )}
           <TextFieldBox
             id='inputField-firstname'
